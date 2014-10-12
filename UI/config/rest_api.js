@@ -6,4 +6,5 @@ module.exports = {
   'get_user' : host_url + '/user/',
   'save_status' : host_url + '/user/',
   'post_new_user' : host_url + '/user/signup',
+  'save_public_message' : host_url + '/user/',
 };

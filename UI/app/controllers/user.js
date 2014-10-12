@@ -85,6 +85,26 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
       });
     },
 
+	postPublicMessage : function (req, res, next) {
+		var user_name = req.session.passport.user.user_name;
+		console.log("Testing request: public message" + req);
+		User.setPublicMessage(user_name, req.body.publicMessage, function(error, publicMessage) {
+			if (error){
+				next(error);
+			} else {
+				for (var sId in participants.online) {
+	    		      var userName = participants.online[sId].userName;
+	    		      if (userName == user_name) {
+	    		          participants.online[sId] = {'userName' : user_name, 'publicMessage': publicMessage};				
+					}
+				}
+				io.sockets.emit("newConnection", {participants: participants});
+				console.log("Testing response - public message:" + res);
+	    		res.redirect('/welcome');
+			}
+		});
+	},
+
     getWelcome : function(req, res) {
      res.render('welcome', {
     	 title: "Hello " + req.session.passport.user.user_name + " !!",
