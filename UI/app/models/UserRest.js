@@ -104,10 +104,10 @@ User.saveNewUser = function(user_name, password, callback) {
   });
 };
 
-User.setStatus = function(user_name, status, callback) {
+User.prototype.setStatus = function(status, callback) {
   var options = {
-    url : rest_api.save_status + this.local.name + '/status' ,
-    body : {userName : user_name, status: status},
+    url : rest_api.save_status + this.local.name,
+    body : {status: status},
     json : true
   };
 
