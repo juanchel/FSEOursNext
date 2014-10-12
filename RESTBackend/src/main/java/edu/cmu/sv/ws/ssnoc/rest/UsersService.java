@@ -1,5 +1,6 @@
 package edu.cmu.sv.ws.ssnoc.rest;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
+import com.sun.deploy.util.SystemUtils;
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.common.utils.ConverterUtils;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
@@ -76,4 +78,37 @@ public class UsersService extends BaseService {
 	}
 
 
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/clusters/{hours}")
+    public String getClusters () {
+
+
+
+        List<List<User>> clusters = new ArrayList<List<User>>();
+
+        try {
+            List<List<UserPO>> userPOLists = DAOFactory.getInstance().getMessageDAO().getClusters(new Timestamp(1));
+
+
+            for (List<UserPO> poList : userPOLists) {
+
+                List<User> dtoList = new ArrayList<User>();
+                for (UserPO po : poList) {
+
+                    User dto = ConverterUtils.convert(po);
+                    dtoList.add(dto);
+                }
+                clusters.add(dtoList);
+            }
+
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+        }
+
+
+
+        return clusters.toString();
+    }
 }

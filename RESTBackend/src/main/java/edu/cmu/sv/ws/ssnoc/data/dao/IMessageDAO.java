@@ -1,5 +1,6 @@
 package edu.cmu.sv.ws.ssnoc.data.dao;
 
+import java.sql.Timestamp;
 import java.util.List;
 import edu.cmu.sv.ws.ssnoc.data.po.MessagePO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
@@ -50,5 +51,6 @@ public interface IMessageDAO{
      */
     String loadMessageById(int id);
 
+    List<List<UserPO>> getClusters(Timestamp timestamp);
 
 }
