@@ -1,0 +1,35 @@
+doctype html
+html
+  include includes/head.jade
+  script(src='/js/jquery.cookie.js')
+    <meta charset="utf-8">
+    <!-- Set the viewpor/ot so this responsive site displays correctly on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    script(src='/js/jquery-1.9.1.min.js')
+    script(src='/js/jquery.watermarkinput.js')
+    link(rel='stylesheet', href='/csspensans.css')
+    link(rel='stylesheet', href='/css/style.css')
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js')
+    script(src='http://code.jquery.com/jquery-latest.js')
+    script(src='http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css')
+    script(src='http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js')
+    script(src='/js/bootstrap.min.js')
+    script(src='/js/status.js')
+  title SSNoC - Welcome
+  body
+    include includes/navbar.jade
+    br
+    if message.length > 0
+        div.alert.alert-danger#passport_alert #{message}
+        div.row
+          div.col-md-12.col-xs-12
+            h3.text-center.offline Offline
+            div.text-center#participants_offline
+      form(action='/message', method='post')
+        select(name='receiverSelect')
+        //  option(value=participants_all) name
+        input(type='text', name='sessionID', value=valueID)
+        button(type="submit" class="btn btn-info btn-lg" id="sendMessageBtn") Send Message
+
+                    

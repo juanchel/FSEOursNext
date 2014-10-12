@@ -5,6 +5,8 @@ module.exports = function(app, _, io, participants, passport) {
   var people_controller = require('./controllers/people')(_, io, participants, passport);
 
   app.get("/", user_controller.getLogin);
+  
+  app.get("/message", user_controller.getAllPrivateMessage);
 
   app.post("/signup", user_controller.postSignup);
   app.post("/status", user_controller.postStatus);
@@ -34,7 +36,7 @@ function refreshAllUsers(participants, callback) {
   participants.all = [];
   User.getAllUsers(function(err, users) {
     users.forEach(function(user) {
-      participants.all.push({'userName' : user.local.name, 'emergency' : user.local.status});
+      participants.all.push({'userName' : user.local.name, 'emergency' : 'ok'});
     });
     callback();
   });

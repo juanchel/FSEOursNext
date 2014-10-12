@@ -16,9 +16,9 @@ process.chdir(__dirname);
 
 require('./config/passport')(passport);
 
-app.set("ipaddr", "0.0.0.0");
+app.set("ipaddr", process.env.SSNOC_NODEJS_IP || "0.0.0.0");
 
-app.set("port", 80);
+app.set("port", process.env.SSNOC_NODEJS_PORT || 80);
 
 app.set("views", __dirname + "/app/views");
 
@@ -52,8 +52,3 @@ http.listen(app.get("port"), app.get("ipaddr"), function() {
   console.log("Server up and running. Go to http://" + app.get("ipaddr") + ":" + app.get("port"));
 });
 
-var ipaddress = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
-var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-http.listen( port, ipaddress, function() {
-    console.log((new Date()) + ' Server is listening on port 8080');
-});
