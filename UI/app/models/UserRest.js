@@ -14,7 +14,7 @@ function User(user_name, password, st){
     name : user_name,
     password : password,
     status : st
-  }
+  };
 }
 
 User.generateHash = function(password) {
