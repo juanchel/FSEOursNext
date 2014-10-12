@@ -1,6 +1,7 @@
 var bcrypt = require('bcrypt-nodejs');
 var request = require('request');
 var rest_api = require('../../config/rest_api');
+var utils = require('../utils');
 
 /*
 function User(user_name, password){
@@ -147,6 +148,33 @@ User.getStatus = function(user_name, status, callback) {
     if (res.statusCode !== 200) {
       callback(null, null);
       return;
+    }
+  });
+};
+
+/**
+ * @param sender user name of the sender
+ * @param receiver user name of the receiver 
+ * @param message content of the message
+ * @param timestamp a Date object, sent time of the message
+ * @param callback function with signature callback(error_message, message_id)
+ */
+User.sendMessage = function(sender, receiver, message, timestamp, callback) {
+  var options = {
+      url : rest_api.send_private_message.replace("{sender}", sender).replace("{receiver}", receiver),
+      body : { 'content' : message, 'postedAt' : utils.formatTimestamp(timestamp) },
+      json : true
+  };
+  
+  request.post(options, function(err, res, body) {
+    if (err) {
+      callback(err, null);
+    } else if (res.statusCode !== 201) {
+      callback(res.body, null);
+    } else {
+      var components = res.headers.location.split('/');
+      var messageId = components[components.length - 1];
+      callback(null, messageId);
     }
   });
 };
