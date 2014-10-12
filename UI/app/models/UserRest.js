@@ -2,12 +2,14 @@ var bcrypt = require('bcrypt-nodejs');
 var request = require('request');
 var rest_api = require('../../config/rest_api');
 
+/*
 function User(user_name, password){
   this.local = {
     name : user_name,
     password : password
   };
 }
+*/
 
 function User(user_name, password, st){
   this.local = {
@@ -104,8 +106,8 @@ User.saveNewUser = function(user_name, password, callback) {
 
 User.setStatus = function(user_name, status, callback) {
   var options = {
-    url : rest_api.save_status + status + '/status',
-    body : {'userName' : user_name},
+    url : rest_api.save_status + this.local.name + '/status' ,
+    body : {userName : user_name, status: status},
     json : true
   };
 
@@ -120,6 +122,32 @@ User.setStatus = function(user_name, status, callback) {
     }
     callback(null, status);
     return;
+  });
+};
+
+User.getStatus = function(user_name, status, callback) {
+  request(rest_api.get_Status, {json:true}, function(err, res, body) {
+    if (err){
+      callback(err,null);
+      return;
+    }
+    if (res.statusCode === 200) {
+      var users = body.map(function(item, idx, arr){
+        return new User(item.userName, item.password, item.emergency_status);
+      });
+
+      users.sort(function(a,b) {
+        return a.userName > b.userName;
+      });
+
+      console.log("@@@@@ in User.getStatus succeed users :" + JSON.stringify(users));
+      callback(null, users);
+      return;
+    }
+    if (res.statusCode !== 200) {
+      callback(null, null);
+      return;
+    }
   });
 };
 
