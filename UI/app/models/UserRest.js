@@ -123,4 +123,30 @@ User.setStatus = function(user_name, status, callback) {
   });
 };
 
+User.setPublicMessage = function(user_name, publicMessage, callback) {
+	var options = {
+		url : rest_api.save_public_message + user_name,
+		body : {'content' : publicMessage},
+		json : true
+	};
+	
+	console.log("set public message: options: " + options);
+	
+	request.post(options, function(err, res, body) {
+		console.log('post err' + err);
+		console.log('post res ' + res);
+		console.log('post body ' + body);
+	    if (err){
+	      callback(err,null);
+	      return;
+	    }
+	    if (res.statusCode !== 200 && res.statusCode !== 201) {
+	      callback(res.body, null);
+	      return;
+	    }
+	    callback(null, publicMessage);
+	    return;
+	  });
+};
+
 module.exports = User;

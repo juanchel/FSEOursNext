@@ -8,6 +8,7 @@ module.exports = function(app, _, io, participants, passport) {
 
   app.post("/signup", user_controller.postSignup);
   app.post("/status", user_controller.postStatus);
+  app.post("/publicmessage", user_controller.postPublicMessage);
 
   app.get("/welcome", isLoggedIn, user_controller.getWelcome);
   
