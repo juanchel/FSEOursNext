@@ -125,8 +125,8 @@ User.setStatus = function(user_name, status, callback) {
 
 User.setPublicMessage = function(user_name, publicMessage, callback) {
 	var options = {
-		url : rest_api.save_public_message + publicMessage + '/publicmessage',
-		body : {'userName' : user_name},
+		url : rest_api.save_public_message + user_name,
+		body : {'content' : publicMessage},
 		json : true
 	};
 	
