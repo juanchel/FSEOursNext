@@ -396,5 +396,54 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         return po;
     }
 
+    public void startTest(int seconds){
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.CREATE_TEST_GET)) {
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.CREATE_TEST_POST)) {
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.INSERT_INTO_TEST1)) {
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.INSERT_INTO_TEST2)) {
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.INSERT_INTO_TEST3)) {
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.CREATE_TEST_RESULTS)) {
+            stmt.executeQuery();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
 
 }

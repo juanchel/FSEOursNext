@@ -15,7 +15,9 @@ public class SQL {
     public static final String SSN_STATUS = "SSN_STATUS";
     public static final String SSN_MESSAGES = "SSN_MESSAGES";
     public static final String PRIVATE_MESSAGES = "PRIVATE_MESSAGES";
-	/*public static final String USERS_MESSAGES = "USERS_MESSAGES";*/
+    public static final String TEST_POST = "TEST_POST";
+    public static final String TEST_GET = "TEST_GET";
+    public static final String TEST_RESULTS = "TEST_RESULTS";
 
     /**
      * Query to check if a given table exists in the H2 database.
@@ -30,35 +32,6 @@ public class SQL {
     /**
      * Query to create the USERS table.
      */
-
-
-//	CREATE TABLE user (
-//			uid integer NOT NULL,
-//			username varchar(255) NOT NULL,
-//			password varchar(40) NOT NULL,
-//			online_status smallint NOT NULL,
-//			role varchar(255) NOT NULL,
-//			emergency_status smallint NOT NULL,
-//			PRIMARY KEY (uid),
-//	);
-//
-//	CREATE TABLE messages (
-//			pid integer NOT NULL,
-//			message varchar(255) NOT NULL,
-//			uid integer NOT NULL,
-//			timestamp timestamp NOT NULL,
-//			PRIMARY KEY (pid),
-//			FORIEGN KEY (uid) REFERENCES user(uid)
-//	);
-//
-//	CREATE TABLE emergency_status (
-//			ok smallint,
-//			help smallint,
-//			emergency smallint,
-//			underfined smallint,
-//			FORIEGN KEY (uid) REFERENCES user(uid)
-//	);
-
 
     public static final String CREATE_USERS = "create table IF NOT EXISTS " + SSN_USERS +
             "(user_id IDENTITY PRIMARY KEY," +
@@ -90,6 +63,38 @@ public class SQL {
             "target varchar(255)," +
             "postedAt timestamp," +
             "messageId smallint NOT NULL AUTO_INCREMENT PRIMARY KEY);";
+
+    public static final String CREATE_TEST_POST = "CREATE TABLE IF NOT EXISTS "+ TEST_POST +" (" +
+            "pid integer NOT NULL AUTO_INCREMENT,"+
+            "message varchar(255),"+
+            "author varchar(255),"+
+            "timestamp timestamp,"+
+            "PRIMARY KEY (pid),"+
+            "FOREIGN KEY (author) REFERENCES public.SSN_USERS(user_name)"+
+            ");";
+
+    public static final String CREATE_TEST_GET = "CREATE TABLE IF NOT EXISTS "+ TEST_GET +" (" +
+            "pid integer NOT NULL AUTO_INCREMENT,"+
+            "message varchar(255),"+
+            "author varchar(255),"+
+            "timestamp timestamp,"+
+            "PRIMARY KEY (pid),"+
+            "FOREIGN KEY (author) REFERENCES public.SSN_USERS(user_name)"+
+            ");";
+
+    public static final String CREATE_TEST_RESULTS = "CREATE TABLE IF NOT EXISTS " + TEST_RESULTS + " (" +
+            "number_of_posts integer," +
+            "number_of_gets integer," +
+            "timestamp timestamp," +
+            "testTime integer);";
+
+    public static final String INSERT_INTO_TEST1 = "insert into " + TEST_GET + " values(1, firstmessagetes, Test_AUTHOR1, 10)";
+    public static final String INSERT_INTO_TEST2 = "insert into " + TEST_GET + " values(1, seconmessagetes, Test_AUTHOR2, 20)";
+    public static final String INSERT_INTO_TEST3 = "insert into " + TEST_GET + " values(1, thirdmessagetes, Test_AUTHOR3, 30)";
+
+
+
+
 
     /**
      * Query to load all users in the system.

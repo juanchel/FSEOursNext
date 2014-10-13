@@ -53,4 +53,6 @@ public interface IMessageDAO{
 
     List<List<UserPO>> getClusters(Timestamp timestamp);
 
+    void startTest(int seconds);
+
 }
