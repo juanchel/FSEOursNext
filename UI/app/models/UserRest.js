@@ -153,28 +153,37 @@ User.getStatus = function(user_name, status, callback) {
 };
 
 /**
- * @param sender user name of the sender
- * @param receiver user name of the receiver 
- * @param message content of the message
- * @param timestamp a Date object, sent time of the message
- * @param callback function with signature callback(error_message, message_id)
+ * @param {string} username - whose chat buddies to get
+ * @param {function} callback - callback with signature `callback(error_message, users)`
  */
-User.sendMessage = function(sender, receiver, message, timestamp, callback) {
-  var options = {
-      url : rest_api.send_private_message.replace("{sender}", sender).replace("{receiver}", receiver),
-      body : { 'content' : message, 'postedAt' : utils.formatTimestamp(timestamp) },
-      json : true
-  };
+User.getChatBuddies = function(username, callback) {
+  var url = rest_api.get_chat_buddies.replace("{user}", username);
   
-  request.post(options, function(err, res, body) {
-    if (err) {
-      callback(err, null);
-    } else if (res.statusCode !== 201) {
-      callback(res.body, null);
+  request(url, {json:true}, function(error, response, body) {
+    if (error) {
+      callback(error, null);
+    } else if (response.statusCode !== 200) {
+      callback(JSON.stringify(response.body), null);
     } else {
-      var components = res.headers.location.split('/');
-      var messageId = components[components.length - 1];
-      callback(null, messageId);
+      var users = body.map(function(item, index, array) {
+        return new User(item.userName, item.password, item.emergency_status);
+      });
+      // TODO: remove de-duplication after backend implements de-duplication
+      var dedupedUsers = [];
+      var seenUsers = {};
+      for (var i = 0; i < users.length; ++i) {
+        var user = users[i];
+        if (seenUsers[user.local.name] === undefined) {
+          dedupedUsers.push(user);
+          seenUsers[user.local.name] = user;
+        }
+      }
+      
+      if (dedupedUsers.length < users.length) {
+        console.warn("duplicated entries found in the chat buddy list of user " + username);
+      }
+      
+      callback(null, dedupedUsers);
     }
   });
 };

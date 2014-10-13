@@ -9,6 +9,6 @@ module.exports = {
   'get_Status' : host_url + '/status/',
   'send_private_message' : host_url + '/message/{sender}/{receiver}',
   'get_chat_buddies' : host_url + '/users/{user}/chatbuddies',
-  'get_private_messages' : host_url + '/messages/{sender}/{receiver}',
+  'get_private_messages' : host_url + '/messages/{user1}/{user2}',
   'get_message' : host_url + '/message/{messageId}',
 };

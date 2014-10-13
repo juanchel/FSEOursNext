@@ -24,7 +24,7 @@ module.exports = function(app, _, io, participants, passport) {
 
   app.get("/", user_controller.getLogin);
   
-  app.get("/message", user_controller.getAllPrivateMessage);
+  app.get("/message", isLoggedIn, user_controller.getAllPrivateMessage);
 
   app.post("/signup", user_controller.postSignup);
   app.post("/status", user_controller.postStatus);
