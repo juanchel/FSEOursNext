@@ -111,7 +111,7 @@ public class TestService extends BaseService{
         m.setAuthor(userName);
 
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String ts = sdf.format(date);
 
         m.setTimestamp(ts);

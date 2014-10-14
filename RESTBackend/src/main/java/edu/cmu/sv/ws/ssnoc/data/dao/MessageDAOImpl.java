@@ -324,7 +324,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
                 po = new MessagePO();
                 po.setContent(rs.getString(2));
                 po.setAuthor(rs.getString(3));
-                po.setTimestamp(rs.getTimestamp(4).toString());
+                po.setTimestamp(rs.getTimestamp(4).toString().replace(".0", ""));
                 messages.add(po);
             }
         } catch (SQLException e) {
@@ -566,7 +566,6 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
             Date date = new Date();
             date.setTime(date.getTime() + seconds*1000);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            System.out.println("STOP TIME: " + sdf.format(date));
             stmt.setTimestamp(1, Timestamp.valueOf(sdf.format(date)));
             stmt.setInt(2, seconds);
 

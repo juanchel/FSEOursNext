@@ -33,13 +33,11 @@ public class UsersService extends BaseService {
         List<User> buds = new ArrayList<User>();
 
         try {
-            System.out.print("HERE");
             budspo = DAOFactory.getInstance().getMessageDAO().loadChatBuddies(userName);
             for (UserPO po : budspo) {
                 User dto = ConverterUtils.convert(po);
                 buds.add(dto);
             }
-            System.out.print("HERE NOW");
         } catch (Exception e) {
             handleException(e);
         } finally {
