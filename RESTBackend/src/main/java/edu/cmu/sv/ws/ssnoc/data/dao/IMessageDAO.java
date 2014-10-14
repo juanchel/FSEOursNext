@@ -23,7 +23,7 @@ public interface IMessageDAO{
     /**
      * This method will load all the users in the
      * database.
-     *
+     * 
      * @return - List of messages.
      */
     List<MessagePO> loadWallMessages();
