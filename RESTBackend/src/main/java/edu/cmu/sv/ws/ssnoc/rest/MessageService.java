@@ -64,7 +64,7 @@ public class MessageService extends BaseService {
         m.setTarget(target);
 
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-dd-MM hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-dd-MM HH:mm:ss");
         String ts = sdf.format(date);
 
         m.setTimestamp(ts);

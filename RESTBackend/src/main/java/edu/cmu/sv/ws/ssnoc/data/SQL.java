@@ -104,6 +104,7 @@ public class SQL {
     public static final String TEST_COUNT_POST = "update " + TEST_RESULTS + " SET number_of_posts = number_of_posts + 1";
     public static final String TEST_COUNT_GET = "update " + TEST_RESULTS + " SET number_of_gets = number_of_gets + 1";
 
+    public static final String TEST_CHECK_TIME = "select NOW() < timestamp FROM " + TEST_RESULTS;
     /**
      * Query to load all users in the system.
      */

@@ -56,9 +56,11 @@ public interface IMessageDAO{
 
     void startTest(int seconds);
 
-    public TestResult getTestResult();
+    TestResult getTestResult();
 
-    public List<MessagePO> testLoadWallMessages();
+    List<MessagePO> testLoadWallMessages();
 
     void testSave(MessagePO messagePO);
+
+    boolean testCheckTime();
 }

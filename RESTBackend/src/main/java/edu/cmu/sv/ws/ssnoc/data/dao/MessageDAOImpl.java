@@ -290,6 +290,23 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         return po;
     }
 
+    public boolean testCheckTime () {
+
+        boolean valid = true;
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.TEST_CHECK_TIME)) {
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                valid = rs.getBoolean(1);
+            }
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        return valid;
+    }
 
     private List<MessagePO> processPublicResults(PreparedStatement stmt) {
         Log.enter(stmt);
@@ -548,8 +565,8 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
 
             Date date = new Date();
             date.setTime(date.getTime() + seconds*1000);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            System.out.println("OMFG: " + sdf.format(date));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            System.out.println("STOP TIME: " + sdf.format(date));
             stmt.setTimestamp(1, Timestamp.valueOf(sdf.format(date)));
             stmt.setInt(2, seconds);
 

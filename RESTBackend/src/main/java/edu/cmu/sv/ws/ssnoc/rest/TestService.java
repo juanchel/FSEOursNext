@@ -16,9 +16,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by vinayvenkatesh on 10/12/14.
- */
 @Path("/test")
 public class TestService extends BaseService{
     @POST
@@ -63,6 +60,18 @@ public class TestService extends BaseService{
         List<Message> messages = null;
 
         try {
+            boolean valid = DAOFactory.getInstance().getMessageDAO().testCheckTime();
+
+            if (!valid) {
+                return new ArrayList<Message>();
+            }
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        try {
             List<MessagePO> messagePOs = DAOFactory.getInstance().getMessageDAO().testLoadWallMessages();
 
             messages = new ArrayList<Message>();
@@ -83,7 +92,19 @@ public class TestService extends BaseService{
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     @Path("/post/{userName}")
-    public Response postOnWall (@PathParam("userName") String userName, Message m) {
+    public Response testPostOnWall (@PathParam("userName") String userName, Message m) {
+
+        try {
+            boolean valid = DAOFactory.getInstance().getMessageDAO().testCheckTime();
+
+            if (!valid) {
+                return ok();
+            }
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
 
         Message resp = new Message();
         m.setPublic(true);
