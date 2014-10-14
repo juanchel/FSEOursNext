@@ -70,7 +70,6 @@ public class SQL {
             "author varchar(255),"+
             "timestamp timestamp,"+
             "PRIMARY KEY (pid),"+
-            "FOREIGN KEY (author) REFERENCES public.SSN_USERS(user_name)"+
             ");";
 
     public static final String CREATE_TEST_GET = "CREATE TABLE IF NOT EXISTS "+ TEST_GET +" (" +
@@ -79,7 +78,6 @@ public class SQL {
             "author varchar(255),"+
             "timestamp timestamp,"+
             "PRIMARY KEY (pid),"+
-            "FOREIGN KEY (author) REFERENCES public.SSN_USERS(user_name)"+
             ");";
 
     public static final String CREATE_TEST_RESULTS = "CREATE TABLE IF NOT EXISTS " + TEST_RESULTS + " (" +
@@ -88,13 +86,23 @@ public class SQL {
             "timestamp timestamp," +
             "testTime integer);";
 
-    public static final String INSERT_INTO_TEST1 = "insert into " + TEST_GET + " values(1, firstmessagetes, Test_AUTHOR1, 10)";
-    public static final String INSERT_INTO_TEST2 = "insert into " + TEST_GET + " values(1, seconmessagetes, Test_AUTHOR2, 20)";
-    public static final String INSERT_INTO_TEST3 = "insert into " + TEST_GET + " values(1, thirdmessagetes, Test_AUTHOR3, 30)";
+    public static final String INSERT_INTO_TEST1 = "insert into " + TEST_GET + " (message, author, timestamp) values ('hello this is a message', 'TESTAUTH', '2014-10-13 05:52:11')";
+    public static final String INSERT_INTO_TEST2 = "insert into " + TEST_GET + " (message, author, timestamp) values ('ni hao zhe shi yi ge message', 'TESTAUTH2', '2014-10-13 05:52:11')";
+    public static final String INSERT_INTO_TEST3 = "insert into " + TEST_GET + " (message, author, timestamp) values ('konnichiwa kore wa message dearu', 'TESTAUTH3', '2014-10-13 05:52:11')";
+    public static final String INSERT_TIME_INTO_TEST = "insert into " + TEST_RESULTS + " (timestamp, testTime, number_of_posts, number_of_gets) values (?, ?, 0, 0)";
 
+    public static final String GET_TEST_RESULTS = "select number_of_posts, number_of_gets, testTime from " + TEST_RESULTS;
+    public static final String DROP_TEST_GET = "DROP TABLE " + TEST_GET;
+    public static final String DROP_TEST_POST = "DROP TABLE " + TEST_POST;
+    public static final String DROP_TEST_RESULTS = "DROP TABLE " + TEST_RESULTS;
 
+    public static final String TEST_POST_ON_WALL = "insert into " + TEST_POST +
+            "(message, author, timestamp) values (?,?,?)";
 
+    public static final String TEST_GET_FROM_WALL = "select * from " + TEST_GET;
 
+    public static final String TEST_COUNT_POST = "update " + TEST_RESULTS + " SET number_of_posts = number_of_posts + 1";
+    public static final String TEST_COUNT_GET = "update " + TEST_RESULTS + " SET number_of_gets = number_of_gets + 1";
 
     /**
      * Query to load all users in the system.

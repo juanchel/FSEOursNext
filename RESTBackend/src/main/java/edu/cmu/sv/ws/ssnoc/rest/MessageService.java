@@ -35,7 +35,7 @@ public class MessageService extends BaseService {
         m.setAuthor(userName);
 
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-dd-MM hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String ts = sdf.format(date);
 
         m.setTimestamp(ts);
