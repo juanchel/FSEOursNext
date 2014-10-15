@@ -42,11 +42,6 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
         }
       });
     },
-
-    
-    getAllPrivateMessage : function(req, res) {
-    	 res.render('message', {message: req.flash('Message')});
-    },
     
     postSignup : function(req, res, next) {
       var err = validateSignupRequest(req);

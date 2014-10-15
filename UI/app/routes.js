@@ -21,10 +21,12 @@ function refreshAllUsers(participants, callback) {
 module.exports = function(app, _, io, participants, passport) {
   var user_controller = require('./controllers/user')(_, io, participants, passport, refreshAllUsers);
   var people_controller = require('./controllers/people')(_, io, participants, passport);
+  var message_controller = require('./controllers/message')(_, io, participants, passport);
 
   app.get("/", user_controller.getLogin);
   
-  app.get("/message", isLoggedIn, user_controller.getAllPrivateMessage);
+  app.get("/messages", isLoggedIn, message_controller.getAllPrivateMessages);
+  app.post("/send_message", isLoggedIn, message_controller.sendMessage);
 
   app.post("/signup", user_controller.postSignup);
   app.post("/status", user_controller.postStatus);
