@@ -18,6 +18,7 @@ public class SQL {
     public static final String TEST_POST = "TEST_POST";
     public static final String TEST_GET = "TEST_GET";
     public static final String TEST_RESULTS = "TEST_RESULTS";
+    public static final String MEMORY_TEST = "MEMORY_TEST";
 
     /**
      * Query to check if a given table exists in the H2 database.
@@ -85,6 +86,20 @@ public class SQL {
             "number_of_gets integer," +
             "timestamp timestamp," +
             "testTime integer);";
+
+    public static final String CREATE_MEMORY_TEST = "CREATE TABLE IF NOT EXISTS " + MEMORY_TEST + " (" +
+            "timestamp timestamp," +
+            "volatile_used long," +
+            "volatile_left long," +
+            "non_volatile_used long," +
+            "non_volatile_left long);";
+
+    public static final String UPDATE_MEMORY = "insert into " + MEMORY_TEST + "(timestamp, volatile_used, volatile_left, non_volatile_used, non_volatile_left)" +
+            " values (?, ?, ?, ?, ?)";
+
+    public static final String GET_MEMORY_RESULTS = "select * from " + MEMORY_TEST;
+
+    public static final String RESET_MEMORY = "delete from " + MEMORY_TEST;
 
     public static final String INSERT_INTO_TEST1 = "insert into " + TEST_GET + " (message, author, timestamp) values ('hello this is a message', 'TESTAUTH', '2014-10-13 05:52:11')";
     public static final String INSERT_INTO_TEST2 = "insert into " + TEST_GET + " (message, author, timestamp) values ('ni hao zhe shi yi ge message', 'TESTAUTH2', '2014-10-13 05:52:11')";
