@@ -32,6 +32,8 @@ PrivateMessage.prototype.send = function(callback) {
     },
     json : true
   };
+  
+  console.info("send message options: " + JSON.stringify(options));
 
   request.post(options, function(error, response, body) {
     if (error) {

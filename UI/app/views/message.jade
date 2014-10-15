@@ -7,15 +7,18 @@ html
   body
     include includes/navbar.jade
     br
-    if message.length > 0
-        div.alert.alert-danger#passport_alert #{message}
-      form(action='/message', method='post')
-        p Write a private message to: #{username}
-        br
-        br
-        input(type='textarea', name = 'message', cols='25', row='5')
-        br
-        br
-        button(type="submit" class="btn btn-info btn-lg" id="sendMessageBtn") Send Message
+    if error_messages.length > 0
+      each error_message in error_messages
+        div.alert.alert-danger#passport_alert= error_message
+    form(action='/send_message', method='post')
+      each message in messages
+        p= message
+      p Write a private message to: #{username}
+      br
+      input(type='textarea', name='content', cols='25', row='5')
+      br
+      input(type='hidden', name='target', value="#{username}")
+      br
+      button(type="submit" class="btn btn-info btn-lg" id="sendMessageBtn") Send Message
 
                     
