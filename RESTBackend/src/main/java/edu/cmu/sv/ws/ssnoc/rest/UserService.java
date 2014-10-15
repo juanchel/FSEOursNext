@@ -20,9 +20,7 @@ import edu.cmu.sv.ws.ssnoc.common.utils.ConverterUtils;
 import edu.cmu.sv.ws.ssnoc.common.utils.SSNCipher;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
 import edu.cmu.sv.ws.ssnoc.data.dao.IUserDAO;
-import edu.cmu.sv.ws.ssnoc.data.dao.IMessageDAO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
-import edu.cmu.sv.ws.ssnoc.data.po.MessagePO;
 import edu.cmu.sv.ws.ssnoc.dto.User;
 
 /**
@@ -103,8 +101,6 @@ public class UserService extends BaseService {
             UserPO po = loadExistingUser(userName);
             if (!validateUserPassword(user.getPassword(), po)) {
                 throw new UnauthorizedUserException(userName);
-            } else {
-                DAOFactory.getInstance().getUserDAO().updateOnline(userName);
             }
         } catch (Exception e) {
             handleException(e);

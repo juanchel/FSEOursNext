@@ -15,7 +15,6 @@ public class UserPO {
 	private String password;
 	private String salt;
     private int emergency_status;
-    private int online_status;
 
 	public long getUserId() {
 		return userId;
@@ -52,10 +51,6 @@ public class UserPO {
     public int getEmergency_status() { return emergency_status;}
 
     public void setEmergency_status(int emergency_status) { this.emergency_status = emergency_status ;};
-
-    public int getOnline_status() { return online_status; };
-
-    public void setOnline_status(int online_status) { this.online_status = online_status; };
 
 	@Override
 	public String toString() {

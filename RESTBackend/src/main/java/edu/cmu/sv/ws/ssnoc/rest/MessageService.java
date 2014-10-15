@@ -13,9 +13,6 @@ import edu.cmu.sv.ws.ssnoc.common.utils.ConverterUtils;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
 import edu.cmu.sv.ws.ssnoc.data.dao.IMessageDAO;
 import edu.cmu.sv.ws.ssnoc.data.po.MessagePO;
-
-import org.h2.util.StringUtils;
-
 import edu.cmu.sv.ws.ssnoc.dto.Message;
 
 import java.text.SimpleDateFormat;
@@ -64,7 +61,7 @@ public class MessageService extends BaseService {
         m.setTarget(target);
 
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-dd-MM HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String ts = sdf.format(date);
 
         m.setTimestamp(ts);

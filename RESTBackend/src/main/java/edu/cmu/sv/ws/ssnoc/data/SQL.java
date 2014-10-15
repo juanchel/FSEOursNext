@@ -12,7 +12,6 @@ public class SQL {
      * here.
      */
     public static final String SSN_USERS = "SSN_USERS";
-    public static final String SSN_STATUS = "SSN_STATUS";
     public static final String SSN_MESSAGES = "SSN_MESSAGES";
     public static final String PRIVATE_MESSAGES = "PRIVATE_MESSAGES";
     public static final String TEST_POST = "TEST_POST";
@@ -27,18 +26,11 @@ public class SQL {
             + " FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = SCHEMA() "
             + " AND UPPER(TABLE_NAME) = UPPER(?)";
 
-    // ****************************************************************
-    // All queries related to USERS
-    // ****************************************************************
-    /**
-     * Query to create the USERS table.
-     */
 
     public static final String CREATE_USERS = "create table IF NOT EXISTS " + SSN_USERS +
             "(user_id IDENTITY PRIMARY KEY," +
             "user_name VARCHAR(255) NOT NULL," +
             "password varchar(40) NOT NULL,"+
-            "online_status smallint ,"+
             "emergency_status smallint ,"+
             "salt VARCHAR(512)  );";
 
@@ -49,13 +41,6 @@ public class SQL {
             "timestamp timestamp,"+
             "PRIMARY KEY (pid),"+
             "FOREIGN KEY (author) REFERENCES public.SSN_USERS(user_name)"+
-            ");";
-
-    public static final String CREATE_STATUS = "CREATE TABLE emergency_status (" +
-            "ok smallint," +
-            "help smallint," +
-            "emergency smallint, " +
-            "undefined smallint," +
             ");";
 
     public static final String CREATE_PM = "CREATE TABLE " + PRIVATE_MESSAGES + " (" +
@@ -124,22 +109,18 @@ public class SQL {
      * Query to load all users in the system.
      */
     public static final String FIND_ALL_USERS = "select user_id, user_name, password,"
-            + " online_status," + " emergency_status," + " salt " + " from " + SSN_USERS + " order by user_name";
+            + " emergency_status," + " salt " + " from " + SSN_USERS + " order by user_name";
 
     /**
      * Query to find a user details depending on his name. Note that this query
      * does a case insensitive search with the user name.
      */
     public static final String FIND_USER_BY_NAME = "select user_id, user_name, password,"
-            + " online_status, "
             + " emergency_status,"
             + " salt "
             + " from "
             + SSN_USERS
             + " where UPPER(user_name) = UPPER(?)";
-
-    public static final String GET_UID_BY_USERNAME = "select user_id from " + SSN_USERS +
-            " where user_name = ?";
 
     public static final String GET_ALL_PUBLIC_MESSAGES = "select * from " + SSN_MESSAGES;
 
@@ -151,6 +132,9 @@ public class SQL {
 
     public static final String GET_CHAT_BUDDIES = "select target from " + PRIVATE_MESSAGES +
             " where author = ?";
+
+    public static final String GET_CHAT_BUDDIES2 = "select author from " + PRIVATE_MESSAGES +
+            " where target = ?";
 
     public static final String GET_MESSAGE_BY_ID = "select content from " + PRIVATE_MESSAGES +
             " where messageId = ?";
@@ -169,12 +153,7 @@ public class SQL {
      * Query to insert a row into the users table.
      */
     public static final String INSERT_USER = "insert into " + SSN_USERS
-            + " (user_name, password, online_status, emergency_status, salt) values (?, ?, ?, ?, ?)";
-
-
-    public static final String UPDATE_ONLINE = "UPDATE " + SSN_USERS + " SET online_status=1 WHERE user_name=?";
-
-    public static final String UPDATE_OFFLINE = "UPDATE " + SSN_USERS + " SET online_status=0 WHERE user_name=?";
+            + " (user_name, password, emergency_status, salt) values (?, ?, ?, ?)";
 
     public static final String UPDATE_STATUS = "UPDATE " + SSN_USERS + " SET emergency_status=? WHERE user_name=?";
 }

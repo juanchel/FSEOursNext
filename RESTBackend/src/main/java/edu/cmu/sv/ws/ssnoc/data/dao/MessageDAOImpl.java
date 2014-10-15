@@ -167,7 +167,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
 
         try (Connection conn = getConnection();
             PreparedStatement stmt = conn.prepareStatement(query2);) {
-            stmt.setTimestamp(1, new Timestamp(1));
+            stmt.setTimestamp(1, timestamp);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 authors.add(rs.getString(1));
@@ -376,18 +376,26 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
             return null;
         }
 
-        List<UserPO> po = null;
+        Set<UserPO> po = new HashSet<UserPO>();
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn
                      .prepareStatement(SQL.GET_CHAT_BUDDIES)) {
             stmt.setString(1, author);
-            po = processChatBuddies(stmt);
+            po.addAll(processChatBuddies(stmt));
         } catch (SQLException e) {
             handleException(e);
         }
 
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.GET_CHAT_BUDDIES2)) {
+            stmt.setString(1, author);
+            po.addAll(processChatBuddies(stmt));
+        } catch (SQLException e) {
+            handleException(e);
+        }
 
-        return po;
+        return new ArrayList<UserPO>(po);
     }
 
     private List<UserPO> processChatBuddies(PreparedStatement stmt) {
