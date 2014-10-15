@@ -1,7 +1,9 @@
 package edu.cmu.sv.ws.ssnoc.rest;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -11,7 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
-import com.sun.deploy.util.SystemUtils;
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.common.utils.ConverterUtils;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
@@ -33,17 +34,13 @@ public class UsersService extends BaseService {
         List<User> buds = new ArrayList<User>();
 
         try {
-            System.out.print("HERE");
             budspo = DAOFactory.getInstance().getMessageDAO().loadChatBuddies(userName);
             for (UserPO po : budspo) {
                 User dto = ConverterUtils.convert(po);
                 buds.add(dto);
             }
-            System.out.print("HERE NOW");
         } catch (Exception e) {
             handleException(e);
-        } finally {
-            //Log.exit(user);
         }
         return buds;
     }
@@ -79,16 +76,23 @@ public class UsersService extends BaseService {
 
 
     @GET
-    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Produces({MediaType.APPLICATION_JSON })
     @Path("/clusters/{hours}")
-    public String getClusters () {
-
-
+    public String getClusters (@PathParam("hours") String hours) {
 
         List<List<User>> clusters = new ArrayList<List<User>>();
 
+        if (hours == "" || hours == null) {
+            hours = "0";
+        }
+
+        Date date = new Date();
+        date.setTime(date.getTime() - (Integer.valueOf(hours)*3600000));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp ts = Timestamp.valueOf(sdf.format(date));
+
         try {
-            List<List<UserPO>> userPOLists = DAOFactory.getInstance().getMessageDAO().getClusters(new Timestamp(1));
+            List<List<UserPO>> userPOLists = DAOFactory.getInstance().getMessageDAO().getClusters(ts);
 
 
             for (List<UserPO> poList : userPOLists) {
@@ -104,10 +108,7 @@ public class UsersService extends BaseService {
 
         } catch (Exception e) {
             handleException(e);
-        } finally {
         }
-
-
 
         return clusters.toString();
     }

@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import edu.cmu.sv.ws.ssnoc.data.po.MessagePO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
+import edu.cmu.sv.ws.ssnoc.dto.TestResult;
 
 /**
  * Interface specifying the contract that all implementations will implement to
@@ -53,4 +54,13 @@ public interface IMessageDAO{
 
     List<List<UserPO>> getClusters(Timestamp timestamp);
 
+    void startTest(int seconds);
+
+    TestResult getTestResult();
+
+    List<MessagePO> testLoadWallMessages();
+
+    void testSave(MessagePO messagePO);
+
+    boolean testCheckTime();
 }
