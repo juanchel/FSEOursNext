@@ -3,9 +3,33 @@ var PrivateMessage = require('../models/PrivateMessageRest');
 module.exports = function(_, io, participants, passport) {
   return {
     getAllPrivateMessages : function(req, res) {
-      PrivateMessage.getMessages(req.user.local.name, req.param('chatbuddy'), 
-          function(error, messages) {
-            
+      var me = req.user.local.name;
+      var buddy = req.param('chatbuddy');
+      PrivateMessage.getMessages(me, buddy, function(error, messages) {
+        var errorMessages = req.flash('errorMessage');
+        if (error) {
+          errorMessages.push(error);
+        }
+        var messageBuffer = [];
+
+        for (var i = 0; i < messages.length; ++i) {
+          var message = messages[i];
+          var author = message.author;
+          var target = message.target;
+          if (author === me && target === buddy) {
+            messageBuffer.push("-> " + message.content + " (sent at " + message.postedAt + ")");
+          } else if (author === buddy && target === me) {
+            messageBuffer.push("<- " + message.content + " (sent at " + message.postedAt + ")");
+          } else {
+            console.warn("message coming from wrong conversation");
+          }
+        }
+        
+        res.render("message", {
+          error_messages: errorMessages,
+          username: buddy,
+          messages: messageBuffer,
+        });
       });
     },
     
@@ -14,7 +38,7 @@ module.exports = function(_, io, participants, passport) {
           req.param('target'), req.param('content'));
       message.send(function(error_message) {
         if (error_message) {
-          req.flash('errorMessage', error_message);
+          req.flash('errorMessage', "failed to send message: " + error_message);
         }
         res.redirect('/messages?chatbuddy=' + req.param('target'));
       });
