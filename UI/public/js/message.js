@@ -5,12 +5,12 @@ function init() {
   var socket = io.connect(serverBaseUrl);
 
   var sessionId = '';
+  
+  var username = '';
 
-  window.my_name = '';
+  console.log("chat buddy: \"" + $("#chatbuddy").html() + "\"");
   
   $('#sendMessageBtn').click(function() {
-    
-    
     return true;
   });
   
@@ -22,8 +22,7 @@ function init() {
       dataType: 'json'
     }).done(function(data) {
       var name = data.name;
-      my_name = data.name;
-
+      username = data.name;
       socket.emit('newUser', {id: sessionId, name: name});
     });
   });
@@ -31,25 +30,15 @@ function init() {
   socket.on('error', function (reason) {
     console.log('Unable to connect to server', reason);
   });
-
-  var panels = $('.user-info');
-  panels.hide();
-  $('.sendMessageBtn').click(function() {
-    var dataFor = $(this).attr('data-for');
-    var idFor = $(dataFor);
-    var currentButton = $(this);
-    idFor.slideToggle(400, function() {
-      if(idFor.is(':visible'))
-        {
-          currentButton.html('<i class="glyphicon glyphicon-chevron-up text-muted"></i>');
-        }
-        else
-          {
-            currentButton.html('<i class="glyphicon glyphicon-chevron-down text-muted"></i>');
-          }
-    })
-  });
   
+  socket.on('newPrivateMessage', function (data) {
+    var author = data.author;
+    var target = data.target;
+    var chatbuddy = $("#chatbuddy").html();
+    if (author === chatbuddy && target === username) {
+      location.reload(true);
+    }
+  });
 }
 
 $(document).on('ready', init);

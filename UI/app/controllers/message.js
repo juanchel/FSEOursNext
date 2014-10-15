@@ -40,6 +40,11 @@ module.exports = function(_, io, participants, passport) {
         if (error_message) {
           req.flash('errorMessage', "failed to send message: " + error_message);
         }
+        io.emit('newPrivateMessage', {
+          author: req.user.local.name, 
+          target: req.param('target'),
+          message: req.param('content'),
+        });
         res.redirect('/messages?chatbuddy=' + req.param('target'));
       });
     }
