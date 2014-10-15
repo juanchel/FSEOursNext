@@ -82,7 +82,7 @@ function init() {
         var name_ele = '<div class="offline col-xs-8 col-sm-9 col-md-10 col-lg-10"><strong>' + userObj.userName + ' ' + emergency + '</strong><br/></div>';
         var dropdown_ele = '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 dropdown-user" data-for=".' + userObj.userName + '"><i class="glyphicon glyphicon-chevron-down text-muted"></i></div>';
         var info_ele = '<div class="row user-row search_item">' + photo_ele + name_ele + dropdown_ele + '</div>';
-        var detail_ele = '<div class="row user-info ' + userObj.userName + '"><button class="btn btn-info col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3 send-button">Wanna leave a message?</a><hr/></div></div>';
+        var detail_ele = '<div class="row user-info ' + userObj.userName + '"><button class="btn btn-info col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3 send-Message" username="' + userObj.userName + '">Wanna leave a message?</a><hr/></div></div>';
         $('#participants_online').append(info_ele);
         $('#participants_online').append(detail_ele);
       }
@@ -103,8 +103,8 @@ function init() {
             }
       })
     });
-    $('.send-button').click(function(){
-    	window.location.replace("http://127.0.0.1:12345/message");
+    $('.send-Message').click(function(){
+    	window.location.replace("http://127.0.0.1:12345/message?=" + $('.send-Message').attr('username'));
     });
   }
 
@@ -136,6 +136,7 @@ function init() {
 
   var panels = $('.user-info');
   panels.hide();
+  /*
   $('.dropdown-user').click(function() {
     var dataFor = $(this).attr('data-for');
     var idFor = $(dataFor);
@@ -151,6 +152,7 @@ function init() {
           }
     })
   });
+  */
 }
 
 $(document).on('ready', init);
