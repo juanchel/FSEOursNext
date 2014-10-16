@@ -11,11 +11,11 @@ var User = require("./UserRest");
  * @param {Date} [postedAt] - when the message was sent, default: current time
  * @param {number} [messageID] - ID of the message
  */
-function PrivateMessage(author, target, content, postedAt, messageID) {
+function PrivateMessage(author, target, content, timestamp, messageID) {
   this.author = author;
   this.target = target;
   this.content = content;
-  this.postedAt = postedAt || new Date();
+  this.timestamp = timestamp || new Date();
   this.messageID = messageID;
 }
 
@@ -28,7 +28,7 @@ PrivateMessage.prototype.send = function(callback) {
         .replace("{receiver}", this.target),
     body : {
       'content' : this.content,
-      'postedAt' : utils.formatTimestamp(this.postedAt)
+      'timestamp' : utils.formatTimestamp(this.timestamp)
     },
     json : true
   };
@@ -39,7 +39,7 @@ PrivateMessage.prototype.send = function(callback) {
     if (error) {
       callback(error);
     } else if (response.statusCode !== 201) {
-      callback(response.body);
+      callback(JSON.stringify(response.body));
     } else {
       if (response.headers.location !== undefined) {
         var components = response.headers.location.split('/');
@@ -85,9 +85,9 @@ PrivateMessage.getMessages = function(user1, user2, callback) {
           // TODO: correct field names after backend correction: timestamp -> postedAt
           var timestampPattern = /([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}).*/;
           var match = timestampPattern.exec(item.timestamp);
-          var postedAt = new Date(Number(match[1]), Number(match[2])-1, Number(match[3]),
+          var timestamp = new Date(Number(match[1]), Number(match[2])-1, Number(match[3]),
               Number(match[4]), Number(match[5]), 0, 0);
-          messages.push(new PrivateMessage(item.author, item.target, item.content, postedAt));
+          messages.push(new PrivateMessage(item.author, item.target, item.content, timestamp));
         } else {
           console.warn("Wrong author or target encountered when retrieving private messages. " +
               "Between user " + item.author + " and user " + item.target + " instead of between user " + 
@@ -95,8 +95,8 @@ PrivateMessage.getMessages = function(user1, user2, callback) {
         }
       }
       messages.sort(function(message1, message2) {
-        var time1 = message1.postedAt.getTime();
-        var time2 = message2.postedAt.getTime();
+        var time1 = message1.timestamp.getTime();
+        var time2 = message2.timestamp.getTime();
         return time1 - time2;
       });
       
