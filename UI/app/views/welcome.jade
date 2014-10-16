@@ -17,6 +17,7 @@ html
     script(src='/js/bootstrap.min.js')
     script(src='/js/status.js')
   title SSNoC - Welcome
+  
   body
     include includes/navbar.jade
     br
@@ -24,7 +25,13 @@ html
         div.alert.alert-danger#passport_alert #{message}
     br
 
-    body(onload='$(\'#my-modal\').modal(\'show\');')
+  body
+    form(action='/publicmessage', method='post')
+      |Post Public Message: 
+      input(type='text', name='publicMessage')
+      button(type="submit" class="btn btn-info btn-lg" id="postMessageButton") Post to wall
+
+  body(onload='$(\'#my-modal\').modal(\'show\');')
     #my-modal.modal.fade
         .modal-dialog
             .modal-content
@@ -37,4 +44,5 @@ html
                     p Emergency - I need help now, as this is a life threatening emergency! 
                     p Undefined - No status yet. 
                     p To share status, click on 'Submit' and select your status.
-                    
+
+    

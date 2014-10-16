@@ -30,6 +30,7 @@ module.exports = function(app, _, io, participants, passport) {
 
   app.post("/signup", user_controller.postSignup);
   app.post("/status", user_controller.postStatus);
+  app.post("/publicmessage", user_controller.postPublicMessage);
 
   app.get("/welcome", isLoggedIn, user_controller.getWelcome);
   
@@ -43,4 +44,7 @@ module.exports = function(app, _, io, participants, passport) {
   }));
 
   app.get("/people", isLoggedIn, people_controller.getPeople);
+
+  app.get("/wall", isLoggedIn, message_controller.getWall);
+  app.get("/private", isLoggedIn, message_controller.getPM);
 };

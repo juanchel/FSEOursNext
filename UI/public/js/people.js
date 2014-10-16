@@ -17,7 +17,7 @@ function init() {
 	        return 0;
 	    });
 	}
-  
+
   function updateParticipants(participants) {
     $('#participants_online').html('');
     $('#participants_offline').html('');

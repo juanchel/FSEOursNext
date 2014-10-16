@@ -24,8 +24,8 @@ public class DBUtils {
 		CREATE_TABLE_LST = new ArrayList<String>();
 		CREATE_TABLE_LST.add(SQL.CREATE_USERS);
         CREATE_TABLE_LST.add(SQL.CREATE_MESSAGES);
-        CREATE_TABLE_LST.add(SQL.CREATE_STATUS);
         CREATE_TABLE_LST.add(SQL.CREATE_PM);
+        CREATE_TABLE_LST.add(SQL.CREATE_MEMORY_TEST);
 	}
 
 	/**

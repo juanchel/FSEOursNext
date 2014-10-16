@@ -52,13 +52,11 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 UserPO po = new UserPO();
-                po = new UserPO();
                 po.setUserId(rs.getLong(1));
                 po.setUserName(rs.getString(2));
                 po.setPassword(rs.getString(3));
-                po.setOnline_status(rs.getInt(4));
-                po.setEmergency_status(rs.getInt(5));
-                po.setSalt(rs.getString(6));
+                po.setEmergency_status(rs.getInt(4));
+                po.setSalt(rs.getString(5));
 
                 users.add(po);
             }
@@ -75,12 +73,12 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         String status = null;
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                status = rs.getString(1);;
+                status = rs.getString(1);
             }
         } catch (SQLException e) {
             handleException(e);
         } finally {
-            //Log.exit(users);
+
         }
         return status;
     }
@@ -149,21 +147,6 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         return status;
     }
 
-    public void updateOnline(String username) {
-
-        try (Connection conn = getConnection();
-            PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_ONLINE)) {
-            stmt.setString(1, username);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            handleException(e);
-        } finally {
-            Log.exit();
-        }
-    }
-
-
-
     /**
      * This method will save the information of the user into the database.
      *
@@ -182,9 +165,8 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
              PreparedStatement stmt = conn.prepareStatement(SQL.INSERT_USER)) {
             stmt.setString(1, userPO.getUserName());
             stmt.setString(2, userPO.getPassword());
-            stmt.setInt(3, userPO.getOnline_status());
-            stmt.setInt(4, userPO.getEmergency_status());
-            stmt.setString(5, userPO.getSalt());
+            stmt.setInt(3, userPO.getEmergency_status());
+            stmt.setString(4, userPO.getSalt());
 
             int rowCount = stmt.executeUpdate();
             Log.trace("Statement executed, and " + rowCount + " rows inserted.");

@@ -5,12 +5,14 @@ import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.data.SQL;
 import edu.cmu.sv.ws.ssnoc.data.po.MessagePO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
+import edu.cmu.sv.ws.ssnoc.dto.TestResult;
 
 /**
  * DAO implementation for saving User information in the H2 database.
@@ -63,6 +65,37 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
 
     }
 
+    public void testSave(MessagePO messagePO){
+        Log.enter(messagePO);
+        if (messagePO == null) {
+            Log.warn("Inside save method with messagePO == NULL");
+            return;
+        }
+
+        try (Connection conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement(SQL.TEST_POST_ON_WALL)) {
+            stmt.setString(1, messagePO.getContent());
+            stmt.setString(2, messagePO.getAuthor());
+            stmt.setTimestamp(3, Timestamp.valueOf(messagePO.getTimestamp()));
+            int rowCount = stmt.executeUpdate();
+            Log.trace("Statement executed, and " + rowCount + " rows inserted.");
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit();
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.TEST_COUNT_POST)) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+    }
+
+
     /**
      * This method will load all the users in the
      * database.
@@ -84,6 +117,31 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
          }
          return messages;
      }
+
+    public List<MessagePO> testLoadWallMessages(){
+        Log.enter();
+
+        String query = SQL.TEST_GET_FROM_WALL;
+
+        List<MessagePO> messages = new ArrayList<MessagePO>();
+        try (Connection conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);) {
+            messages = processPublicResults(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(messages);
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.TEST_COUNT_GET)) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        return messages;
+    }
 
     public List<List<UserPO>> getClusters(Timestamp timestamp) {
         Log.enter();
@@ -109,7 +167,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
 
         try (Connection conn = getConnection();
             PreparedStatement stmt = conn.prepareStatement(query2);) {
-            stmt.setTimestamp(1, new Timestamp(1));
+            stmt.setTimestamp(1, timestamp);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 authors.add(rs.getString(1));
@@ -232,6 +290,23 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         return po;
     }
 
+    public boolean testCheckTime () {
+
+        boolean valid = true;
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.TEST_CHECK_TIME)) {
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                valid = rs.getBoolean(1);
+            }
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        return valid;
+    }
 
     private List<MessagePO> processPublicResults(PreparedStatement stmt) {
         Log.enter(stmt);
@@ -249,7 +324,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
                 po = new MessagePO();
                 po.setContent(rs.getString(2));
                 po.setAuthor(rs.getString(3));
-                po.setTimestamp(rs.getTimestamp(4).toString());
+                po.setTimestamp(rs.getTimestamp(4).toString().replace(".0", ""));
                 messages.add(po);
             }
         } catch (SQLException e) {
@@ -301,22 +376,26 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
             return null;
         }
 
-
-        System.out.print("LOADCHATB 1");
-
-        List<UserPO> po = null;
+        Set<UserPO> po = new HashSet<UserPO>();
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn
                      .prepareStatement(SQL.GET_CHAT_BUDDIES)) {
             stmt.setString(1, author);
-            po = processChatBuddies(stmt);
+            po.addAll(processChatBuddies(stmt));
         } catch (SQLException e) {
             handleException(e);
         }
 
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.GET_CHAT_BUDDIES2)) {
+            stmt.setString(1, author);
+            po.addAll(processChatBuddies(stmt));
+        } catch (SQLException e) {
+            handleException(e);
+        }
 
-        System.out.print("LOADCHATB 2");
-        return po;
+        return new ArrayList<UserPO>(po);
     }
 
     private List<UserPO> processChatBuddies(PreparedStatement stmt) {
@@ -396,5 +475,112 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         return po;
     }
 
+    public TestResult getTestResult() {
+        TestResult tr = new TestResult();
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.GET_TEST_RESULTS)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                float gets = rs.getInt(1);
+                float posts = rs.getInt(2);
+                float time = rs.getInt(3);
+                tr.setGet(gets/time);
+                tr.setPost(posts/time);
+            }
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.DROP_TEST_GET)) {
+            stmt.execute();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.DROP_TEST_POST)) {
+            stmt.execute();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.DROP_TEST_RESULTS)) {
+            stmt.execute();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        return tr;
+    }
+
+    public void startTest(int seconds){
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.CREATE_TEST_GET)) {
+            stmt.execute();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.CREATE_TEST_POST)) {
+            stmt.execute();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.INSERT_INTO_TEST1)) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.INSERT_INTO_TEST2)) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.INSERT_INTO_TEST3)) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.CREATE_TEST_RESULTS)) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.INSERT_TIME_INTO_TEST)) {
+
+            Date date = new Date();
+            date.setTime(date.getTime() + seconds*1000);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            stmt.setTimestamp(1, Timestamp.valueOf(sdf.format(date)));
+            stmt.setInt(2, seconds);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+    }
 
 }

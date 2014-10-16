@@ -126,66 +126,30 @@ User.prototype.setStatus = function(status, callback) {
   });
 };
 
-User.getStatus = function(user_name, status, callback) {
-  request(rest_api.get_Status, {json:true}, function(err, res, body) {
-    if (err){
-      callback(err,null);
-      return;
-    }
-    if (res.statusCode === 200) {
-      var users = body.map(function(item, idx, arr){
-        return new User(item.userName, item.password, item.emergency_status);
-      });
-
-      users.sort(function(a,b) {
-        return a.userName > b.userName;
-      });
-
-      console.log("@@@@@ in User.getStatus succeed users :" + JSON.stringify(users));
-      callback(null, users);
-      return;
-    }
-    if (res.statusCode !== 200) {
-      callback(null, null);
-      return;
-    }
-  });
-};
-
-/**
- * @param {string} username - whose chat buddies to get
- * @param {function} callback - callback with signature `callback(error_message, users)`
- */
-User.getChatBuddies = function(username, callback) {
-  var url = rest_api.get_chat_buddies.replace("{user}", username);
-  
-  request(url, {json:true}, function(error, response, body) {
-    if (error) {
-      callback(error, null);
-    } else if (response.statusCode !== 200) {
-      callback(JSON.stringify(response.body), null);
-    } else {
-      var users = body.map(function(item, index, array) {
-        return new User(item.userName, item.password, item.emergency_status);
-      });
-      // TODO: remove de-duplication after backend implements de-duplication
-      var dedupedUsers = [];
-      var seenUsers = {};
-      for (var i = 0; i < users.length; ++i) {
-        var user = users[i];
-        if (seenUsers[user.local.name] === undefined) {
-          dedupedUsers.push(user);
-          seenUsers[user.local.name] = user;
-        }
-      }
-      
-      if (dedupedUsers.length < users.length) {
-        console.warn("duplicated entries found in the chat buddy list of user " + username);
-      }
-      
-      callback(null, dedupedUsers);
-    }
-  });
+User.setPublicMessage = function(user_name, publicMessage, callback) {
+	var options = {
+		url : rest_api.save_public_message + user_name,
+		body : {'content' : publicMessage},
+		json : true
+	};
+	
+	console.log("set public message: options: " + options);
+	
+	request.post(options, function(err, res, body) {
+		console.log('post err' + err);
+		console.log('post res ' + res);
+		console.log('post body ' + body);
+	    if (err){
+	      callback(err,null);
+	      return;
+	    }
+	    if (res.statusCode !== 200 && res.statusCode !== 201) {
+	      callback(res.body, null);
+	      return;
+	    }
+	    callback(null, publicMessage);
+	    return;
+	  });
 };
 
 module.exports = User;

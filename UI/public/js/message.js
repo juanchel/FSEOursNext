@@ -7,6 +7,7 @@ function init() {
   var sessionId = '';
   
   var username = '';
+  function updateMessages(participants) {
 
   console.log("chat buddy: \"" + $("#chatbuddy").html() + "\"");
   
@@ -14,6 +15,15 @@ function init() {
     return true;
   });
   
+
+    $('#participants_online').html("");
+
+    for (var i = 0; i < participants.wall.length; i++) {
+      $('#participants_online').append(participants.wall[i].author + " said: " + participants.wall[i].content + '</br>');
+    }
+
+  }
+
   socket.on('connect', function () {
     sessionId = socket.socket.sessionid;
     $.ajax({
@@ -25,6 +35,11 @@ function init() {
       username = data.name;
       socket.emit('newUser', {id: sessionId, name: name});
     });
+    socket.emit('newMessage', {});
+  });
+
+  socket.on('newWallPost', function (data) {
+    updateMessages(data.participants);
   });
 
   socket.on('error', function (reason) {
@@ -39,6 +54,8 @@ function init() {
       location.reload(true);
     }
   });
+
+
 }
 
 $(document).on('ready', init);
