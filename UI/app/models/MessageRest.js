@@ -2,15 +2,14 @@ var bcrypt = require('bcrypt-nodejs');
 var request = require('request');
 var rest_api = require('../../config/rest_api');
 
-function Message(from, msg, ts) {
+function Message(from, msg) {
   this.local = {
     author : from,
-    content : msg,
-    timestamp : 
+    content : msg
   }
 }
 
-function Message(from, msg, ts, to) {
+function Message(from, msg, to) {
   this.local = {
     author : from,
     target : to,
