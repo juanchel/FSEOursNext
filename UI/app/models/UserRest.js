@@ -213,6 +213,7 @@ User.getfromMeasurePerformance = function(user_name, callback) {
 };
 
 User.stopMeasurePerformance = function(callback) {
+	console.log("Checking number of times");
   request(rest_api.end_measure_performance, {json:true}, function(err, res, body) {
     if (err){
       callback(err,null);
@@ -221,8 +222,7 @@ User.stopMeasurePerformance = function(callback) {
 	console.log("@@@@@@@@ Result Status Code: " + res.statusCode);
 	console.log("@@@@@@@@@@ testresult obj" + body.post + body.get);
     if (res.statusCode === 200) {
-      var tr = new TestResult(body.post, body.get);
-      callback(null, tr);
+      callback(null, body.post, body.get);
       return;
     }
     if (res.statusCode !== 200) {

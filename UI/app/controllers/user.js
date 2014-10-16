@@ -140,10 +140,10 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
     },
 
 	stopMeasurePerformanceFn : function(req, res) {
-      User.stopMeasurePerformance(function(err, tr) {
+      User.stopMeasurePerformance(function(err, post, get) {
         res.render('welcome', {
-			posts: "Posts/sec = " + tr.post, 
-			gets: "Gets/sec = " + tr.get
+			posts: "Posts/sec = " + post, 
+			gets: "Gets/sec = " + get,
 		});
       });
     },
