@@ -13,5 +13,9 @@ module.exports = {
   'get_message' : host_url + '/message/{messageId}',
   'save_public_message' : host_url + '/message/',
   'get_wall' : host_url + '/messages/wall',
-  'get_pm' : host_url + '/messages/'
+  'get_pm' : host_url + '/messages/',
+  'set_measure_performance_time' : host_url + '/test/start/',
+  'measure_performance_post' : host_url + '/test/post/',
+  'measure_performance_get' : host_url + '/test/get',
+  'end_measure_performance' : host_url + '/test/end'
 };

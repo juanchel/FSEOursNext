@@ -108,7 +108,53 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
 			}
 		});
 	},
+	
+	startMeasurePerformanceFn : function (req, res, next) {
+		var user_name = req.session.passport.user.user_name;
+		console.log("In user.js");
+		User.sendMeasurePerformanceStart(user_name, req.body.measurePerformanceTime, function(error, measurePerformanceTime) {
+			if (error){
+				next(error);
+			} else {
+				io.sockets.emit("newConnection", {participants: participants});
+	    		res.redirect('/welcome');
+			}
+		});
+	},
+	
+	postMeasurePerformanceFn : function (req, res, next) {
+		var user_name = req.session.passport.user.user_name;
+		console.log("Inside post");
+		User.postForMeasurePerformance(user_name, function(error, postMessage) {
+			if (error){
+				next(error);
+			} else {
+				io.sockets.emit("newConnection", {participants: participants});
+	    		res.redirect('/welcome');
+			}
+		});
+	},
+	
+	getMeasurePerformanceFn : function(req, res) {
+      var user_name = req.session.passport.user.user_name;
+		console.log("Inside get");
+      User.getfromMeasurePerformance(user_name, function(err, message) {
+        
+      });
+      res.redirect('/welcome');
+    },
 
+	stopMeasurePerformanceFn : function(req, res) {
+      User.stopMeasurePerformance(function(err, tr) {
+        res.render('welcome', {
+			posts: "Posts/sec = " + tr.post, 
+			gets: "Gets/sec = " + tr.get,
+      message: ''
+		});
+
+      //res.redirect('/welcome');
+      });
+    },
 
     getWelcome : function(req, res) {
      res.render('welcome', {
