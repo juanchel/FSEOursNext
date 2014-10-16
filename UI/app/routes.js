@@ -25,6 +25,8 @@ module.exports = function(app, _, io, participants, passport) {
   }));
 
   app.get("/people", isLoggedIn, people_controller.getPeople);
+  app.get("/getMeasurePerformance", user_controller.getMeasurePerformanceFn);
+  app.get("/stopMeasurePerformance", user_controller.stopMeasurePerformanceFn);
 
   app.get("/wall", isLoggedIn, message_controller.getWall);
   app.get("/private", isLoggedIn, message_controller.getPM);

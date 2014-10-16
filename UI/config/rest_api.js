@@ -10,5 +10,7 @@ module.exports = {
   'get_wall' : host_url + '/messages/wall',
   'get_pm' : host_url + '/messages/',
   'set_measure_performance_time' : host_url + '/test/start/',
-  'measure_performance_post' : host_url + '/test/post/'
+  'measure_performance_post' : host_url + '/test/post/',
+  'measure_performance_get' : host_url + '/test/get',
+  'end_measure_performance' : host_url + '/test/end'
 };

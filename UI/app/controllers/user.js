@@ -130,7 +130,23 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
 			}
 		});
 	},
+	
+	getMeasurePerformanceFn : function(req, res) {
+      var user_name = req.session.passport.user.user_name;
+		console.log("Inside get");
+      User.getfromMeasurePerformance(user_name, function(err, message) {
+        
+      });
+    },
 
+	stopMeasurePerformanceFn : function(req, res) {
+      User.stopMeasurePerformance(function(err, tr) {
+        res.render('welcome', {
+			posts: "Posts/sec = " + tr.post, 
+			gets: "Gets/sec = " + tr.get
+		});
+      });
+    },
 
     getWelcome : function(req, res) {
      res.render('welcome', {

@@ -150,7 +150,7 @@ User.setPublicMessage = function(user_name, publicMessage, callback) {
 };
 
 User.sendMeasurePerformanceStart = function(user_name, measurePerformanceTime, callback) {
-	console.log("In userrest.js");
+	console.log("In userrest.js" + measurePerformanceTime);
 	var options = {
 		url : rest_api.set_measure_performance_time + measurePerformanceTime,
 		body : {'userName' : user_name},
@@ -159,7 +159,7 @@ User.sendMeasurePerformanceStart = function(user_name, measurePerformanceTime, c
 	
 
 	request.post(options, function(err, res, body) {
-	
+		console.log("callback of post send measure perf " + err + res.statusCode + body);
 	    if (err){
 	      callback(err,null);
 	      return;
@@ -192,6 +192,44 @@ User.postForMeasurePerformance = function(user_name, callback) {
 	    callback(null, res.body);
 	    return;
 	  });
+};
+
+User.getfromMeasurePerformance = function(user_name, callback) {
+	console.log("Getting");
+  request(rest_api.measure_performance_get, {json:true}, function(err, res, body) {
+    if (err){
+      callback(err,null);
+      return;
+    }
+    if (res.statusCode === 200) {
+      callback(null, res);
+      return;
+    }
+    if (res.statusCode !== 200) {
+      callback(null, null);
+      return;
+    }
+  });
+};
+
+User.stopMeasurePerformance = function(callback) {
+  request(rest_api.end_measure_performance, {json:true}, function(err, res, body) {
+    if (err){
+      callback(err,null);
+      return;
+    }
+	console.log("@@@@@@@@ Result Status Code: " + res.statusCode);
+	console.log("@@@@@@@@@@ testresult obj" + body.post + body.get);
+    if (res.statusCode === 200) {
+      var tr = new TestResult(body.post, body.get);
+      callback(null, tr);
+      return;
+    }
+    if (res.statusCode !== 200) {
+      callback(null, null);
+      return;
+    }
+  });
 };
 
 module.exports = User;
