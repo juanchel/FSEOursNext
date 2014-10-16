@@ -15,7 +15,7 @@ html
     script(src='http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css')
     script(src='http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js')
     script(src='/js/bootstrap.min.js')
-    script(src='/js/status.js')
+    script(src='/js/message.js')
   title SSNoC - Welcome
   
   body
@@ -26,23 +26,9 @@ html
     br
 
   body
-    form(action='/publicmessage', method='post')
-      |Post Public Message: 
-      input(type='text', name='publicMessage')
-      button(type="submit" class="btn btn-info btn-lg" id="postMessageButton") Post to wall
-
-  body(onload='$(\'#my-modal\').modal(\'show\');')
-    #my-modal.modal.fade
-        .modal-dialog
-            .modal-content
-                .modal-header
-                    button.close(type='button', data-dismiss='modal', aria-hidden='true') x
-                    h4.modal-title Welcome
-                    p Welcome to SSNOC.Connect with others in the network, share your status, and reach out to people!
-                    p Status Messages: OK - I am OK, I do not need help;
-                    p Help - I need help, but this is not a life threatening emergency; 
-                    p Emergency - I need help now, as this is a life threatening emergency! 
-                    p Undefined - No status yet. 
-                    p To share status, click on 'Submit' and select your status.
-
+    div.container
+      br
+      br
+      div#participants_online
+      br
     

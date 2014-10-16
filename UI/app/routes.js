@@ -3,6 +3,7 @@ var User = require('./models/UserRest');
 module.exports = function(app, _, io, participants, passport) {
   var user_controller = require('./controllers/user')(_, io, participants, passport, refreshAllUsers);
   var people_controller = require('./controllers/people')(_, io, participants, passport);
+  var message_controller = require('./controllers/message')(_, io, participants, passport);
 
   app.get("/", user_controller.getLogin);
 
@@ -22,6 +23,9 @@ module.exports = function(app, _, io, participants, passport) {
   }));
 
   app.get("/people", isLoggedIn, people_controller.getPeople);
+
+  app.get("/wall", isLoggedIn, message_controller.getWall);
+  app.get("/private", isLoggedIn, message_controller.getPM);
 };
 
 function isLoggedIn(req, res, next) {

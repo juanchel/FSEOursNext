@@ -6,10 +6,13 @@ var express = require("express"),
   passport = require('passport'),
   flash = require('connect-flash'),
   User = require('./app/models/UserRest');
+  Message = require('./app/models/MessageRest')
 
 var participants = {
   online : {},
-  all : []
+  all : [],
+  wall : [],
+  priv : {}
 };
 
 process.chdir(__dirname);
@@ -41,6 +44,17 @@ User.getAllUsers(function(err, users) {
   if (!err) {
     users.forEach(function(user) {
       participants.all.push({userName : user.local.name, emergency: user.local.status});
+    });
+  }
+
+  require('./app/routes')(app, _, io, participants, passport);
+  require('./app/socket')(_, io, participants);
+});
+
+Message.getAllWallPosts(function(err, messages) {
+  if (!err) {
+    messages.forEach(function(message) {
+      participants.wall.push({author: message.local.author, content: message.local.content})
     });
   }
 

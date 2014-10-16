@@ -7,4 +7,6 @@ module.exports = {
   'save_status' : host_url + '/user/',
   'post_new_user' : host_url + '/user/signup',
   'save_public_message' : host_url + '/message/',
+  'get_wall' : host_url + '/messages/wall',
+  'get_pm' : host_url + '/messages/'
 };
