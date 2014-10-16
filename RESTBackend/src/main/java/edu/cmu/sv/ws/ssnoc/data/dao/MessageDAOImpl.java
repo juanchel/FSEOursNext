@@ -5,8 +5,7 @@ import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.data.SQL;
@@ -85,6 +84,128 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
          }
          return messages;
      }
+
+    public List<List<UserPO>> getClusters(Timestamp timestamp) {
+        Log.enter();
+
+        String query = SQL.FIND_ALL_USERNAMES;
+
+        List<String> usernames = new ArrayList<String>();
+        try (Connection conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                usernames.add(rs.getString(1));
+            }
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        String query2 = SQL.FIND_TALKERS_BY_TIME;
+
+        List<String> authors = new ArrayList<String>();
+        List<String> targets = new ArrayList<String>();
+
+
+        try (Connection conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query2);) {
+            stmt.setTimestamp(1, new Timestamp(1));
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                authors.add(rs.getString(1));
+                targets.add(rs.getString(2));
+            }
+        } catch (SQLException e) {
+            handleException(e);
+        }
+
+        Set<String> initSet = new HashSet<String>();
+        Set<String> losers = new HashSet<String>();
+
+        for (String a : authors) {
+            initSet.add(a);
+        }
+        for (String t : targets) {
+            initSet.add(t);
+        }
+
+        losers = new HashSet<String>(usernames);
+        losers.removeAll(initSet);
+
+        Set<Set<String>> clusterSet = new HashSet<Set<String>>();
+        clusterSet.add(initSet);
+
+        for (int i = 0; i < authors.size(); i++) {
+
+            System.out.println("AUTHOR " + authors.get(i) + "  TARGET " + targets.get(i));
+
+            Set<Set<String>> toRemove = new HashSet<Set<String>>();
+            Set<Set<String>> toAdd = new HashSet<Set<String>>();
+            Set<String> toAdd1 = new HashSet<String>();
+            Set<String> toAdd2 = new HashSet<String>();
+
+            for (Set<String> group : clusterSet) {
+                if (group.contains(authors.get(i)) && group.contains(targets.get(i))) {
+                    toRemove.add(group);
+                    toAdd1 = new HashSet<String>(group);
+                    toAdd1.remove(authors.get(i));
+                    toAdd2 = new HashSet<String>(group);
+                    toAdd2.remove(targets.get(i));
+                    toAdd.add(toAdd1);
+                    toAdd.add(toAdd2);
+                }
+            }
+            clusterSet.removeAll(toRemove);
+            clusterSet.addAll(toAdd);
+
+            Set<Set<String>> toRemove2 = new HashSet<Set<String>>();
+            for (Set<String> group : clusterSet) {
+                for (Set<String> group2 : clusterSet) {
+                    if (group.containsAll(group2) && !group.equals(group2)) {
+                        toRemove2.add(group2);
+                    }
+                }
+            }
+
+            clusterSet.removeAll(toRemove2);
+
+//            Iterator<Set<String>> iterator = clusterSet.iterator();
+//
+//            while (iterator.hasNext()) {
+//                Set<String> nextGroup = iterator.next();
+//                Set<String> secondGroup =  new HashSet<String>(nextGroup);
+//                System.out.println(nextGroup);
+//
+//                if (nextGroup.contains(authors.get(i)) && nextGroup.contains(targets.get(i))) {
+//                    clusterSet.remove(nextGroup);
+//                    nextGroup.remove(authors.get(i));
+//                    clusterSet.add(nextGroup);
+//                    secondGroup.remove(targets.get(i));
+//                    clusterSet.add(secondGroup);
+//                }
+//            }
+        }
+
+        for (Set<String> group : clusterSet) {
+            group.addAll(losers);
+        }
+
+        // Conversion from set set to list list
+        List<List<UserPO>> clusters = new ArrayList<List<UserPO>>();
+        for (Set<String> group : clusterSet) {
+            List<UserPO> poList = new ArrayList<UserPO> ();
+            for (String un : group) {
+                UserPO po = new UserPO();
+                po.setUserName(un);
+                poList.add(po);
+            }
+            clusters.add(poList);
+
+        }
+
+
+        return clusters;
+    }
 
     /**
      * This method will load all the users in the

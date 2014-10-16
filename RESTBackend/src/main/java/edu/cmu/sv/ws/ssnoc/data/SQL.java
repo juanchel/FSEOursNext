@@ -131,6 +131,11 @@ public class SQL {
 
     public static final String FIND_STATUS_BY_NAME = "select emergency_status from SSN_USERS where UPPER(user_name) = UPPER(?)";
 
+    public static final String FIND_TALKERS_BY_TIME = "select author, target from " + PRIVATE_MESSAGES +
+            " where postedAt > ?";
+
+    public static final String FIND_ALL_USERNAMES = "select user_name from " + SSN_USERS;
+
     /**
      * Query to insert a row into the users table.
      */
