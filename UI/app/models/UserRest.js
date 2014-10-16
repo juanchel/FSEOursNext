@@ -1,20 +1,23 @@
 var bcrypt = require('bcrypt-nodejs');
 var request = require('request');
 var rest_api = require('../../config/rest_api');
+var utils = require('../utils');
 
+/*
 function User(user_name, password){
   this.local = {
     name : user_name,
     password : password
   };
 }
+*/
 
 function User(user_name, password, st){
   this.local = {
     name : user_name,
     password : password,
     status : st
-  }
+  };
 }
 
 User.generateHash = function(password) {
@@ -102,10 +105,10 @@ User.saveNewUser = function(user_name, password, callback) {
   });
 };
 
-User.setStatus = function(user_name, status, callback) {
+User.prototype.setStatus = function(status, callback) {
   var options = {
-    url : rest_api.save_status + status + '/status',
-    body : {'userName' : user_name},
+    url : rest_api.save_status + this.local.name,
+    body : {status: status},
     json : true
   };
 
