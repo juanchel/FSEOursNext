@@ -104,7 +104,7 @@ function init() {
       })
     });
     $('.send-Message').click(function(){
-    	window.location.replace("http://127.0.0.1:12345/messages?=" + $('.send-Message').attr('username'));
+    	window.location.replace("http://0.0.0.0/messages?=" + $('.send-Message').attr('username'));
     });
   }
 

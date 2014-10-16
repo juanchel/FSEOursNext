@@ -15,7 +15,6 @@ function init() {
     return true;
   });
   
-
     $('#participants_online').html("");
 
     for (var i = 0; i < participants.wall.length; i++) {

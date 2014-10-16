@@ -1,5 +1,5 @@
+
 var PrivateMessage = require('../models/PrivateMessageRest');
-var User = require('../models/MessageRest');
 
 module.exports = function(_, io, participants, passport) {
   return {
@@ -12,11 +12,6 @@ module.exports = function(_, io, participants, passport) {
           errorMessages.push(error);
         }
         var messageBuffer = [];
-module.exports = function(_, io, participants, passport, refreshAllUsers) {
-  return{
-    getWall : function(req, res) {
-      res.render('wall', {message: ""});
-    },
 
         for (var i = 0; i < messages.length; ++i) {
           var message = messages[i];
@@ -37,10 +32,16 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
           messages: messageBuffer,
         });
       });
+    },
+
+    getWall : function(req, res) {
+      res.render('wall', {message: ""});
+    },
+
     getPM : function(req, res) {
       res.render('private', {message: ""});
     },
-    
+
     sendMessage: function(req, res) {
       var message = new PrivateMessage(req.user.local.name, 
           req.param('target'), req.param('content'));
@@ -58,6 +59,4 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
       });
     }
   };
-};
-  }
 };
