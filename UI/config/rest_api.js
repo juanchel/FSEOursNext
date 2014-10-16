@@ -8,5 +8,7 @@ module.exports = {
   'post_new_user' : host_url + '/user/signup',
   'save_public_message' : host_url + '/message/',
   'get_wall' : host_url + '/messages/wall',
-  'get_pm' : host_url + '/messages/'
+  'get_pm' : host_url + '/messages/',
+  'set_measure_performance_time' : host_url + '/test/start/',
+  'measure_performance_post' : host_url + '/test/post/'
 };

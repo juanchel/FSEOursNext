@@ -149,4 +149,49 @@ User.setPublicMessage = function(user_name, publicMessage, callback) {
 	  });
 };
 
+User.sendMeasurePerformanceStart = function(user_name, measurePerformanceTime, callback) {
+	console.log("In userrest.js");
+	var options = {
+		url : rest_api.set_measure_performance_time + measurePerformanceTime,
+		body : {'userName' : user_name},
+		json : true
+	};
+	
+
+	request.post(options, function(err, res, body) {
+	
+	    if (err){
+	      callback(err,null);
+	      return;
+	    }
+	    if (res.statusCode !== 200 && res.statusCode !== 201) {
+	      callback(res.body, null);
+	      return;
+	    }
+	    callback(null, measurePerformanceTime);
+	    return;
+	  });
+};
+
+User.postForMeasurePerformance = function(user_name, callback) {
+	var options = {
+		url : rest_api.measure_performance_post + user_name,
+		body : {'content' : "abcdefghijklmnopqrst"},
+		json : true
+	};
+	console.log("Posting");
+	request.post(options, function(err, res, body) {
+	    if (err){
+	      callback(err,null);
+	      return;
+	    }
+	    if (res.statusCode !== 200 && res.statusCode !== 201) {
+	      callback(res.body, null);
+	      return;
+	    }
+	    callback(null, res.body);
+	    return;
+	  });
+};
+
 module.exports = User;
