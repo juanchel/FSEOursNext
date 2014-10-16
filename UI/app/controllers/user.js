@@ -137,14 +137,18 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
       User.getfromMeasurePerformance(user_name, function(err, message) {
         
       });
+      res.redirect('/welcome');
     },
 
 	stopMeasurePerformanceFn : function(req, res) {
       User.stopMeasurePerformance(function(err, tr) {
         res.render('welcome', {
 			posts: "Posts/sec = " + tr.post, 
-			gets: "Gets/sec = " + tr.get
+			gets: "Gets/sec = " + tr.get,
+      message: ''
 		});
+
+      //res.redirect('/welcome');
       });
     },
 

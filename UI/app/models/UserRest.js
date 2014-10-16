@@ -221,7 +221,7 @@ User.stopMeasurePerformance = function(callback) {
 	console.log("@@@@@@@@ Result Status Code: " + res.statusCode);
 	console.log("@@@@@@@@@@ testresult obj" + body.post + body.get);
     if (res.statusCode === 200) {
-      var tr = new TestResult(body.post, body.get);
+      var tr = {post:body.post, get:body.get};
       callback(null, tr);
       return;
     }
