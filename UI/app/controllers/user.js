@@ -10,7 +10,7 @@ function validateSignupRequest(req) {
 		return "Username is too short.";
 	} else if (bannedUsernames.indexOf(username) >= 0) {
 		return "This username is reserved.";
-	} else if (password != passwordRepeated) {
+	} else if (password !== passwordRepeated) {
 		return "Two passwords do not match each other.";
 	} else if (password.length < 4) {
 		return "This password is too short";
@@ -42,22 +42,26 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
         }
       });
     },
-
+    
     postSignup : function(req, res, next) {
-      err = validateSignupRequest(req);
+      var err = validateSignupRequest(req);
       if (err) {
     	  req.flash('signupMessage', err);
     	  res.redirect('/signup');
     	  return;
       }
+
       passport.authenticate('local-signup', function(err, user, isNewUser, info) {
-        if (err)
+        if (err) {
           return next(err);
-        if (!user)
+        }
+        if (!user) {
           return res.redirect('/signup');
+        }
         req.logIn(user, function(err) {
-          if (err)
+          if (err) {
             return next(err);
+          }
           participants.all.push({'userName' : user.local.name, 'emergency' : user.local.status});
           if (!isNewUser){
         	  req.flash('welcomeMessage','You have already signed up. Welcome back! Haha!');
@@ -75,7 +79,7 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
     	  } else {
     		  for (var sId in participants.online) {
     		      var userName = participants.online[sId].userName;
-    		      if (userName == user_name) {
+    		      if (userName === user_name) {
     		          participants.online[sId] = {'userName' : user_name, 'status': status};
     		      }
     		  }
@@ -137,14 +141,18 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
       User.getfromMeasurePerformance(user_name, function(err, message) {
         
       });
+      res.redirect('/welcome');
     },
 
 	stopMeasurePerformanceFn : function(req, res) {
-      User.stopMeasurePerformance(function(err, post, get) {
+      User.stopMeasurePerformance(function(err, tr) {
         res.render('welcome', {
-			posts: "Posts/sec = " + post, 
-			gets: "Gets/sec = " + get,
+			posts: "Posts/sec = " + tr.post, 
+			gets: "Gets/sec = " + tr.get,
+      message: ''
 		});
+
+      //res.redirect('/welcome');
       });
     },
 
