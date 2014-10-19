@@ -104,7 +104,7 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
 				}
 				io.sockets.emit("newConnection", {participants: participants});
 				console.log("Testing response - public message:" + res);
-	    		res.redirect('/welcome');
+	    		res.redirect('/wall');
 			}
 		});
 	},

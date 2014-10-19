@@ -38,9 +38,11 @@ module.exports = function(_, io, participants, passport) {
       res.render('wall', {message: ""});
     },
 
+   /*
     getPM : function(req, res) {
       res.render('private', {message: ""});
     },
+    */
 
     sendMessage: function(req, res) {
       var message = new PrivateMessage(req.user.local.name, 

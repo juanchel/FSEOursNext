@@ -13,7 +13,8 @@ html
         div.alert.alert-danger#passport_alert= error_message
     div.bm#main-message
       form(action='/send_message', method='post')
-        a(href='chat box') Private messages:
+        div.container
+          p Private messages:
         div.container
           div.well
             each message in messages
