@@ -19,6 +19,9 @@ function Message(from, msg, to) {
 
 Message.getAllWallPosts = function(callback) {
   request(rest_api.get_wall, {json:true}, function(err, res, body) {
+    if (err){
+      console.warning("There is an error: " + err);
+    }
     if (res.statusCode === 200) {
       var messages = body.map(function(item, idx, arr){
         return new Message(item.author, item.content);

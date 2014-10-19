@@ -51,6 +51,8 @@ function init() {
     var chatbuddy = $("#chatbuddy").html();
     if (author === chatbuddy && target === username) {
       location.reload(true);
+    }else if (author !== chatbuddy && target === username){
+      alert("There is a new message from: " + chatbuddy);
     }
   });
 
