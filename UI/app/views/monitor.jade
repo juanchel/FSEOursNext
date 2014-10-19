@@ -6,15 +6,28 @@ html
   title SSNoC - People
   body
     include includes/navbar.jade
+    
+  body 
+    br
     div.container
-      br
-      br
-      div.well CHAT
+      p Measure Performance
+    form(action='/startMeasurePerformance', method='post')
+      |Enter Time: 
+      input(type='text', name='measurePerformanceTime')
+      button(type="submit" class="btn btn-info btn-lg" id="startMeasurePerformanceButton") Start
 
-      form
-        input(type='text', name='chat')
+  body 
+    form(action='/stopMeasurePerformance', method='get')
+      button(type="submit" class="btn btn-info btn-lg" id="stopMeasurePerformanceButton") Stop
 
-      button(onclick='pmroute()') CHAT
+  body 
+    form(action='/postMeasurePerformance', method='post')
+      button(type="submit" class="btn btn-info btn-lg" id="postMeasurePerformanceButton") Post
 
-      div#participants_online
-      br
+  body 
+    form(action='/getMeasurePerformance', method='get')
+      button(type="submit" class="btn btn-info btn-lg" id="getMeasurePerformanceButton") Get
+
+  p #{posts}
+  p #{gets}
+      
