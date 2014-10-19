@@ -31,6 +31,29 @@ html
       input(type='text', name='publicMessage')
       button(type="submit" class="btn btn-info btn-lg" id="postMessageButton") Post to wall
 
+  p Measure Performance
+
+  body 
+    form(action='/startMeasurePerformance', method='post')
+      |Enter Time: 
+      input(type='text', name='measurePerformanceTime')
+      button(type="submit" class="btn btn-info btn-lg" id="startMeasurePerformanceButton") Start
+
+  body 
+    form(action='/stopMeasurePerformance', method='get')
+      button(type="submit" class="btn btn-info btn-lg" id="stopMeasurePerformanceButton") Stop
+
+  body 
+    form(action='/postMeasurePerformance', method='post')
+      button(type="submit" class="btn btn-info btn-lg" id="postMeasurePerformanceButton") Post
+
+  body 
+    form(action='/getMeasurePerformance', method='get')
+      button(type="submit" class="btn btn-info btn-lg" id="getMeasurePerformanceButton") Get
+
+  p #{posts}
+  p #{gets}
+
   body(onload='$(\'#my-modal\').modal(\'show\');')
     #my-modal.modal.fade
         .modal-dialog
@@ -44,5 +67,7 @@ html
                     p Emergency - I need help now, as this is a life threatening emergency! 
                     p Undefined - No status yet. 
                     p To share status, click on 'Submit' and select your status.
+
+
 
     
