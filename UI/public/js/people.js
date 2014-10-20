@@ -52,7 +52,7 @@ function init() {
       var dropdown_ele = '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 dropdown-user" data-for=".' + name + '">' + dropdown_symbol + '</div>';
 
       var info_ele = '<div class="row user-row search_item">' + photo_ele + name_ele + dropdown_ele + '</div>';
-      var detail_ele = '<div class="row user-info ' + name + '"><a class="btn btn-info col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3">Wanna chat with this user?</a><hr/></div></div>';
+      var detail_ele = '<div class="row user-info ' + name + '"><button class="btn btn-info col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3 send-Message" username="' + name + '">Wanna chat with this user?</a><hr/></div></div>';
       if (map[name].sId === sessionId || name === my_name) {
       } else {
         $('#participants_online').append(info_ele);
@@ -104,7 +104,7 @@ function init() {
       })
     });
     $('.send-Message').click(function(){
-    	window.location.replace("http://0.0.0.0/messages?=" + $('.send-Message').attr('username'));
+    	window.location.replace("/messages?chatbuddy=" + $('.send-Message').attr('username'));
     });
   }
 

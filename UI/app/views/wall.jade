@@ -27,8 +27,18 @@ html
 
   body
     div.container
-      br
-      br
-      div#participants_online
-      br
-    
+      p Public messages:
+        div.container
+          div.well
+            br
+            div#participants_online
+            br
+  body
+    form(action='/publicmessage', method='post')
+      div.container
+        p Post Public Message: 
+        br
+        input(type='text', name='publicMessage')
+        br
+        br
+        button(type="submit" class="btn btn-info btn-lg" id="postMessageButton") Post to wall

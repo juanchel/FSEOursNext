@@ -18,9 +18,9 @@ module.exports = function(_, io, participants, passport) {
           var author = message.author;
           var target = message.target;
           if (author === me && target === buddy) {
-            messageBuffer.push("-> " + message.content + " (sent at " + message.postedAt + ")");
+            messageBuffer.push(me + ": " + message.content + " (sent at " + message.timestamp + ")");
           } else if (author === buddy && target === me) {
-            messageBuffer.push("<- " + message.content + " (sent at " + message.postedAt + ")");
+            messageBuffer.push(buddy + ": " + message.content + " (sent at " + message.timestamp + ")");
           } else {
             console.warn("message coming from wrong conversation");
           }
@@ -38,9 +38,11 @@ module.exports = function(_, io, participants, passport) {
       res.render('wall', {message: ""});
     },
 
+   /*
     getPM : function(req, res) {
       res.render('private', {message: ""});
     },
+    */
 
     sendMessage: function(req, res) {
       var message = new PrivateMessage(req.user.local.name, 
