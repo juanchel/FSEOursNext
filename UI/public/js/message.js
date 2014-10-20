@@ -38,7 +38,10 @@ function init() {
   });
 
   socket.on('newWallPost', function (data) {
-    updateMessages(data.participants);
+  //  updateMessages(data.participants);
+    if(updateMessages(data.participants)){
+      location.reload(true); 
+    }
   });
 
   socket.on('error', function (reason) {
