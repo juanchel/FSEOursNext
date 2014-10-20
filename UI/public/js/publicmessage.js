@@ -8,10 +8,8 @@ function init() {
   
   var username = '';
   function updateMessages(participants) {
-
-  console.log("chat buddy: \"" + $("#chatbuddy").html() + "\"");
   
-  $('#sendMessageBtn').click(function() {
+  $('#postMessageButton').click(function() {
     return true;
   });
 
@@ -37,25 +35,17 @@ function init() {
     socket.emit('newMessage', {});
   });
 
-  socket.on('newWallPost', function (data) {
-    updateMessages(data.participants);
-  });
 
   socket.on('error', function (reason) {
     console.log('Unable to connect to server', reason);
   });
-  
-  socket.on('newPrivateMessage', function (data) {
+
+  socket.on('newPublicMessage', function (data) {
     var author = data.author;
-    var target = data.target;
-    var chatbuddy = $("#chatbuddy").html();
-    if (author === chatbuddy && target === username) {
+    if (author === me || author === username) {
       location.reload(true);
-    }else if (author !== chatbuddy && target === username){
-      alert("There is a new message from: " + author);
     }
   });
-
 
 }
 

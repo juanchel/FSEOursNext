@@ -54,7 +54,7 @@ User.getAllUsers(function(err, users) {
 Message.getAllWallPosts(function(err, messages) {
   if (!err) {
     messages.forEach(function(message) {
-      participants.wall.push({author: message.local.author, content: message.local.content})
+      participants.wall.push({author: message.author, content: message.content, timestamp: message.timestamp})
     });
   }
 

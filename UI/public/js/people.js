@@ -59,6 +59,8 @@ function init() {
         $('#participants_online').append(detail_ele);
       }
     }
+    
+    
 
     participants.all.sortOn('userName');
     
@@ -103,8 +105,8 @@ function init() {
             }
       })
     });
-    $('.send-Message').click(function(){
-    	window.location.replace("/messages?chatbuddy=" + $('.send-Message').attr('username'));
+    $('.send-Message').click(function(event){
+    	window.location.replace("/messages?chatbuddy=" + event.target.attributes.username.value);
     });
   }
 

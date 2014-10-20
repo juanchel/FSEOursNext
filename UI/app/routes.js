@@ -31,7 +31,10 @@ module.exports = function(app, _, io, participants, passport) {
 
   app.post("/signup", user_controller.postSignup);
   app.post("/status", user_controller.postStatus);
-  app.post("/publicmessage", user_controller.postPublicMessage);
+  
+  app.post("/publicmessage", message_controller.postPublicMessage);
+  app.get("/publicmessage", message_controller.getWall);
+  
   app.post("/startMeasurePerformance", user_controller.startMeasurePerformanceFn);
   app.post("/postMeasurePerformance", user_controller.postMeasurePerformanceFn);
 
