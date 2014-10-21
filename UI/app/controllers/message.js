@@ -43,7 +43,7 @@ module.exports = function(_, io, participants, passport) {
           req.flash('errorMessage', "failed to send message: " + error_message);
         }
        // console.log("Here is the auther:" + req.user.local.name + "Message content is:" + req.param('content'));
-        io.emit('newPrivateMessage', {
+        io.sockets.emit('newPrivateMessage', {
           author: req.user.local.name, 
           target: req.param('target'),
           message: req.param('content'),

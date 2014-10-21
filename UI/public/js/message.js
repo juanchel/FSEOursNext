@@ -1,5 +1,5 @@
 function init() {
-  
+  console.log("Im here");
   var serverBaseUrl = document.domain;
 
   var socket = io.connect(serverBaseUrl);
@@ -38,7 +38,7 @@ function init() {
   });
   
   socket.on('newPrivateMessage', function (data) {
-    console.log("Here is the auther:" + req.user.local.name + "Message content is:" + req.param('content'));
+    console.log("Here is the auther:" + data.author + "Message target is:" + data.target + "Message content is:" + data.content);
     var author = data.author;
     var target = data.target;
     var chatbuddy = $("#chatbuddy").html();
