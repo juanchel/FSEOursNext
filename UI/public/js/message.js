@@ -15,14 +15,6 @@ function init() {
     return true;
   });
 
-  
-    $('#participants_online').html("");
-
-    for (var i = 0; i < participants.wall.length; i++) {
-      $('#participants_online').append(participants.wall[i].author + " said:  " + participants.wall[i].content + '</br>' + "  (Send at: " + participants.wall[i].timestamp + ")" + '</br>');
-    }
-  }
-
   socket.on('connect', function () {
     sessionId = socket.socket.sessionid;
     $.ajax({
@@ -46,17 +38,16 @@ function init() {
   });
   
   socket.on('newPrivateMessage', function (data) {
+    console.log("Here is the auther:" + req.user.local.name + "Message content is:" + req.param('content'));
     var author = data.author;
     var target = data.target;
     var chatbuddy = $("#chatbuddy").html();
     if (author === chatbuddy && target === username) {
       location.reload(true);
-    }else if (author !== chatbuddy && target === username){
-      alert("There is a new message from: " + author);
     }
   });
 
-
+}
 }
 
 $(document).on('ready', init);
