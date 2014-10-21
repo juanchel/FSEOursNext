@@ -23,6 +23,7 @@ module.exports = function(app, _, io, participants, passport) {
   var people_controller = require('./controllers/people')(_, io, participants, passport);
   var message_controller = require('./controllers/message')(_, io, participants, passport);
   var monitor_controller = require('./controllers/monitor')(_, io, participants, passport);
+  var searchCtl_controller = require('./controllers/searchCtl')(_, io, participants, passport);
 
   app.get("/", user_controller.getLogin);
   
@@ -37,6 +38,9 @@ module.exports = function(app, _, io, participants, passport) {
   
   app.post("/startMeasurePerformance", user_controller.startMeasurePerformanceFn);
   app.post("/postMeasurePerformance", user_controller.postMeasurePerformanceFn);
+  
+  app.get("/search", searchCtl_controller.getSearchResults);
+  app.post("/search", searchCtl_controller.postSearchInfo);
 
   app.get("/welcome", isLoggedIn, user_controller.getWelcome);
   

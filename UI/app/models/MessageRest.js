@@ -4,23 +4,6 @@ var rest_api = require('../../config/rest_api');
 var utils = require("../utils");
 var User = require("./UserRest");
 
-/*
-function Message(from, msg) {
-  this.local = {
-    author : from,
-    content : msg
-  }
-}
-
-function Message(from, msg, to) {
-  this.local = {
-    author : from,
-    target : to,
-    content : msg
-  }
-}
-*/
-
 function PublicMessage(author, content, timestamp, messageID) {
   this.author = author;
   this.content = content;
@@ -67,15 +50,7 @@ PublicMessage.getAllWallPosts = function(callback) {
     }else if (res.statusCode !== 200) {
       callback(JSON.stringify(body), null);
     } else if(res.statusCode === 200) {
-     /*
-      var messages = body.map(function(item, idx, arr){
-        return new PublicMessage(item.author, item.content, item.timestamp);
-      });
 
-      console.log("@@@@@ in Message.getAllWallPosts succeed messages :" + JSON.stringify(messages));
-      callback(null, messages);
-      return;
-      */
       var publicmessages = [];
       for (var i = 0; i < body.length; ++i) {
         var item = body[i];
