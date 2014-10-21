@@ -7,19 +7,7 @@ function init() {
   var sessionId = '';
   
   var username = '';
-  function updateMessages(participants) {
-  
-  $('#postMessageButton').click(function() {
-    return true;
-  });
 
-  
-    $('#participants_online').html("");
-
-    for (var i = 0; i < participants.wall.length; i++) {
-      $('#participants_online').append(participants.wall[i].author + " said:  " + participants.wall[i].content + '</br>' + "  (Send at: " + participants.wall[i].timestamp + ")" + '</br>');
-    }
-  }
 
   socket.on('connect', function () {
     sessionId = socket.socket.sessionid;
@@ -35,16 +23,14 @@ function init() {
     socket.emit('newMessage', {});
   });
 
-
   socket.on('error', function (reason) {
     console.log('Unable to connect to server', reason);
   });
 
   socket.on('newPublicMessage', function (data) {
     var author = data.author;
-    if (author === me || author === username) {
-      location.reload(true);
-    }
+    location.reload(true);
+    
   });
 
 }

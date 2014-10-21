@@ -90,6 +90,10 @@ module.exports = function(_, io, participants, passport) {
             }
           }
           io.sockets.emit("newConnection", {participants: participants});
+          io.sockets.emit("newPublicMessage",{
+            author: req.user.local.name, 
+            message: req.param('content'),
+          });
           console.log("Testing response - public message:" + res);
             res.redirect('/wall');
         }
