@@ -11,6 +11,8 @@ import java.util.List;
 @Path("/memory")
 public class MemoryService extends BaseService{
 
+    private static boolean running = false;
+
     @POST
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     @Path("/start")
@@ -19,24 +21,10 @@ public class MemoryService extends BaseService{
             DAOFactory.getInstance().getMemoryDAO().start();
         } catch (Exception e) {
             handleException(e);
-        } finally {
-
         }
 
-        return ok();
-    }
-
-    @POST
-    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    @Path("/save")
-    public Response save () {
-        try {
-            DAOFactory.getInstance().getMemoryDAO().save();
-        } catch (Exception e) {
-            handleException(e);
-        } finally {
-
-        }
+        if (!running)
+            new MemoryThread().start();
 
         return ok();
     }
@@ -49,15 +37,29 @@ public class MemoryService extends BaseService{
         List<MemoryPO> memory = null;
         try {
             memory = DAOFactory.getInstance().getMemoryDAO().end();
-
         } catch (Exception e) {
             handleException(e);
-        } finally {
-
         }
+
+        running = false;
 
         return memory;
     }
 
-}
+    private class MemoryThread extends Thread {
 
+        public void run() {
+            running = true;
+            try {
+                for (int i = 0; i<60; i++) {
+                    Thread.sleep(60000);
+                    DAOFactory.getInstance().getMemoryDAO().save();
+                }
+            } catch (Exception e) {
+                handleException(e);
+            }
+            running = false;
+        }
+    }
+
+}
