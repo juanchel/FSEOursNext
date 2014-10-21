@@ -34,6 +34,7 @@ module.exports = function(app, _, io, participants, passport) {
   app.post("/publicmessage", user_controller.postPublicMessage);
   app.post("/startMeasurePerformance", user_controller.startMeasurePerformanceFn);
   app.post("/postMeasurePerformance", user_controller.postMeasurePerformanceFn);
+  app.post("/startMeasureMemory", user_controller.startMeasureMemoryFn);
 
   app.get("/welcome", isLoggedIn, user_controller.getWelcome);
   
@@ -49,6 +50,7 @@ module.exports = function(app, _, io, participants, passport) {
   app.get("/people", isLoggedIn, people_controller.getPeople);
   app.get("/getMeasurePerformance", user_controller.getMeasurePerformanceFn);
   app.get("/stopMeasurePerformance", user_controller.stopMeasurePerformanceFn);
+  app.get("/stopMeasureMemory", user_controller.stopMeasureMemoryFn);
 
   app.get("/wall", isLoggedIn, message_controller.getWall);
   app.get("/monitor", isLoggedIn, monitor_controller.getResult);

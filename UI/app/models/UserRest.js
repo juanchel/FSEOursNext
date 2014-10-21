@@ -216,18 +216,83 @@ User.getfromMeasurePerformance = function(user_name, callback) {
 };
 
 User.stopMeasurePerformance = function(callback) {
-	console.log("Checking number of times");
   request(rest_api.end_measure_performance, {json:true}, function(err, res, body) {
     if (err){
       callback(err,null);
       return;
     }
-	console.log("@@@@@@@@ Result Status Code: " + res.statusCode);
-	console.log("@@@@@@@@@@ testresult obj" + body.post + body.get);
+
     if (res.statusCode === 200) {
       var tr = {post:body.post, get:body.get};
       callback(null, tr);
       return;
+    }
+    if (res.statusCode !== 200) {
+      callback(null, null);
+      return;
+    }
+  });
+};
+
+User.MeasureMemoryStart = function(user_name, callback) {
+	console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@Inside User Rest");
+	var options = {
+		url : rest_api.start_measure_memory,
+		body : {'userName' : user_name},
+		json : true
+	};
+	
+	request.post(options, function(err, res, body) {
+	    if (err){
+	      callback(err,null);
+	      return;
+	    }
+	    if (res.statusCode !== 200 && res.statusCode !== 201) {
+	      callback(res.body, null);
+	      return;
+	    }
+	    callback(null, res.body);
+	    return;
+	  });
+};
+
+/*function listProperties(obj) {
+   var propList = "";
+   for(var propName in obj) {
+      if(typeof(obj[propName]) != "undefined") {
+         propList = propList + propName + ", ";
+      }
+   }
+   return propList;
+}*/
+
+User.MeasureMemoryStop = function(callback) {
+//  request.post({
+//	url: rest_api.save_measure_memory,
+//	// body: {'userName': user_name},
+//	// json: true,
+//  }, function(err, res, body) { console.log('Got res.status code from save: ' + res.statusCode); });
+
+  request.get(rest_api.end_measure_memory, {json:true}, function(err, res, body) {
+    //console.log("err from backend" + err);
+    //console.log("res.status code from backend " + res.statusCode);
+    //console.log("body :" + listProperties(body));
+
+    if (err){
+      callback(err,null);
+      return;
+    }
+	
+    //var memory = body[0];
+	//var i = 0; 
+    if (res.statusCode === 200) {
+		for (var i in body){
+			//var mem = {timestamp: memory.timestamp, usedVolatile: memory.usedVolatile, leftVolatile: memory.leftVolatile, usedNonVolatile: memory.usedNonVolatile, leftNonVolatile: memory.leftNonVolatile};
+	      	console.log ("Testing in OK From Backend: " + body[i].timestamp + body[i].usedVolatile);
+			callback(null, body[i].timestamp, body[i].usedVolatile, body[i].leftVolatile, body[i].usedNonVolatile, body[i].leftNonVolatile);
+			//i++;
+		}
+       return;
     }
     if (res.statusCode !== 200) {
       callback(null, null);
