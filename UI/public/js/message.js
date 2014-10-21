@@ -1,5 +1,4 @@
 function init() {
-  console.log("Im here");
   var serverBaseUrl = document.domain;
 
   var socket = io.connect(serverBaseUrl);
@@ -7,7 +6,6 @@ function init() {
   var sessionId = '';
   
   var username = '';
-  function updateMessages(participants) {
 
   console.log("chat buddy: \"" + $("#chatbuddy").html() + "\"");
   
@@ -29,25 +27,22 @@ function init() {
     socket.emit('newMessage', {});
   });
 
-  socket.on('newWallPost', function (data) {
-    updateMessages(data.participants);
-  });
-
   socket.on('error', function (reason) {
     console.log('Unable to connect to server', reason);
   });
   
   socket.on('newPrivateMessage', function (data) {
-    console.log("Here is the auther:" + data.author + "Message target is:" + data.target + "Message content is:" + data.content);
     var author = data.author;
     var target = data.target;
     var chatbuddy = $("#chatbuddy").html();
     if (author === chatbuddy && target === username) {
       location.reload(true);
+    }else if(author !== chatbuddy && target === username){
+      alert("Get a new message from: " + author);
     }
   });
 
 }
-}
+
 
 $(document).on('ready', init);

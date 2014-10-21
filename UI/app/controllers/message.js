@@ -52,13 +52,7 @@ module.exports = function(_, io, participants, passport) {
         res.redirect('/messages?chatbuddy=' + req.param('target'));
       });
     },
-    
-   /*
-    getWall : function(req, res) {
-      res.render('wall', {message: ""});
-    },
-    */
-    
+     
     getWall : function(req, res) {
       PublicMessage.getAllWallPosts(function(error, publicmessages) {
         var errorMessages = req.flash('errorMessage');
