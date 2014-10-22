@@ -286,13 +286,14 @@ User.MeasureMemoryStop = function(callback) {
     //var memory = body[0];
 	//var i = 0; 
     if (res.statusCode === 200) {
-		for (var i in body){
+		//for (var i in body) {
 			//var mem = {timestamp: memory.timestamp, usedVolatile: memory.usedVolatile, leftVolatile: memory.leftVolatile, usedNonVolatile: memory.usedNonVolatile, leftNonVolatile: memory.leftNonVolatile};
-	      	console.log ("Testing in OK From Backend: " + body[i].timestamp + body[i].usedVolatile);
-			callback(null, body[i].timestamp, body[i].usedVolatile, body[i].leftVolatile, body[i].usedNonVolatile, body[i].leftNonVolatile);
+	      	//console.log ("Testing in OK From Backend: " + body[i].timestamp + body[i].usedVolatile);
+			//callback(null, body[i].timestamp, body[i].usedVolatile, body[i].leftVolatile, body[i].usedNonVolatile, body[i].leftNonVolatile);
 			//i++;
-		}
-       return;
+		//}
+	    callback(null, body);
+        return;
     }
     if (res.statusCode !== 200) {
       callback(null, null);

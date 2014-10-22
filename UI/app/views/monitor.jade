@@ -43,6 +43,13 @@ html
         th Left Volatile
         th Used Non-Volatile
         th Left Non-Volatile
+      each entry in entries ? entries : []
+        tr
+          td #{entry.timestamp}
+          td #{entry.usedVolatile}
+          td #{entry.leftVolatile}
+          td #{entry.usedNonVolatile}
+          td #{entry.leftNonVolatile}
       tr
         td #{timestamp}
         td #{usedVolatile}

@@ -171,16 +171,20 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
 	},
 	
 	stopMeasureMemoryFn : function(req, res) {
-      User.MeasureMemoryStop(function(err, timeStamp, usedVolatile, leftVolatile, usedNonVolatile, leftNonVolatile) {
-		console.log("Testing if values arrive: " + usedVolatile + leftVolatile);
-        res.render('monitor', {
-			timestamp: timeStamp,
-			usedVolatile: usedVolatile,
-			leftVolatile: leftVolatile,
-			usedNonVolatile: usedNonVolatile,
-			leftNonVolatile: leftNonVolatile,
-			message: ''
-		});
+      //User.MeasureMemoryStop(function(err, timeStamp, usedVolatile, leftVolatile, usedNonVolatile, leftNonVolatile) {
+	  User.MeasureMemoryStop(function(err, entries) {
+		//console.log("Testing if values arrive: " + usedVolatile + leftVolatile);
+//        res.render('monitor', {
+//			timestamp: timeStamp,
+//			usedVolatile: usedVolatile,
+//			leftVolatile: leftVolatile,
+//			usedNonVolatile: usedNonVolatile,
+//			leftNonVolatile: leftNonVolatile,
+//			message: ''
+//		});
+		console.log('entries length ' + entries.length);
+		console.log('entries ' + JSON.stringify(entries));
+		res.render('monitor', {entries: entries, message: ''});
 
       //res.redirect('/welcome');
       });
