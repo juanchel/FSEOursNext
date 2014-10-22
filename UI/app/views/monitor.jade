@@ -28,17 +28,47 @@ html
       input(type='text', name='measurePerformanceTime')
       button(type="submit" class="btn btn-info btn-lg" id="startMeasurePerformanceButton") Start
 
+  p Measure Memory
   body 
     form(action='/stopMeasurePerformance', method='get')
       button(type="submit" class="btn btn-info btn-lg" id="stopMeasurePerformanceButton") Stop
 
   body 
+    form(action='/startMeasureMemory', method='post')
+      button(type="submit" class="btn btn-info btn-lg" id="startMeasureMemoryButton") Start Measure Memory
     form(action='/postMeasurePerformance', method='post')
       button(type="submit" class="btn btn-info btn-lg" id="postMeasurePerformanceButton") Post
 
+  body
+    form(action='/stopMeasureMemory', method='get')
+      button(type="submit" class="btn btn-info btn-lg" id="stopMeasureMemoryButton") Stop Measure Memory
   body 
     form(action='/getMeasurePerformance', method='get')
       button(type="submit" class="btn btn-info btn-lg" id="getMeasurePerformanceButton") Get
+
+  body
+    table(style='width: 100%;')
+      tr
+        th Time Stamp
+        th Used Volatile
+        th Left Volatile
+        th Used Non-Volatile
+        th Left Non-Volatile
+      each entry in entries ? entries : []
+        tr
+          td #{entry.timestamp}
+          td #{entry.usedVolatile}
+          td #{entry.leftVolatile}
+          td #{entry.usedNonVolatile}
+          td #{entry.leftNonVolatile}
+      tr
+        td #{timestamp}
+        td #{usedVolatile}
+        td #{leftVolatile}
+        td #{usedNonVolatile}
+        td #{leftNonVolatile}
+
+
 
   p #{posts}
   p #{gets}
