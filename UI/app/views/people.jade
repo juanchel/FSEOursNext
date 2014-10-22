@@ -2,11 +2,37 @@ doctype html
 html
   include includes/head.jade
   script(src='/js/jquery.cookie.js')
-  script(src='/js/people.js')
+    <meta charset="utf-8">
+    <!-- Set the viewpor/ot so this responsive site displays correctly on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    script(src='/js/jquery-1.9.1.min.js')
+    script(src='/js/jquery.watermarkinput.js')
+    link(rel='stylesheet', href='/csspensans.css')
+    link(rel='stylesheet', href='/css/style.css')
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    script(src='/js/bootstrap.min.js')
+    script(src='/js/people.js')
   title SSNoC - People
   body
     include includes/navbar.jade
     div.container
+      br
+      br
+      br
+      br
+      br
+      br
+      form(action='/status', method='post')
+      h4.text-centre
+        You You may now update your status : 
+        &nbsp
+        select(name='statusSelect')
+          option(id="option-1",value='1') Okay
+          option(id="option-3",value='2') Help
+          option(id="option-2",value='3') EMERGENCY!!!
+        &nbsp
+        button(type="submit" class="btn btn-primary btn-sm" id="signupBtn") update status
+      br
       br
       br
       div.well#myself.search_item
@@ -19,14 +45,7 @@ html
             strong #{user_name}
       div.well#participants_online
       br
-      //
-        div.row
-          div.col-md-12.col-xs-12
-            h3.text-center.offline Offline
-            div.text-center#participants_offline
-      form(action='/status', method='post')
-        select(name='statusSelect')
-          option(value='1') Okay
-          option(value='2') Help
-          option(value='3') EMERGENCY!!!
-        button(type="submit" class="btn btn-info btn-lg" id="signupBtn") update status
+      br
+      div.row
+      div.col-md-12.col-xs-1
+      div.text-center#participants_offline

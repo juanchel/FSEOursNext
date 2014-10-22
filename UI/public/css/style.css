@@ -116,3 +116,23 @@ h3{
   padding: 0px;
   height: 100%;
 }
+
+#option-1 {
+   color: green;
+}
+
+#option-2 {
+   color: red;
+}
+
+#option-3 {
+   color: yellow;
+}
+
+#option-4 {
+   color: black;
+}
+
+h3{
+ color: dodgerblue !important;
+}

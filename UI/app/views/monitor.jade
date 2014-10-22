@@ -10,30 +10,41 @@ html
     link(rel='stylesheet', href='/csspensans.css')
     link(rel='stylesheet', href='/css/style.css')
     link(rel='stylesheet', href='/css/bootstrap.min.css')
-    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js')
-    script(src='http://code.jquery.com/jquery-latest.js')
-    script(src='http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css')
-    script(src='http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js')
     script(src='/js/bootstrap.min.js')
-    script(src='/js/message.js')
-  title SSNoC - Welcome
-  
+    script(src='/js/monitor.js')
+  title SSNoC - Monitor
   body
-    include includes/navbar.jade
+    include includes/navbar.jade 
     br
-    if message.length > 0
-        div.alert.alert-danger#passport_alert #{message}
     br
+    br
+    br
+    br
+    br
+    div.container
+      p Measure Performance
+    form(action='/startMeasurePerformance', method='post')
+      |Enter Time: 
+      input(type='text', name='measurePerformanceTime')
+      button(type="submit" class="btn btn-info btn-lg" id="startMeasurePerformanceButton") Start
 
   p Measure Memory
+  body 
+    form(action='/stopMeasurePerformance', method='get')
+      button(type="submit" class="btn btn-info btn-lg" id="stopMeasurePerformanceButton") Stop
 
   body 
     form(action='/startMeasureMemory', method='post')
       button(type="submit" class="btn btn-info btn-lg" id="startMeasureMemoryButton") Start Measure Memory
+    form(action='/postMeasurePerformance', method='post')
+      button(type="submit" class="btn btn-info btn-lg" id="postMeasurePerformanceButton") Post
 
   body
     form(action='/stopMeasureMemory', method='get')
       button(type="submit" class="btn btn-info btn-lg" id="stopMeasureMemoryButton") Stop Measure Memory
+  body 
+    form(action='/getMeasurePerformance', method='get')
+      button(type="submit" class="btn btn-info btn-lg" id="getMeasurePerformanceButton") Get
 
   body
     table(style='width: 100%;')
@@ -59,3 +70,6 @@ html
 
 
 
+  p #{posts}
+  p #{gets}
+      
