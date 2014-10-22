@@ -152,7 +152,6 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
       if (error){
           next(error);
       } else {
-          io.sockets.emit("newConnection", {participants: participants});
           res.render('analyze', {clusters : clusters});
       }
       });

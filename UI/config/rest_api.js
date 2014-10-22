@@ -18,6 +18,6 @@ module.exports = {
   'measure_performance_post' : host_url + '/test/post/',
   'measure_performance_get' : host_url + '/test/get',
   'end_measure_performance' : host_url + '/test/end',
-  'analyzing_network' : host_url + '/users/clusters',
+  'analyzing_network' : host_url + '/users/clusters/',
   
 };
