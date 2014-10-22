@@ -3,15 +3,6 @@ var request = require('request');
 var rest_api = require('../../config/rest_api');
 var utils = require('../utils');
 
-/*
-function User(user_name, password){
-  this.local = {
-    name : user_name,
-    password : password
-  };
-}
-*/
-
 function User(user_name, password, st){
   this.local = {
     name : user_name,
@@ -150,6 +141,29 @@ User.setPublicMessage = function(user_name, publicMessage, callback) {
 	    callback(null, publicMessage);
 	    return;
 	  });
+};
+
+User.sendHoursForAnalyzing = function(user_name,analyzeTime,callback){
+  console.log("Yo Analyze Time is here:" + analyzeTime);
+  var options = {
+      url : rest_api.analyzing_network + analyzeTime,
+      body : {'userName' : user_name},
+      json : true
+  };
+
+  request.get(options, function(err, res, body) {
+      //console.log("callback of post sending hours for analyzing " + err + res.statusCode + body);
+      if (err){
+          callback(err,null);
+          return;
+      }
+      if (res.statusCode !== 200 && res.statusCode !== 201) {
+          callback(res.body, null);
+          return;
+      }
+      callback(null, res.body);
+      return;
+  });
 };
 
 User.sendMeasurePerformanceStart = function(user_name, measurePerformanceTime, callback) {

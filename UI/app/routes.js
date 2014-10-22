@@ -39,6 +39,9 @@ module.exports = function(app, _, io, participants, passport) {
   app.post("/startMeasurePerformance", user_controller.startMeasurePerformanceFn);
   app.post("/postMeasurePerformance", user_controller.postMeasurePerformanceFn);
   
+  app.post("/analyzeSocialNetwork", isLoggedIn, user_controller.hoursForAnalyzing);
+  app.get("/analyze", isLoggedIn, user_controller.analyzeNetwork);
+  
   app.get("/search", searchCtl_controller.getSearchResults);
   app.post("/search", searchCtl_controller.postSearchInfo);
 

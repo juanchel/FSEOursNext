@@ -136,6 +136,27 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
       //res.redirect('/welcome');
       });
     },
+    
+    analyzeNetwork:function (req,res) {
+      res.render('analyze', {
+          title: "Hello " + req.session.passport.user.user_name + " !!",
+          message: req.flash('welcomeMessage')
+      });
+      console.log("I'm in analyzeNetworkFunction!");
+  },
+
+   hoursForAnalyzing:function(req, res, next) {
+      var user_name = req.session.passport.user.user_name;
+      console.log("In user.js");
+      User.sendHoursForAnalyzing(user_name, req.body.analyzeTime, function(error, clusters) {
+      if (error){
+          next(error);
+      } else {
+          io.sockets.emit("newConnection", {participants: participants});
+          res.render('analyze', {clusters : clusters});
+      }
+      });
+   },
 
     getWelcome : function(req, res) {
      res.render('welcome', {

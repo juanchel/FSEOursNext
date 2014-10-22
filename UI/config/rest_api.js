@@ -17,5 +17,7 @@ module.exports = {
   'set_measure_performance_time' : host_url + '/test/start/',
   'measure_performance_post' : host_url + '/test/post/',
   'measure_performance_get' : host_url + '/test/get',
-  'end_measure_performance' : host_url + '/test/end'
+  'end_measure_performance' : host_url + '/test/end',
+  'analyzing_network' : host_url + '/users/clusters',
+  
 };
