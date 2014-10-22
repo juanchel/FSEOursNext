@@ -17,7 +17,8 @@ html
   body
     include includes/navbar.jade
     br
-    if message.length > 0
+    if typeof(message) !== 'undefined'
+      if message.length > 0
         div.alert.alert-danger#passport_alert #{message}
     br
 

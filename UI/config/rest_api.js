@@ -20,4 +20,8 @@ module.exports = {
   'end_measure_performance' : host_url + '/test/end',
   'analyzing_network' : host_url + '/users/clusters/',
   
+  'end_measure_performance' : host_url + '/test/end',
+  'start_measure_memory' : host_url + '/memory/start',
+  'save_measure_memory': host_url + '/memory/save',
+  'end_measure_memory' : host_url + '/memory/end',
 };
