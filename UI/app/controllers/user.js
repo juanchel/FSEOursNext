@@ -97,8 +97,8 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
 			if (error){
 				next(error);
 			} else {
-				io.sockets.emit("newConnection", {participants: participants});
-	    		res.redirect('/welcome');
+			//	io.sockets.emit("newConnection", {participants: participants});
+	    	//	res.redirect('/w');
 			}
 		});
 	},
@@ -127,7 +127,7 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
 
 	stopMeasurePerformanceFn : function(req, res) {
       User.stopMeasurePerformance(function(err, tr) {
-        res.render('welcome', {
+        res.render('monitor', {
 			posts: "Posts/sec = " + tr.post, 
 			gets: "Gets/sec = " + tr.get,
       message: ''

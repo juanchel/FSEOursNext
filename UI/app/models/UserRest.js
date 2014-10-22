@@ -188,6 +188,29 @@ User.sendMeasurePerformanceStart = function(user_name, measurePerformanceTime, c
 	    callback(null, measurePerformanceTime);
 	    return;
 	  });
+	
+	var inputTime = measurePerformanceTime;
+	
+	//var d = new Date();
+	//var currentSeconds = d.getSeconds();
+	//var temp = currentSeconds;
+	
+	var startTime = parseInt((new Date()).getTime() / 1000);
+	console.log('start time ' + startTime);
+	var endTime = (startTime + parseInt(measurePerformanceTime));
+	console.log('end time ' + endTime);
+
+	while (startTime < endTime){
+		//posts
+		User.postForMeasurePerformance(user_name, function(error, postMessage) { });
+		//gets
+		User.getfromMeasurePerformance(user_name, function(err, message) {  });
+
+      startTime = parseInt((new Date()).getTime() / 1000);
+      console.log('current time ' + startTime)
+	}
+
+    console.log('done with while loop');
 };
 
 User.postForMeasurePerformance = function(user_name, callback) {
@@ -230,11 +253,14 @@ User.getfromMeasurePerformance = function(user_name, callback) {
 };
 
 User.stopMeasurePerformance = function(callback) {
+	console.log('stopMeasurePerformance');
   request(rest_api.end_measure_performance, {json:true}, function(err, res, body) {
     if (err){
       callback(err,null);
       return;
     }
+
+    console.log('body ' + JSON.stringify(body));
 
     if (res.statusCode === 200) {
       var tr = {post:body.post, get:body.get};
