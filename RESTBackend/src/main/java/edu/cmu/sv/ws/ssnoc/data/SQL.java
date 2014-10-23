@@ -18,6 +18,8 @@ public class SQL {
     public static final String TEST_GET = "TEST_GET";
     public static final String TEST_RESULTS = "TEST_RESULTS";
     public static final String MEMORY_TEST = "MEMORY_TEST";
+    public static final String SSN_ANNOUNCEMENTS = "SSN_ANNOUNCEMENTS";
+
 
     /**
      * Query to check if a given table exists in the H2 database.
@@ -78,6 +80,15 @@ public class SQL {
             "volatile_left long," +
             "non_volatile_used long," +
             "non_volatile_left long);";
+
+    public static final String CREATE_ANNOUNCENMENTS = "CREATE TABLE IF NOT EXISTS "+ SSN_ANNOUNCEMENTS +" (" +
+            "pid integer NOT NULL AUTO_INCREMENT,"+
+            "message varchar(255),"+
+            "author varchar(255),"+
+            "timestamp timestamp,"+
+            "PRIMARY KEY (pid),"+
+            "FOREIGN KEY (author) REFERENCES public.SSN_USERS(user_name)"+
+            ");";
 
     public static final String UPDATE_MEMORY = "insert into " + MEMORY_TEST + "(timestamp, volatile_used, volatile_left, non_volatile_used, non_volatile_left)" +
             " values (?, ?, ?, ?, ?)";
@@ -148,6 +159,12 @@ public class SQL {
             " where postedAt > ?";
 
     public static final String FIND_ALL_USERNAMES = "select user_name from " + SSN_USERS;
+
+
+    public static final String POST_ANNOUNCEMENT = "insert into " + SSN_ANNOUNCEMENTS +
+            "(message, author, timestamp) values (?,?,?)";
+
+    public static final String GET_ALL_ANNOUNCEMENTS = "select * from " + SSN_ANNOUNCEMENTS;
 
     /**
      * Query to insert a row into the users table.

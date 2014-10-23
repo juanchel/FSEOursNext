@@ -44,6 +44,11 @@ public interface IMessageDAO{
      */
     List<UserPO> loadChatBuddies(String author);
 
+    List<MessagePO> loadAnnouncement();
+
+    void saveAnnouncement(MessagePO messagePO);
+
+
     /**
      * This method will load all the users in the
      * database.
