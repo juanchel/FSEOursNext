@@ -12,6 +12,16 @@ public class User {
 	private String password;
     private int emergency_status;
 
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
+
+    private int role;
+
 	public String getUserName() {
 		return userName;
 	}

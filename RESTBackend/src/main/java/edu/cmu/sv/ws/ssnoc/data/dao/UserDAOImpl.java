@@ -57,6 +57,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
                 po.setPassword(rs.getString(3));
                 po.setEmergency_status(rs.getInt(4));
                 po.setSalt(rs.getString(5));
+                po.setRole(rs.getInt(6));
 
                 users.add(po);
             }
@@ -177,6 +178,64 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         }
     }
 
+    public void updatePW(String username, String pw, String salt) {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_PASSWORD)) {
+            stmt.setString(1, pw);
+            stmt.setString(2, salt);
+            stmt.setString(3, username);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+
+        }
+    }
+
+    public void updateUsername(String username, String nextName) {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_USERNAME)) {
+            stmt.setString(1, nextName);
+            stmt.setString(2, username);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+
+        }
+    }
+
+    public void updateRole(String username, int role) {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_ROLE)) {
+            stmt.setInt(1, role);
+            stmt.setString(2, username);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+
+        }
+    }
+
+
+    public void updateActive(String username, boolean active) {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_ACTIVE)) {
+            stmt.setBoolean(1, active);
+            stmt.setString(2, username);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+
+        }
+    }
+
     @Override
     public void updateStatus(String username, int status) {
         try (Connection conn = getConnection();
@@ -184,7 +243,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
             stmt.setInt(1, status);
             stmt.setString(2, username);
 
-            int rowCount = stmt.executeUpdate();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             handleException(e);
         } finally {

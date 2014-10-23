@@ -15,6 +15,15 @@ public class UserPO {
 	private String password;
 	private String salt;
     private int emergency_status;
+    private int role;
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
 
 	public long getUserId() {
 		return userId;
