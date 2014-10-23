@@ -30,9 +30,13 @@ html
 
   
   body 
+<<<<<<< HEAD
     form(action='/stopMeasurePerformance', method='post')
       input(type='hidden', name='serial', value="#{serial}")
       button(type="submit" class="btn btn-primary btn-sm" id="stopMeasurePerformanceButton") Stop
+=======
+      button(class="btn btn-info btn-lg" id="stopMeasurePerformanceButton") Stop
+>>>>>>> branch 'cc' of https://github.com/juanchel/FSEOursNext.git
 
   div#serial(style='display: none') #{serial}
   p The number of posts per sec is:

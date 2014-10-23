@@ -7,6 +7,19 @@ function init() {
   var sessionId = '';
   
   var username = '';
+  
+  $("button#stopMeasurePerformanceButton").click(function() {
+    $.ajax({
+      url: '/stopMeasurePerformance',
+      type: 'POST',
+      dataType: 'json',
+      data: {serial : $("div#serial").html()}
+    }).done(function(data){
+      if (data.error) {
+        document.alert(data.error);
+      }
+    });
+  });
 
   socket.on('connect', function () {
     sessionId = socket.socket.sessionid;
