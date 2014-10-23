@@ -46,7 +46,7 @@ PublicMessage.prototype.send = function(callback) {
 PublicMessage.getAllWallPosts = function(callback) {
   request(rest_api.get_wall, {json:true}, function(err, res, body) {
     if (err){
-      console.warning("There is an error: " + err);
+      console.warn("There is an error: " + err);
     }else if (res.statusCode !== 200) {
       callback(JSON.stringify(body), null);
     } else if(res.statusCode === 200) {
