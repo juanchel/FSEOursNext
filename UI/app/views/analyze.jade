@@ -1,0 +1,39 @@
+doctype html
+html
+    include includes/head.jade
+    script(src='/js/jquery.cookie.js')
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        script(src='/js/jquery-1.9.1.min.js')
+        script(src='/js/jquery.watermarkinput.js')
+        link(rel='stylesheet', href='/csspensans.css')
+        link(rel='stylesheet', href='/css/style.css')
+        link(rel='stylesheet', href='/css/bootstrap.min.css')
+        script(src='/js/bootstrap.min.js')
+        script(src='/js/people.js')
+    title SSNoC - Analyze
+    body
+        include includes/navbar.jade
+        br
+        br
+        br
+        br
+        br
+        h4.text-center Analyze Social Network
+        br
+        form(action='/analyzeSocialNetwork', method='post')
+            h4.text-center
+                Enter Enter time in hours :
+                        &nbsp
+                        input(type='number', name='analyzeTime')
+                        br
+                        br
+                        button(type="submit",class="btn btn-primary btn-sm", id="analyzeSocialNetwork") Analyze
+        
+            center
+              Following Following are the clusters of users :
+                if clusters != null
+                    each cluster in clusters
+                        each user in cluster
+                            li= user.userName
+                        br

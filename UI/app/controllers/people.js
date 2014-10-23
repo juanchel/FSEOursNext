@@ -4,4 +4,4 @@ module.exports = function(_, io, participants, passport) {
         res.render("people", {userId: req.session.userId, title:"People", user_name:req.session.passport.user.user_name});
     }
     };
-};
+};;

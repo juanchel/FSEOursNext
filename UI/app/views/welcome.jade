@@ -10,10 +10,6 @@ html
     link(rel='stylesheet', href='/csspensans.css')
     link(rel='stylesheet', href='/css/style.css')
     link(rel='stylesheet', href='/css/bootstrap.min.css')
-    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js')
-    script(src='http://code.jquery.com/jquery-latest.js')
-    script(src='http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css')
-    script(src='http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js')
     script(src='/js/bootstrap.min.js')
     script(src='/js/status.js')
   title SSNoC - Welcome
@@ -21,15 +17,13 @@ html
   body
     include includes/navbar.jade
     br
-    if message.length > 0
+    if typeof(message) !== 'undefined'
+      if message.length > 0
         div.alert.alert-danger#passport_alert #{message}
     br
-
-  body
-    form(action='/publicmessage', method='post')
-      |Post Public Message: 
-      input(type='text', name='publicMessage')
-      button(type="submit" class="btn btn-info btn-lg" id="postMessageButton") Post Message
+    br
+    br
+    br
 
   body(onload='$(\'#my-modal\').modal(\'show\');')
     #my-modal.modal.fade
@@ -44,4 +38,7 @@ html
                     p Emergency - I need help now, as this is a life threatening emergency! 
                     p Undefined - No status yet. 
                     p To share status, click on 'Submit' and select your status.
+
+
+
     

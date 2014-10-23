@@ -1,0 +1,35 @@
+doctype html
+html
+  include includes/head.jade
+  script(src='/js/jquery.cookie.js')
+  script(src='/js/message.js')
+  title SSNoC - Message
+  body
+    include includes/navbar.jade
+    br
+    br
+    br
+    br
+    div#chatbuddy(style="display:none;") #{username}
+    if error_messages.length > 0
+      each error_message in error_messages
+        div.alert.alert-danger#passport_alert= error_message
+    div.bm#main-message
+      form(action='/send_message', method='post')
+        div.container
+          p Private messages:
+        div.container
+          div.well
+            each message in messages
+              p= message
+        div.container
+          p Write a private message to: #{username}
+          br
+          input(type='textarea', name='content', cols='25', row='5')
+          br
+          input(type='hidden', name='target', value="#{username}")
+          br
+          button(type="submit" class="btn btn-primary btn-sm" id="sendMessageBtn") Send Message
+        
+
+                    

@@ -10,7 +10,7 @@ function validateSignupRequest(req) {
 		return "Username is too short.";
 	} else if (bannedUsernames.indexOf(username) >= 0) {
 		return "This username is reserved.";
-	} else if (password != passwordRepeated) {
+	} else if (password !== passwordRepeated) {
 		return "Two passwords do not match each other.";
 	} else if (password.length < 4) {
 		return "This password is too short";
@@ -42,22 +42,26 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
         }
       });
     },
-
+    
     postSignup : function(req, res, next) {
-      err = validateSignupRequest(req);
+      var err = validateSignupRequest(req);
       if (err) {
     	  req.flash('signupMessage', err);
     	  res.redirect('/signup');
     	  return;
       }
+
       passport.authenticate('local-signup', function(err, user, isNewUser, info) {
-        if (err)
+        if (err) {
           return next(err);
-        if (!user)
+        }
+        if (!user) {
           return res.redirect('/signup');
+        }
         req.logIn(user, function(err) {
-          if (err)
+          if (err) {
             return next(err);
+          }
           participants.all.push({'userName' : user.local.name, 'emergency' : user.local.status});
           if (!isNewUser){
         	  req.flash('welcomeMessage','You have already signed up. Welcome back! Haha!');
@@ -75,7 +79,7 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
     	  } else {
     		  for (var sId in participants.online) {
     		      var userName = participants.online[sId].userName;
-    		      if (userName == user_name) {
+    		      if (userName === user_name) {
     		          participants.online[sId] = {'userName' : user_name, 'status': status};
     		      }
     		  }
@@ -85,25 +89,98 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
       });
     },
 
-	postPublicMessage : function (req, res, next) {
+
+	startMeasurePerformanceFn : function (req, res, next) {
 		var user_name = req.session.passport.user.user_name;
-		console.log("Testing request: public message" + req);
-		User.setPublicMessage(user_name, req.body.publicMessage, function(error, publicMessage) {
+		console.log("In user.js");
+		User.sendMeasurePerformanceStart(user_name, req.body.measurePerformanceTime, function(error, measurePerformanceTime) {
 			if (error){
 				next(error);
 			} else {
-				for (var sId in participants.online) {
-	    		      var userName = participants.online[sId].userName;
-	    		      if (userName == user_name) {
-	    		          participants.online[sId] = {'userName' : user_name, 'publicMessage': publicMessage};				
-					}
-				}
+			//	io.sockets.emit("newConnection", {participants: participants});
+	    	//	res.redirect('/w');
+			}
+
+      res.redirect('/monitor');
+		});
+	},
+	
+	postMeasurePerformanceFn : function (req, res, next) {
+		var user_name = req.session.passport.user.user_name;
+		console.log("Inside post");
+		User.postForMeasurePerformance(user_name, function(error, postMessage) {
+			if (error){
+				next(error);
+			} else {
 				io.sockets.emit("newConnection", {participants: participants});
-				console.log("Testing response - public message:" + res);
 	    		res.redirect('/welcome');
 			}
 		});
 	},
+	
+	getMeasurePerformanceFn : function(req, res) {
+      var user_name = req.session.passport.user.user_name;
+		console.log("Inside get");
+      User.getfromMeasurePerformance(user_name, function(err, message) {
+        
+      });
+      res.redirect('/welcome');
+    },
+
+	stopMeasurePerformanceFn : function(req, res) {
+      User.stopMeasurePerformance(function(err, tr) {
+        res.render('monitor', {
+			posts: "Posts/sec = " + tr.post, 
+			gets: "Gets/sec = " + tr.get,
+      message: ''
+		});
+
+      //res.redirect('/welcome');
+      });
+    },
+    
+    analyzeNetwork:function (req,res) {
+      res.render('analyze', {
+          title: "Hello " + req.session.passport.user.user_name + " !!",
+          message: req.flash('welcomeMessage')
+      });
+      console.log("I'm in analyzeNetworkFunction!");
+  },
+
+   hoursForAnalyzing:function(req, res, next) {
+      var user_name = req.session.passport.user.user_name;
+      console.log("In user.js");
+      User.sendHoursForAnalyzing(user_name, req.body.analyzeTime, function(error, clusters) {
+      if (error){
+          next(error);
+      } else {
+          res.render('analyze', {clusters : clusters});
+      }
+      });
+   },
+
+	startMeasureMemoryFn : function (req, res, next) {
+		var user_name = req.session.passport.user.user_name;
+		User.MeasureMemoryStart(user_name, function(error, measurePerformanceTime) {
+			if (error){
+				next(error);
+			} else {
+				io.sockets.emit("newConnection", {participants: participants});
+	    		res.redirect('/monitor');
+			}
+		});
+	},
+	
+	stopMeasureMemoryFn : function(req, res) {
+	  User.MeasureMemoryStop(function(err, entries) {
+
+		console.log('entries length ' + entries.length);
+		console.log('entries ' + JSON.stringify(entries));
+		res.render('monitor', {entries: entries, message: ''});
+
+      });
+    },
+	
 
     getWelcome : function(req, res) {
      res.render('welcome', {

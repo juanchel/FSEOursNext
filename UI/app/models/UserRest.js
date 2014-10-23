@@ -1,12 +1,19 @@
 var bcrypt = require('bcrypt-nodejs');
 var request = require('request');
 var rest_api = require('../../config/rest_api');
+var utils = require('../utils');
 
-function User(user_name, password){
-  this.local = {
-    name : user_name,
-    password : password
+var alive = true;
+
+var asyncLoop = function(o) {
+  var endTime = o.endTime;
+
+  var loop = function(){
+    if (parseInt((new Date()).getTime() / 1000)>=endTime){o.callback(); return;}
+    console.log(endTime-parseInt((new Date()).getTime() / 1000))
+    o.functionToLoop(loop);
   };
+  loop();
 }
 
 function User(user_name, password, st){
@@ -14,7 +21,7 @@ function User(user_name, password, st){
     name : user_name,
     password : password,
     status : st
-  }
+  };
 }
 
 User.generateHash = function(password) {
@@ -102,10 +109,10 @@ User.saveNewUser = function(user_name, password, callback) {
   });
 };
 
-User.setStatus = function(user_name, status, callback) {
+User.prototype.setStatus = function(status, callback) {
   var options = {
-    url : rest_api.save_status + status + '/status',
-    body : {'userName' : user_name},
+    url : rest_api.save_status + this.local.name,
+    body : {status: status},
     json : true
   };
 
@@ -147,6 +154,190 @@ User.setPublicMessage = function(user_name, publicMessage, callback) {
 	    callback(null, publicMessage);
 	    return;
 	  });
+};
+
+User.sendHoursForAnalyzing = function(user_name,analyzeTime,callback){
+  console.log("Yo Analyze Time is here:" + analyzeTime);
+  var options = {
+      url : rest_api.analyzing_network + analyzeTime,
+      body : {'userName' : user_name},
+      json : true
+  };
+
+  request.get(options, function(err, res, body) {
+      //console.log("callback of post sending hours for analyzing " + err + res.statusCode + body);
+      if (err){
+          callback(err,null);
+          return;
+      }
+      if (res.statusCode !== 200 && res.statusCode !== 201) {
+          callback(res.body, null);
+          return;
+      }
+      callback(null, res.body);
+      return;
+  });
+};
+
+User.sendMeasurePerformanceStart = function(user_name, measurePerformanceTime, callback) {
+	console.log("In userrest.js" + measurePerformanceTime);
+	var options = {
+		url : rest_api.set_measure_performance_time + measurePerformanceTime,
+		json : true
+	};
+
+	request.post(options, function(err, res, body) {
+	    if (err){
+	      callback(err,null);
+	      return;
+	    }
+	    if (res.statusCode !== 200 && res.statusCode !== 201) {
+	      callback(res.body, null);
+	      return;
+	    }
+	    callback(null, measurePerformanceTime);
+	    return;
+	  });
+
+	var startTime = parseInt((new Date()).getTime() / 1000);
+	var endTime = (startTime + parseInt(measurePerformanceTime));
+
+	// while (startTime < endTime){
+	// 	//posts
+	// 	User.postForMeasurePerformance(user_name, function(error, postMessage) { });
+	// 	//gets
+	// 	User.getfromMeasurePerformance(user_name, function(err, message) { });
+
+ //      startTime = parseInt((new Date()).getTime() / 1000);
+ //      console.log('current time ' + startTime)
+	// }
+
+  asyncLoop({
+    endTime : endTime,
+    functionToLoop : function(loop) {
+      setTimeout(function() {
+        User.postForMeasurePerformance(user_name, function(error, message) {alive = message;});
+        if (!alive) {return;}
+        loop();
+      }, 2);
+    },
+    callback : function() {
+      console.log('done');
+    }
+  });
+
+  asyncLoop({
+    endTime : endTime,
+    functionToLoop : function(loop) {
+      setTimeout(function() {
+        User.getfromMeasurePerformance(user_name, function(err, message) {alive = message; });
+        if (!alive) {return;}
+        loop();
+      }, 2);
+    },
+    callback : function() {
+      console.log('done');
+    }
+  });
+
+  // callback(null, 0);
+  // console.log('done with while loop');
+  // return;
+};
+
+User.postForMeasurePerformance = function(user_name, callback) {
+	var options = {
+		url : rest_api.measure_performance_post + user_name,
+		body : {'content' : "abcdefghijklmnopqrst"},
+		json : true
+	};
+	request.post(options, function(err, res, body) {
+	    if (err){
+	      callback(err,false);
+	    }
+	    if (res.statusCode !== 200 && res.statusCode !== 201) {
+	      callback(res.body, false)
+	    }
+	    callback(null, true);
+	  });
+};
+
+User.getfromMeasurePerformance = function(user_name, callback) {
+  request(rest_api.measure_performance_get, {json:true}, function(err, res, body) {
+    if (err){
+      callback(err,false);
+    }
+    if (res.statusCode == 200) {
+      callback(null, true);
+    }
+    if (res.statusCode !== 200) {
+      callback(null, false);
+    }
+
+  });
+};
+
+User.stopMeasurePerformance = function(callback) {
+	console.log('stopMeasurePerformance');
+  request(rest_api.end_measure_performance, {json:true}, function(err, res, body) {
+    if (err){
+      callback(err,null);
+      return;
+    }
+
+    console.log('body ' + JSON.stringify(body));
+
+    if (res.statusCode === 200) {
+      var tr = {post:body.post, get:body.get};
+      callback(null, tr);
+      return;
+    }
+    if (res.statusCode !== 200) {
+      callback(null, null);
+      return;
+    }
+  });
+};
+
+User.MeasureMemoryStart = function(user_name, callback) {
+	var options = {
+		url : rest_api.start_measure_memory,
+		body : {'userName' : user_name},
+		json : true
+	};
+	
+	request.post(options, function(err, res, body) {
+	    if (err){
+	      callback(err,null);
+	      return;
+	    }
+	    if (res.statusCode !== 200 && res.statusCode !== 201) {
+	      callback(res.body, null);
+	      return;
+	    }
+	    callback(null, res.body);
+	    return;
+	  });
+};
+
+User.MeasureMemoryStop = function(callback) {
+
+  request.get(rest_api.end_measure_memory, {json:true}, function(err, res, body) {
+
+    if (err){
+      callback(err,null);
+      return;
+    }
+	
+    if (res.statusCode === 200) {
+	    callback(null, body);
+        return;
+    }
+    if (res.statusCode !== 200) {
+      callback(null, null);
+      return;
+    }
+  });
 };
 
 module.exports = User;
