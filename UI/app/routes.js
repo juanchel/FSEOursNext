@@ -60,6 +60,9 @@ module.exports = function(app, _, io, participants, passport) {
   app.get("/getMeasurePerformance", user_controller.getMeasurePerformanceFn);
   app.get("/stopMeasurePerformance", user_controller.stopMeasurePerformanceFn);
 
+  app.post("/startMeasureMemory", user_controller.startMeasureMemoryFn);
+  app.get("/stopMeasureMemory", user_controller.stopMeasureMemoryFn);
+
   app.get("/wall", isLoggedIn, message_controller.getWall);
   app.get("/monitor", isLoggedIn, monitor_controller.getResult);
 };

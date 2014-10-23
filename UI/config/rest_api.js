@@ -17,7 +17,6 @@ module.exports = {
   'set_measure_performance_time' : host_url + '/test/start/',
   'measure_performance_post' : host_url + '/test/post/',
   'measure_performance_get' : host_url + '/test/get',
-  'end_measure_performance' : host_url + '/test/end',
   'analyzing_network' : host_url + '/users/clusters/',
   'searchForUsername' : host_url + '/search/username',
   'searchForStatus' : host_url + '/search/status',
@@ -25,4 +24,8 @@ module.exports = {
   'searchForWall' : host_url + '/search/wall',
   'searchForPrivateMessage' : host_url + '/search/private/{username}',
   
+  'end_measure_performance' : host_url + '/test/end',
+  'start_measure_memory' : host_url + '/memory/start',
+  'save_measure_memory': host_url + '/memory/save',
+  'end_measure_memory' : host_url + '/memory/end',
 };
