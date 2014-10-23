@@ -25,29 +25,33 @@ html
       p Measure Performance
     form(action='/startMeasurePerformance', method='post')
       |Enter Time: 
-      input(type='text', name='measurePerformanceTime')
-      button(type="submit" class="btn btn-info btn-lg" id="startMeasurePerformanceButton") Start
+      input(type='text', name='measurePerformanceTime')   
+      button(type="submit" class="btn btn-primary btn-sm" id="startMeasurePerformanceButton") Start
 
   
   body 
     form(action='/stopMeasurePerformance', method='post')
       input(type='hidden', name='serial', value="#{serial}")
-      button(type="submit" class="btn btn-info btn-lg" id="stopMeasurePerformanceButton") Stop
+      button(type="submit" class="btn btn-primary btn-sm" id="stopMeasurePerformanceButton") Stop
 
   div#serial(style='display: none') #{serial}
+  p The number of posts per sec is:
   p#post_result
+  p The number of gets per sec is:
   p#get_result
-  
+  br
+  br
+  br
 
   p Measure Memory
   body 
     form(action='/startMeasureMemory', method='post')
-      button(type="submit" class="btn btn-info btn-lg" id="startMeasureMemoryButton") Start Measure Memory
-    
+      button(type="submit" class="btn btn-primary btn-sm" id="startMeasureMemoryButton") Start Measure Memory
+    br
 
   body
     form(action='/stopMeasureMemory', method='get')
-      button(type="submit" class="btn btn-info btn-lg" id="stopMeasureMemoryButton") Stop Measure Memory
+      button(type="submit" class="btn btn-primary btn-sm" id="stopMeasureMemoryButton") Stop Measure Memory
   
 
   body

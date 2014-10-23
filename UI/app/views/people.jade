@@ -25,12 +25,10 @@ html
       form(action='/status', method='post')
       h4.text-centre
         You You may now update your status : 
-        &nbsp
         select(name='statusSelect')
-          option(id="option-1",value='1') Okay
-          option(id="option-3",value='2') Help
-          option(id="option-2",value='3') EMERGENCY!!!
-        &nbsp
+          option(value='1') Okay
+          option(value='2') Help
+          option(value='3') EMERGENCY!!!
         button(type="submit" class="btn btn-primary btn-sm" id="signupBtn") update status
       br
       br
