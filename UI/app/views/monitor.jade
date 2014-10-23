@@ -30,9 +30,7 @@ html
 
   
   body 
-    form(action='/stopMeasurePerformance', method='post')
-      input(type='hidden', name='serial', value="#{serial}")
-      button(type="submit" class="btn btn-info btn-lg" id="stopMeasurePerformanceButton") Stop
+      button(class="btn btn-info btn-lg" id="stopMeasurePerformanceButton") Stop
 
   div#serial(style='display: none') #{serial}
   p#post_result

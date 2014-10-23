@@ -124,7 +124,7 @@ module.exports = function(_, io, participants, performanceMeasurements, passport
 	stopMeasurePerformanceFn : function(req, res) {
 	  if (!performanceMeasurements.onGoing) {
 	    console.warn("no ongoing performance measurement");
-	    res.render("monitor", {serial : req.body.serial});
+	    res.json(200, {serial : req.body.serial, stopped : false, error: "no ongoing performance measurement"});
 	    return;
 	  }
     var user_name = req.session.passport.user.user_name;
@@ -133,10 +133,10 @@ module.exports = function(_, io, participants, performanceMeasurements, passport
         serial == performanceMeasurements.serial) {
       performanceMeasurements.cancelRequested = true;
       console.info("cancel requested: " + performanceMeasurements.cancelRequested);
-      res.render("monitor", {serial : serial});
+      res.json(200, {serial : serial, stopped : true, error: null});
     } else {
       console.warn("username or serial does not match");
-      res.render("monitor", {serial : serial});
+      res.json(200, {serial : serial, stopped : false, error: "username or serial does not match"});
     }
 	},
     
