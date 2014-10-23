@@ -59,6 +59,29 @@ public class MessagesService extends BaseService {
         return messages;
     }
 
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/announcements")
+    public List<Message> getAnnouncements () {
+        List<Message> messages = null;
+
+        try {
+            List<MessagePO> messagePOs = DAOFactory.getInstance().getMessageDAO().loadAnnouncement();
+
+            messages = new ArrayList<Message>();
+            for (MessagePO po : messagePOs) {
+                Message dto = ConverterUtils.convert(po);
+                messages.add(dto);
+            }
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return messages;
+    }
+
 
 
 }
