@@ -65,6 +65,43 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
 
     }
 
+    public void saveAnnouncement(MessagePO messagePO){
+        Log.enter(messagePO);
+        if (messagePO == null) {
+            Log.warn("Inside save method with messagePO == NULL");
+            return;
+        }
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL.POST_ANNOUNCEMENT)) {
+            stmt.setString(1, messagePO.getContent());
+            stmt.setString(2, messagePO.getAuthor());
+            stmt.setTimestamp(3, Timestamp.valueOf(messagePO.getTimestamp()));
+            int rowCount = stmt.executeUpdate();
+            Log.trace("Statement executed, and " + rowCount + " rows inserted.");
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit();
+        }
+    }
+
+    public List<MessagePO> loadAnnouncement(){
+        Log.enter();
+
+        String query = SQL.GET_ALL_ANNOUNCEMENTS;
+
+        List<MessagePO> messages = new ArrayList<MessagePO>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);) {
+            messages = processPublicResults(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(messages);
+        }
+        return messages;
+    }
+
     public void testSave(MessagePO messagePO){
         Log.enter(messagePO);
         if (messagePO == null) {

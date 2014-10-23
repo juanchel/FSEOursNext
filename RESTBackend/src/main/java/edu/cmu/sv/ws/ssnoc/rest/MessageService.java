@@ -49,6 +49,35 @@ public class MessageService extends BaseService {
         return created(resp);
     }
 
+
+    @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/{userName}/announcement")
+    public Response postAnnouncement (@PathParam("userName") String userName, Message m) {
+
+        Message resp = new Message();
+        m.setPublic(true);
+        m.setAuthor(userName);
+
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String ts = sdf.format(date);
+
+        m.setTimestamp(ts);
+
+        try {
+            IMessageDAO dao = DAOFactory.getInstance().getMessageDAO();
+            MessagePO po = ConverterUtils.convert(m);
+            dao.saveAnnouncement(po);
+            resp = ConverterUtils.convert(po);
+        } catch (Exception e) {
+            handleException(e);
+        }
+
+        return created(resp);
+    }
+
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
