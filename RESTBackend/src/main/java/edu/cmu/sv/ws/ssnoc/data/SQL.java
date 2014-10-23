@@ -32,6 +32,7 @@ public class SQL {
             "user_name VARCHAR(255) NOT NULL," +
             "password varchar(40) NOT NULL,"+
             "emergency_status smallint ,"+
+            "role smallint,"+
             "salt VARCHAR(512)  );";
 
     public static final String CREATE_MESSAGES = "CREATE TABLE IF NOT EXISTS "+ SSN_MESSAGES +" (" +
@@ -109,7 +110,7 @@ public class SQL {
      * Query to load all users in the system.
      */
     public static final String FIND_ALL_USERS = "select user_id, user_name, password,"
-            + " emergency_status," + " salt " + " from " + SSN_USERS + " order by user_name";
+            + " emergency_status," + " salt, role " + " from " + SSN_USERS + " order by user_name";
 
     /**
      * Query to find a user details depending on his name. Note that this query
@@ -117,7 +118,7 @@ public class SQL {
      */
     public static final String FIND_USER_BY_NAME = "select user_id, user_name, password,"
             + " emergency_status,"
-            + " salt "
+            + " salt, role "
             + " from "
             + SSN_USERS
             + " where UPPER(user_name) = UPPER(?)";
@@ -156,4 +157,8 @@ public class SQL {
             + " (user_name, password, emergency_status, salt) values (?, ?, ?, ?)";
 
     public static final String UPDATE_STATUS = "UPDATE " + SSN_USERS + " SET emergency_status=? WHERE user_name=?";
+
+    public static final String UPDATE_USERNAME = "UPDATE " + SSN_USERS + " SET user_name=? WHERE user_name=?";
+    public static final String UPDATE_PASSWORD = "UPDATE " + SSN_USERS + " SET password=?, salt=? WHERE user_name=?";
+    public static final String UPDATE_ROLE = "UPDATE " + SSN_USERS + " SET role=? WHERE user_name=?";
 }

@@ -29,6 +29,7 @@ public class ConverterUtils {
 		User dto = new User();
 		dto.setUserName(po.getUserName());
         dto.setEmergency_status(po.getEmergency_status());
+        dto.setRole(po.getRole());
 		return dto;
 	}
 
@@ -49,6 +50,7 @@ public class ConverterUtils {
 		po.setUserName(dto.getUserName());
 		po.setPassword(dto.getPassword());
         po.setEmergency_status(dto.getEmergency_status());
+        po.setRole(dto.getRole());
 
 		return po;
 	}
