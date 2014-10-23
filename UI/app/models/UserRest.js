@@ -3,6 +3,19 @@ var request = require('request');
 var rest_api = require('../../config/rest_api');
 var utils = require('../utils');
 
+var alive = true;
+
+var asyncLoop = function(o) {
+  var endTime = o.endTime;
+
+  var loop = function(){
+    if (parseInt((new Date()).getTime() / 1000)>=endTime){o.callback(); return;}
+    console.log(endTime-parseInt((new Date()).getTime() / 1000))
+    o.functionToLoop(loop);
+  };
+  loop();
+}
+
 function User(user_name, password, st){
   this.local = {
     name : user_name,
@@ -170,13 +183,10 @@ User.sendMeasurePerformanceStart = function(user_name, measurePerformanceTime, c
 	console.log("In userrest.js" + measurePerformanceTime);
 	var options = {
 		url : rest_api.set_measure_performance_time + measurePerformanceTime,
-		body : {'userName' : user_name},
 		json : true
 	};
-	
 
 	request.post(options, function(err, res, body) {
-		console.log("callback of post send measure perf " + err + res.statusCode + body);
 	    if (err){
 	      callback(err,null);
 	      return;
@@ -188,6 +198,51 @@ User.sendMeasurePerformanceStart = function(user_name, measurePerformanceTime, c
 	    callback(null, measurePerformanceTime);
 	    return;
 	  });
+
+	var startTime = parseInt((new Date()).getTime() / 1000);
+	var endTime = (startTime + parseInt(measurePerformanceTime));
+
+	// while (startTime < endTime){
+	// 	//posts
+	// 	User.postForMeasurePerformance(user_name, function(error, postMessage) { });
+	// 	//gets
+	// 	User.getfromMeasurePerformance(user_name, function(err, message) { });
+
+ //      startTime = parseInt((new Date()).getTime() / 1000);
+ //      console.log('current time ' + startTime)
+	// }
+
+  asyncLoop({
+    endTime : endTime,
+    functionToLoop : function(loop) {
+      setTimeout(function() {
+        User.postForMeasurePerformance(user_name, function(error, message) {alive = message;});
+        if (!alive) {return;}
+        loop();
+      }, 2);
+    },
+    callback : function() {
+      console.log('done');
+    }
+  });
+
+  asyncLoop({
+    endTime : endTime,
+    functionToLoop : function(loop) {
+      setTimeout(function() {
+        User.getfromMeasurePerformance(user_name, function(err, message) {alive = message; });
+        if (!alive) {return;}
+        loop();
+      }, 2);
+    },
+    callback : function() {
+      console.log('done');
+    }
+  });
+
+  // callback(null, 0);
+  // console.log('done with while loop');
+  // return;
 };
 
 User.postForMeasurePerformance = function(user_name, callback) {
@@ -196,45 +251,41 @@ User.postForMeasurePerformance = function(user_name, callback) {
 		body : {'content' : "abcdefghijklmnopqrst"},
 		json : true
 	};
-	console.log("Posting");
 	request.post(options, function(err, res, body) {
 	    if (err){
-	      callback(err,null);
-	      return;
+	      callback(err,false);
 	    }
 	    if (res.statusCode !== 200 && res.statusCode !== 201) {
-	      callback(res.body, null);
-	      return;
+	      callback(res.body, false)
 	    }
-	    callback(null, res.body);
-	    return;
+	    callback(null, true);
 	  });
 };
 
 User.getfromMeasurePerformance = function(user_name, callback) {
-	console.log("Getting");
   request(rest_api.measure_performance_get, {json:true}, function(err, res, body) {
     if (err){
-      callback(err,null);
-      return;
+      callback(err,false);
     }
-    if (res.statusCode === 200) {
-      callback(null, res);
-      return;
+    if (res.statusCode == 200) {
+      callback(null, true);
     }
     if (res.statusCode !== 200) {
-      callback(null, null);
-      return;
+      callback(null, false);
     }
+
   });
 };
 
 User.stopMeasurePerformance = function(callback) {
+	console.log('stopMeasurePerformance');
   request(rest_api.end_measure_performance, {json:true}, function(err, res, body) {
     if (err){
       callback(err,null);
       return;
     }
+
+    console.log('body ' + JSON.stringify(body));
 
     if (res.statusCode === 200) {
       var tr = {post:body.post, get:body.get};
@@ -249,7 +300,6 @@ User.stopMeasurePerformance = function(callback) {
 };
 
 User.MeasureMemoryStart = function(user_name, callback) {
-	console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@Inside User Rest");
 	var options = {
 		url : rest_api.start_measure_memory,
 		body : {'userName' : user_name},
@@ -270,42 +320,16 @@ User.MeasureMemoryStart = function(user_name, callback) {
 	  });
 };
 
-/*function listProperties(obj) {
-   var propList = "";
-   for(var propName in obj) {
-      if(typeof(obj[propName]) != "undefined") {
-         propList = propList + propName + ", ";
-      }
-   }
-   return propList;
-}*/
-
 User.MeasureMemoryStop = function(callback) {
-//  request.post({
-//	url: rest_api.save_measure_memory,
-//	// body: {'userName': user_name},
-//	// json: true,
-//  }, function(err, res, body) { console.log('Got res.status code from save: ' + res.statusCode); });
 
   request.get(rest_api.end_measure_memory, {json:true}, function(err, res, body) {
-    //console.log("err from backend" + err);
-    //console.log("res.status code from backend " + res.statusCode);
-    //console.log("body :" + listProperties(body));
 
     if (err){
       callback(err,null);
       return;
     }
 	
-    //var memory = body[0];
-	//var i = 0; 
     if (res.statusCode === 200) {
-		//for (var i in body) {
-			//var mem = {timestamp: memory.timestamp, usedVolatile: memory.usedVolatile, leftVolatile: memory.leftVolatile, usedNonVolatile: memory.usedNonVolatile, leftNonVolatile: memory.leftNonVolatile};
-	      	//console.log ("Testing in OK From Backend: " + body[i].timestamp + body[i].usedVolatile);
-			//callback(null, body[i].timestamp, body[i].usedVolatile, body[i].leftVolatile, body[i].usedNonVolatile, body[i].leftNonVolatile);
-			//i++;
-		//}
 	    callback(null, body);
         return;
     }
