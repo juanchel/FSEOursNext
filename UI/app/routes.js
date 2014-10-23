@@ -36,8 +36,8 @@ module.exports = function(app, _, io, participants, performanceMeasurements, pas
   app.post("/publicmessage", message_controller.postPublicMessage);
   app.get("/publicmessage", message_controller.getWall);
   
-  app.post("/startMeasurePerformance", user_controller.startMeasurePerformanceFn);
-  app.get("/stopMeasurePerformance", user_controller.stopMeasurePerformanceFn);
+  app.post("/startMeasurePerformance", isLoggedIn, user_controller.startMeasurePerformanceFn);
+  app.post("/stopMeasurePerformance", isLoggedIn, user_controller.stopMeasurePerformanceFn);
   
   app.post("/analyzeSocialNetwork", isLoggedIn, user_controller.hoursForAnalyzing);
   app.get("/analyze", isLoggedIn, user_controller.analyzeNetwork);

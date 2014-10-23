@@ -5,18 +5,18 @@ var utils = require('../utils');
 
 var alive = true;
 
-var asyncLoop = function(endTime, performanceMeasurement, functionToLoop, finalCallback) {
-  var loop = function(i) {
+var asyncLoop = function(endTime, performanceMeasurements, functionToLoop, finalCallback) {
+  var loop = function(i, performanceMeasurement) {
     var currentTime = new Date();
     if (currentTime < endTime && 
         !performanceMeasurement.cancelRequested) {
-      functionToLoop(i+1, loop);
+      functionToLoop(i+1, performanceMeasurement, loop);
     } else {
       finalCallback(i);
     }
   };
   
-  loop(0);
+  loop(0, performanceMeasurements);
 };
 
 function User(user_name, password, st){
@@ -188,6 +188,8 @@ User.sendMeasurePerformanceStart = function(user_name, timePeriodSeconds, perfor
 		url : rest_api.set_measure_performance_time + timePeriodSeconds,
 		json : true
 	};
+  
+  console.info("start measurement: " + options.url);
 
 	request.post(options, function(err, res, body) {
 	  if (err) {
@@ -210,17 +212,19 @@ User.sendMeasurePerformanceStart = function(user_name, timePeriodSeconds, perfor
 	  var endTime = new Date(startTimeMillis + timePeriodSeconds * 1000);
 
 	  asyncLoop(endTime, performanceMeasurements,
-	      function(i, loop) {
+	      function(i, performanceMeasurement, loop) {
 	        User.postForMeasurePerformance(user_name, function(error, isSuccessful) {
 	          if (!isSuccessful) {
 	            console.warn("POST mesure performance request got error: " + error);
 	          }
-	          loop(i);
+	          loop(i, performanceMeasurement);
 	        });
 	      },
 	      function(i) {
 	        console.log('we have executed ' + i + ' POST requests');
 	        performanceMeasurements.numPosts = i;
+	        console.log("num POSTs " + performanceMeasurements.numPosts + ", num GETs " +
+	            performanceMeasurements.numGets);
 	        if (performanceMeasurements.numGets >= 0) {
 	          stoppedCallback();
 	        }
@@ -228,17 +232,19 @@ User.sendMeasurePerformanceStart = function(user_name, timePeriodSeconds, perfor
 	  );
 
 	  asyncLoop(endTime, performanceMeasurements,
-	      function(i, loop) {
+	      function(i, performanceMeasurement, loop) {
 	        User.getfromMeasurePerformance(user_name, function(error, isSuccessful) {
 	          if (!isSuccessful) {
 	            console.warn("GET mesure performance request got error: " + error);
 	          }
-	          loop(i);
+	          loop(i, performanceMeasurement);
 	        });
 	      },
 	      function(i) {
 	        console.log('we have executed ' + i + ' GET requests');
 	        performanceMeasurements.numGets = i;
+	        console.log("num POSTs " + performanceMeasurements.numPosts + ", num GETs " +
+	              performanceMeasurements.numGets);
 	        if (performanceMeasurements.numPosts >= 0) {
 	          stoppedCallback();
 	        }

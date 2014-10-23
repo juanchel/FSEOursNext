@@ -132,10 +132,11 @@ module.exports = function(_, io, participants, performanceMeasurements, passport
     if (user_name === performanceMeasurements.username && 
         serial === performanceMeasurements.serial) {
       performanceMeasurements.cancelRequested = true;
-      res.render("monitor", {serial : req.body.serial});
+      console.info("cancel requested: " + performanceMeasurements.cancelRequested);
+      res.render("monitor", {serial : serial});
     } else {
       console.warn("username or serial does not match");
-      res.render("monitor", {serial : req.body.serial});
+      res.render("monitor", {serial : serial});
     }
 	},
     
