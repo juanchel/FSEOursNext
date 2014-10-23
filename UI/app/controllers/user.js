@@ -100,6 +100,8 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
 			//	io.sockets.emit("newConnection", {participants: participants});
 	    	//	res.redirect('/w');
 			}
+
+      res.redirect('/monitor');
 		});
 	},
 	
@@ -158,7 +160,6 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
    },
 
 	startMeasureMemoryFn : function (req, res, next) {
-		console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@Inside User");
 		var user_name = req.session.passport.user.user_name;
 		User.MeasureMemoryStart(user_name, function(error, measurePerformanceTime) {
 			if (error){
@@ -168,26 +169,15 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
 	    		res.redirect('/monitor');
 			}
 		});
-		console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@Back to User");
 	},
 	
 	stopMeasureMemoryFn : function(req, res) {
-      //User.MeasureMemoryStop(function(err, timeStamp, usedVolatile, leftVolatile, usedNonVolatile, leftNonVolatile) {
 	  User.MeasureMemoryStop(function(err, entries) {
-		//console.log("Testing if values arrive: " + usedVolatile + leftVolatile);
-//        res.render('monitor', {
-//			timestamp: timeStamp,
-//			usedVolatile: usedVolatile,
-//			leftVolatile: leftVolatile,
-//			usedNonVolatile: usedNonVolatile,
-//			leftNonVolatile: leftNonVolatile,
-//			message: ''
-//		});
+
 		console.log('entries length ' + entries.length);
 		console.log('entries ' + JSON.stringify(entries));
 		res.render('monitor', {entries: entries, message: ''});
 
-      //res.redirect('/welcome');
       });
     },
 	
