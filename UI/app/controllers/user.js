@@ -129,8 +129,8 @@ module.exports = function(_, io, participants, performanceMeasurements, passport
 	  }
     var user_name = req.session.passport.user.user_name;
     var serial = req.body.serial;
-    if (user_name === performanceMeasurements.username && 
-        serial === performanceMeasurements.serial) {
+    if (user_name == performanceMeasurements.username && 
+        serial == performanceMeasurements.serial) {
       performanceMeasurements.cancelRequested = true;
       console.info("cancel requested: " + performanceMeasurements.cancelRequested);
       res.render("monitor", {serial : serial});

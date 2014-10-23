@@ -257,7 +257,8 @@ User.postForMeasurePerformance = function(user_name, callback) {
 	var options = {
 		url : rest_api.measure_performance_post + user_name,
 		body : {'content' : "abcdefghijklmnopqrst"},
-		json : true
+		json : true,
+		timeout : 1000
 	};
 	request.post(options, function(err, res, body) {
 	    if (err) {
@@ -271,7 +272,7 @@ User.postForMeasurePerformance = function(user_name, callback) {
 };
 
 User.getfromMeasurePerformance = function(user_name, callback) {
-  request(rest_api.measure_performance_get, {json:true}, function(err, res, body) {
+  request(rest_api.measure_performance_get, {json:true, timeout : 1000}, function(err, res, body) {
     if (err) {
       callback(err, false);
     } else if (res.statusCode === 200) {
