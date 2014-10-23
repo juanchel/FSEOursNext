@@ -11,7 +11,6 @@ html
     link(rel='stylesheet', href='/css/style.css')
     link(rel='stylesheet', href='/css/bootstrap.min.css')
     script(src='/js/bootstrap.min.js')
-    script(src='/js/monitor.js')
   title SSNoC - Monitor
   body
     include includes/navbar.jade 
@@ -28,23 +27,25 @@ html
       input(type='text', name='measurePerformanceTime')
       button(type="submit" class="btn btn-info btn-lg" id="startMeasurePerformanceButton") Start
 
-  p Measure Memory
+  
   body 
     form(action='/stopMeasurePerformance', method='get')
       button(type="submit" class="btn btn-info btn-lg" id="stopMeasurePerformanceButton") Stop
 
+  p #{posts}
+  p #{gets}
+  
+
+  p Measure Memory
   body 
     form(action='/startMeasureMemory', method='post')
       button(type="submit" class="btn btn-info btn-lg" id="startMeasureMemoryButton") Start Measure Memory
-    form(action='/postMeasurePerformance', method='post')
-      button(type="submit" class="btn btn-info btn-lg" id="postMeasurePerformanceButton") Post
+    
 
   body
     form(action='/stopMeasureMemory', method='get')
       button(type="submit" class="btn btn-info btn-lg" id="stopMeasureMemoryButton") Stop Measure Memory
-  body 
-    form(action='/getMeasurePerformance', method='get')
-      button(type="submit" class="btn btn-info btn-lg" id="getMeasurePerformanceButton") Get
+  
 
   body
     table(style='width: 100%;')
@@ -70,6 +71,4 @@ html
 
 
 
-  p #{posts}
-  p #{gets}
       
