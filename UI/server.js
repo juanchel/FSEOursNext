@@ -14,6 +14,15 @@ var participants = {
   wall : [],
   priv : {}
 };
+  
+var performanceMeasurements = {
+    serial : -1,
+    onGoing : false,
+    cancelRequested : false,
+    username : null,
+    numPosts : -1,
+    numGets : -1
+};
 
 process.chdir(__dirname);
 
@@ -47,7 +56,7 @@ User.getAllUsers(function(err, users) {
     });
   }
 
-  require('./app/routes')(app, _, io, participants, passport);
+  require('./app/routes')(app, _, io, participants, performanceMeasurements, passport);
   require('./app/socket')(_, io, participants);
 });
 
@@ -58,7 +67,7 @@ Message.getAllWallPosts(function(err, messages) {
     });
   }
 
-  require('./app/routes')(app, _, io, participants, passport);
+  require('./app/routes')(app, _, io, participants, performanceMeasurements, passport);
   require('./app/socket')(_, io, participants);
 });
 

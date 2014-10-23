@@ -11,6 +11,7 @@ html
     link(rel='stylesheet', href='/css/style.css')
     link(rel='stylesheet', href='/css/bootstrap.min.css')
     script(src='/js/bootstrap.min.js')
+    script(src='/js/monitor.js')
   title SSNoC - Monitor
   body
     include includes/navbar.jade 
@@ -30,10 +31,12 @@ html
   
   body 
     form(action='/stopMeasurePerformance', method='get')
-      button(type="submit" class="btn btn-info btn-lg" id="stopMeasurePerformanceButton") Stop
+    input(type='hidden', name='serial', value="#{serial}")
+    button(type="submit" class="btn btn-info btn-lg" id="stopMeasurePerformanceButton") Stop
 
-  p #{posts}
-  p #{gets}
+  div#serial(style='display: none') #{serial}
+  p#post_result
+  p#get_result
   
 
   p Measure Memory

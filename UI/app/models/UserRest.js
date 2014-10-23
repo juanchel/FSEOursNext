@@ -5,16 +5,19 @@ var utils = require('../utils');
 
 var alive = true;
 
-var asyncLoop = function(o) {
-  var endTime = o.endTime;
-
-  var loop = function(){
-    if (parseInt((new Date()).getTime() / 1000)>=endTime){o.callback(); return;}
-    console.log(endTime-parseInt((new Date()).getTime() / 1000))
-    o.functionToLoop(loop);
+var asyncLoop = function(endTime, performanceMeasurement, functionToLoop, finalCallback) {
+  var loop = function(i) {
+    var currentTime = new Date();
+    if (currentTime < endTime && 
+        !performanceMeasurement.cancelRequested) {
+      functionToLoop(i+1, loop);
+    } else {
+      finalCallback(i);
+    }
   };
-  loop();
-}
+  
+  loop(0);
+};
 
 function User(user_name, password, st){
   this.local = {
@@ -179,70 +182,69 @@ User.sendHoursForAnalyzing = function(user_name,analyzeTime,callback){
   });
 };
 
-User.sendMeasurePerformanceStart = function(user_name, measurePerformanceTime, callback) {
-	console.log("In userrest.js" + measurePerformanceTime);
-	var options = {
-		url : rest_api.set_measure_performance_time + measurePerformanceTime,
+User.sendMeasurePerformanceStart = function(user_name, timePeriodSeconds, performanceMeasurements, 
+    startedCallback, stoppedCallback) {
+  var options = {
+		url : rest_api.set_measure_performance_time + timePeriodSeconds,
 		json : true
 	};
 
 	request.post(options, function(err, res, body) {
-	    if (err){
-	      callback(err,null);
-	      return;
-	    }
-	    if (res.statusCode !== 200 && res.statusCode !== 201) {
-	      callback(res.body, null);
-	      return;
-	    }
-	    callback(null, measurePerformanceTime);
+	  if (err) {
+	    startedCallback(err, false);
 	    return;
-	  });
+	  } else if (res.statusCode !== 200 && res.statusCode !== 201) {
+	    startedCallback(JSON.stringify(res.body), false);
+	    return;
+	  }
 
-	var startTime = parseInt((new Date()).getTime() / 1000);
-	var endTime = (startTime + parseInt(measurePerformanceTime));
+	  ++performanceMeasurements.serial;
+	  performanceMeasurements.onGoing = true;
+	  performanceMeasurements.cancelRequested = false;
+	  performanceMeasurements.username = user_name;
+	  performanceMeasurements.numPosts = -1;
+	  performanceMeasurements.numGets = -1;
+	  startedCallback(null, true);
+	  
+	  var startTimeMillis = new Date().getTime();
+	  var endTime = new Date(startTimeMillis + timePeriodSeconds * 1000);
 
-	// while (startTime < endTime){
-	// 	//posts
-	// 	User.postForMeasurePerformance(user_name, function(error, postMessage) { });
-	// 	//gets
-	// 	User.getfromMeasurePerformance(user_name, function(err, message) { });
+	  asyncLoop(endTime, performanceMeasurements,
+	      function(i, loop) {
+	        User.postForMeasurePerformance(user_name, function(error, isSuccessful) {
+	          if (!isSuccessful) {
+	            console.warn("POST mesure performance request got error: " + error);
+	          }
+	          loop(i);
+	        });
+	      },
+	      function(i) {
+	        console.log('we have executed ' + i + ' POST requests');
+	        performanceMeasurements.numPosts = i;
+	        if (performanceMeasurements.numGets >= 0) {
+	          stoppedCallback();
+	        }
+	      }
+	  );
 
- //      startTime = parseInt((new Date()).getTime() / 1000);
- //      console.log('current time ' + startTime)
-	// }
-
-  asyncLoop({
-    endTime : endTime,
-    functionToLoop : function(loop) {
-      setTimeout(function() {
-        User.postForMeasurePerformance(user_name, function(error, message) {alive = message;});
-        if (!alive) {return;}
-        loop();
-      }, 2);
-    },
-    callback : function() {
-      console.log('done');
-    }
-  });
-
-  asyncLoop({
-    endTime : endTime,
-    functionToLoop : function(loop) {
-      setTimeout(function() {
-        User.getfromMeasurePerformance(user_name, function(err, message) {alive = message; });
-        if (!alive) {return;}
-        loop();
-      }, 2);
-    },
-    callback : function() {
-      console.log('done');
-    }
-  });
-
-  // callback(null, 0);
-  // console.log('done with while loop');
-  // return;
+	  asyncLoop(endTime, performanceMeasurements,
+	      function(i, loop) {
+	        User.getfromMeasurePerformance(user_name, function(error, isSuccessful) {
+	          if (!isSuccessful) {
+	            console.warn("GET mesure performance request got error: " + error);
+	          }
+	          loop(i);
+	        });
+	      },
+	      function(i) {
+	        console.log('we have executed ' + i + ' GET requests');
+	        performanceMeasurements.numGets = i;
+	        if (performanceMeasurements.numPosts >= 0) {
+	          stoppedCallback();
+	        }
+	      }
+	  );
+	});
 };
 
 User.postForMeasurePerformance = function(user_name, callback) {
@@ -252,49 +254,38 @@ User.postForMeasurePerformance = function(user_name, callback) {
 		json : true
 	};
 	request.post(options, function(err, res, body) {
-	    if (err){
-	      callback(err,false);
+	    if (err) {
+	      callback(err, false);
+	    } else if (res.statusCode !== 200 && res.statusCode !== 201) {
+	      callback(JSON.stringify(res.body), false);
+	    } else {
+	      callback(null, true);
 	    }
-	    if (res.statusCode !== 200 && res.statusCode !== 201) {
-	      callback(res.body, false)
-	    }
-	    callback(null, true);
 	  });
 };
 
 User.getfromMeasurePerformance = function(user_name, callback) {
   request(rest_api.measure_performance_get, {json:true}, function(err, res, body) {
-    if (err){
-      callback(err,false);
-    }
-    if (res.statusCode == 200) {
+    if (err) {
+      callback(err, false);
+    } else if (res.statusCode === 200) {
       callback(null, true);
+    } else {
+      callback(JSON.stringify(res.body), false);
     }
-    if (res.statusCode !== 200) {
-      callback(null, false);
-    }
-
   });
 };
 
-User.stopMeasurePerformance = function(callback) {
+User.stopMeasurePerformance = function (callback) {
 	console.log('stopMeasurePerformance');
   request(rest_api.end_measure_performance, {json:true}, function(err, res, body) {
-    if (err){
+    if (err) {
       callback(err,null);
-      return;
-    }
-
-    console.log('body ' + JSON.stringify(body));
-
-    if (res.statusCode === 200) {
-      var tr = {post:body.post, get:body.get};
-      callback(null, tr);
-      return;
-    }
-    if (res.statusCode !== 200) {
-      callback(null, null);
-      return;
+    } else if (res.statusCode === 200) {
+      var testResults = {post:body.post, get:body.get};
+      callback(null, testResults);
+    } else {
+      callback(JSON.stringify(body), null);
     }
   });
 };

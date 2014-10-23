@@ -19,7 +19,7 @@ function validateSignupRequest(req) {
 	return null;
 }
 
-module.exports = function(_, io, participants, passport, refreshAllUsers) {
+module.exports = function(_, io, participants, performanceMeasurements, passport, refreshAllUsers) {
   return {
     getLogin : function(req, res) {
       res.render("join", {message: req.flash('loginMessage')});
@@ -92,52 +92,52 @@ module.exports = function(_, io, participants, passport, refreshAllUsers) {
 
 	startMeasurePerformanceFn : function (req, res, next) {
 		var user_name = req.session.passport.user.user_name;
-		console.log("In user.js");
-		User.sendMeasurePerformanceStart(user_name, req.body.measurePerformanceTime, function(error, measurePerformanceTime) {
-			if (error){
-				next(error);
-			} else {
-			//	io.sockets.emit("newConnection", {participants: participants});
-	    	//	res.redirect('/w');
-			}
-
-      res.redirect('/monitor');
-		});
+		if (performanceMeasurements.onGoing) {
+		  res.json(200, {error: "on going measurement", started: false, serial: performanceMeasurements.serial});
+		}
+		User.sendMeasurePerformanceStart(user_name, req.body.measurePerformanceTime, performanceMeasurements,
+		    function(error, started) {
+		      if (error) {
+		        console.warn("error starting performance measurement: " + error);
+			      res.render("monitor", {serial: ""});
+		      } else {
+		        res.render("monitor", {serial: performanceMeasurements.serial});
+		      }
+		    },
+		    function() {
+		      performanceMeasurements.onGoing = false;
+		      performanceMeasurements.cancelRequested = false;
+		      console.info("measurement stopped #" + performanceMeasurements.serial);
+		      User.stopMeasurePerformance(function(error, testResults) {
+		        io.sockets.emit('newPerformanceMeasurementResult', {
+		          username : performanceMeasurements.username,
+		          serial : performanceMeasurements.serial,
+		          get : testResults.get,
+		          post : testResults.post,
+		          error : error
+		        });
+		      });
+		    }
+		);
 	},
-	
-	postMeasurePerformanceFn : function (req, res, next) {
-		var user_name = req.session.passport.user.user_name;
-		console.log("Inside post");
-		User.postForMeasurePerformance(user_name, function(error, postMessage) {
-			if (error){
-				next(error);
-			} else {
-				io.sockets.emit("newConnection", {participants: participants});
-	    		res.redirect('/welcome');
-			}
-		});
-	},
-	
-	getMeasurePerformanceFn : function(req, res) {
-      var user_name = req.session.passport.user.user_name;
-		console.log("Inside get");
-      User.getfromMeasurePerformance(user_name, function(err, message) {
-        
-      });
-      res.redirect('/welcome');
-    },
 
 	stopMeasurePerformanceFn : function(req, res) {
-      User.stopMeasurePerformance(function(err, tr) {
-        res.render('monitor', {
-			posts: "Posts/sec = " + tr.post, 
-			gets: "Gets/sec = " + tr.get,
-      message: ''
-		});
-
-      //res.redirect('/welcome');
-      });
-    },
+	  if (!performanceMeasurements.onGoing) {
+	    console.warn("no ongoing performance measurement");
+	    res.render("monitor", {serial : req.body.serial});
+	    return;
+	  }
+    var user_name = req.session.passport.user.user_name;
+    var serial = req.body.serial;
+    if (user_name === performanceMeasurements.username && 
+        serial === performanceMeasurements.serial) {
+      performanceMeasurements.cancelRequested = true;
+      res.render("monitor", {serial : req.body.serial});
+    } else {
+      console.warn("username or serial does not match");
+      res.render("monitor", {serial : req.body.serial});
+    }
+	},
     
     analyzeNetwork:function (req,res) {
       res.render('analyze', {

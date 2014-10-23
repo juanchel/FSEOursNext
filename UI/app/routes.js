@@ -18,8 +18,8 @@ function refreshAllUsers(participants, callback) {
   });
 }
 
-module.exports = function(app, _, io, participants, passport) {
-  var user_controller = require('./controllers/user')(_, io, participants, passport, refreshAllUsers);
+module.exports = function(app, _, io, participants, performanceMeasurements, passport) {
+  var user_controller = require('./controllers/user')(_, io, participants, performanceMeasurements, passport, refreshAllUsers);
   var people_controller = require('./controllers/people')(_, io, participants, passport);
   var message_controller = require('./controllers/message')(_, io, participants, passport);
   var monitor_controller = require('./controllers/monitor')(_, io, participants, passport);
@@ -37,7 +37,7 @@ module.exports = function(app, _, io, participants, passport) {
   app.get("/publicmessage", message_controller.getWall);
   
   app.post("/startMeasurePerformance", user_controller.startMeasurePerformanceFn);
-  app.post("/postMeasurePerformance", user_controller.postMeasurePerformanceFn);
+  app.get("/stopMeasurePerformance", user_controller.stopMeasurePerformanceFn);
   
   app.post("/analyzeSocialNetwork", isLoggedIn, user_controller.hoursForAnalyzing);
   app.get("/analyze", isLoggedIn, user_controller.analyzeNetwork);
@@ -57,9 +57,7 @@ module.exports = function(app, _, io, participants, passport) {
   }));
 
   app.get("/people", isLoggedIn, people_controller.getPeople);
-  app.get("/getMeasurePerformance", user_controller.getMeasurePerformanceFn);
-  app.get("/stopMeasurePerformance", user_controller.stopMeasurePerformanceFn);
-
+  
   app.post("/startMeasureMemory", user_controller.startMeasureMemoryFn);
   app.get("/stopMeasureMemory", user_controller.stopMeasureMemoryFn);
 
