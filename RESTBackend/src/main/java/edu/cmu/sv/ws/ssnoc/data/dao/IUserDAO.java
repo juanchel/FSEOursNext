@@ -44,4 +44,5 @@ public interface IUserDAO {
     void updatePW(String username, String pw, String salt);
     public void updateUsername(String username, String nextName);
     public void updateRole(String username, int nextName);
+    public void updateActive(String username, boolean active);
 }

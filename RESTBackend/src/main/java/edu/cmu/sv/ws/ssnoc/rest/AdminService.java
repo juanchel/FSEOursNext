@@ -70,4 +70,20 @@ public class AdminService extends BaseService {
 
         return ok();
     }
+
+    @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/active/{userName}/{active}")
+    public Response changeActive(@PathParam("userName") String userName, @PathParam("active") String active) {
+
+        boolean a = false;
+        if (active.contains("1")) {
+            a = true;
+        }
+
+        DAOFactory.getInstance().getUserDAO().updateActive(userName, a);
+
+        return ok();
+    }
 }

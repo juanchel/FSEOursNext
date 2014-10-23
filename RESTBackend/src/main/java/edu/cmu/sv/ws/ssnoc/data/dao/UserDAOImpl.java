@@ -213,8 +213,20 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
             stmt.setInt(1, role);
             stmt.setString(2, username);
 
-            System.out.println(role);
-            System.out.println(username);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+
+        }
+    }
+
+
+    public void updateActive(String username, boolean active) {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_ACTIVE)) {
+            stmt.setBoolean(1, active);
+            stmt.setString(2, username);
 
             stmt.executeUpdate();
         } catch (SQLException e) {

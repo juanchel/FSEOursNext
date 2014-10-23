@@ -33,6 +33,7 @@ public class SQL {
             "password varchar(40) NOT NULL,"+
             "emergency_status smallint ,"+
             "role smallint,"+
+            "active boolean," +
             "salt VARCHAR(512)  );";
 
     public static final String CREATE_MESSAGES = "CREATE TABLE IF NOT EXISTS "+ SSN_MESSAGES +" (" +
@@ -110,7 +111,7 @@ public class SQL {
      * Query to load all users in the system.
      */
     public static final String FIND_ALL_USERS = "select user_id, user_name, password,"
-            + " emergency_status," + " salt, role " + " from " + SSN_USERS + " order by user_name";
+            + " emergency_status," + " salt, role " + " from " + SSN_USERS + " where active=TRUE order by user_name ";
 
     /**
      * Query to find a user details depending on his name. Note that this query
@@ -121,7 +122,7 @@ public class SQL {
             + " salt, role "
             + " from "
             + SSN_USERS
-            + " where UPPER(user_name) = UPPER(?)";
+            + " where UPPER(user_name) = UPPER(?) AND active=TRUE";
 
     public static final String GET_ALL_PUBLIC_MESSAGES = "select * from " + SSN_MESSAGES;
 
@@ -148,17 +149,18 @@ public class SQL {
     public static final String FIND_TALKERS_BY_TIME = "select author, target from " + PRIVATE_MESSAGES +
             " where postedAt > ?";
 
-    public static final String FIND_ALL_USERNAMES = "select user_name from " + SSN_USERS;
+    public static final String FIND_ALL_USERNAMES = "select user_name from " + SSN_USERS + " where active=TRUE";
 
     /**
      * Query to insert a row into the users table.
      */
     public static final String INSERT_USER = "insert into " + SSN_USERS
-            + " (user_name, password, emergency_status, salt) values (?, ?, ?, ?)";
+            + " (user_name, password, emergency_status, salt, role, active) values (?, ?, ?, ?, 0, TRUE)";
 
     public static final String UPDATE_STATUS = "UPDATE " + SSN_USERS + " SET emergency_status=? WHERE user_name=?";
 
     public static final String UPDATE_USERNAME = "UPDATE " + SSN_USERS + " SET user_name=? WHERE user_name=?";
     public static final String UPDATE_PASSWORD = "UPDATE " + SSN_USERS + " SET password=?, salt=? WHERE user_name=?";
     public static final String UPDATE_ROLE = "UPDATE " + SSN_USERS + " SET role=? WHERE user_name=?";
+    public static final String UPDATE_ACTIVE = "UPDATE " + SSN_USERS + " SET active=? WHERE user_name=?";
 }
