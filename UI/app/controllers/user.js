@@ -140,58 +140,47 @@ module.exports = function(_, io, participants, performanceMeasurements, passport
     }
 	},
     
-    analyzeNetwork:function (req,res) {
-      res.render('analyze', {
-          title: "Hello " + req.session.passport.user.user_name + " !!",
-          message: req.flash('welcomeMessage')
-      });
-      console.log("I'm in analyzeNetworkFunction!");
-  },
+  analyzeNetwork:function (req,res) {
+    res.render('analyze', {
+        title: "Hello " + req.session.passport.user.user_name + " !!",
+        message: req.flash('welcomeMessage')
+    });
+    console.log("I'm in analyzeNetworkFunction!");
+},
 
-   hoursForAnalyzing:function(req, res, next) {
-      var user_name = req.session.passport.user.user_name;
-      console.log("In user.js");
-      User.sendHoursForAnalyzing(user_name, req.body.analyzeTime, function(error, clusters) {
-      if (error){
-          next(error);
-      } else {
-          res.render('analyze', {clusters : clusters});
-      }
-      });
-   },
+ hoursForAnalyzing:function(req, res, next) {
+    var user_name = req.session.passport.user.user_name;
+    console.log("In user.js");
+    User.sendHoursForAnalyzing(user_name, req.body.analyzeTime, function(error, clusters) {
+    if (error){
+        next(error);
+    } else {
+        res.render('analyze', {clusters : clusters});
+    }
+    });
+ },
 
-	startMeasureMemoryFn : function (req, res, next) {
-		var user_name = req.session.passport.user.user_name;
-		User.MeasureMemoryStart(user_name, function(error, measurePerformanceTime) {
-			if (error){
-				next(error);
-			} else {
-				io.sockets.emit("newConnection", {participants: participants});
-	    		res.redirect('/monitor');
-			}
-		});
-	},
-	
-	stopMeasureMemoryFn : function(req, res) {
-	  User.MeasureMemoryStop(function(err, timeStamp, usedVolatile, leftVolatile, usedNonVolatile, leftNonVolatile) {
-	  User.MeasureMemoryStop(function(err, entries) {
+startMeasureMemoryFn : function (req, res, next) {
+  var user_name = req.session.passport.user.user_name;
+  User.MeasureMemoryStart(user_name, function(error, measurePerformanceTime) {
+    if (error){
+      next(error);
+    } else {
+      io.sockets.emit("newConnection", {participants: participants});
+        res.redirect('/monitor');
+    }
+  });
+},
 
-		console.log('entries length ' + entries.length);
-		console.log('entries ' + JSON.stringify(entries));
-		res.render('monitor', {entries: entries, message: ''});
-		res.render('monitor', {
-		  timestamp: timeStamp,
-		  usedVolatile: usedVolatile,
-		  leftVolatile: leftVolatile,
-		  usedNonVolatile: usedNonVolatile,
-		  leftNonVolatile: leftNonVolatile,
-		  message: ''
-		  });
+stopMeasureMemoryFn : function(req, res) {
+  User.MeasureMemoryStop(function(err, entries) {
+
+  console.log('entries length ' + entries.length);
+  console.log('entries ' + JSON.stringify(entries));
+  res.render('monitor', {entries: entries, message: ''});
 
     });
-	  });
-    },
-	
+  },
 
     getWelcome : function(req, res) {
      res.render('welcome', {

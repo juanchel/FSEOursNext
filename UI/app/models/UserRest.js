@@ -298,24 +298,24 @@ User.stopMeasurePerformance = function (callback) {
 };
 
 User.MeasureMemoryStart = function(user_name, callback) {
-	var options = {
-		url : rest_api.start_measure_memory,
-		body : {'userName' : user_name},
-		json : true
-	};
-	
-	request.post(options, function(err, res, body) {
-	    if (err){
-	      callback(err,null);
-	      return;
-	    }
-	    if (res.statusCode !== 200 && res.statusCode !== 201) {
-	      callback(res.body, null);
-	      return;
-	    }
-	    callback(null, res.body);
-	    return;
-	  });
+  var options = {
+    url : rest_api.start_measure_memory,
+    body : {'userName' : user_name},
+    json : true
+  };
+  
+  request.post(options, function(err, res, body) {
+      if (err){
+        callback(err,null);
+        return;
+      }
+      if (res.statusCode !== 200 && res.statusCode !== 201) {
+        callback(res.body, null);
+        return;
+      }
+      callback(null, res.body);
+      return;
+    });
 };
 
 User.MeasureMemoryStop = function(callback) {
@@ -326,9 +326,9 @@ User.MeasureMemoryStop = function(callback) {
       callback(err,null);
       return;
     }
-	
+  
     if (res.statusCode === 200) {
-	    callback(null, body);
+      callback(null, body);
         return;
     }
     if (res.statusCode !== 200) {
