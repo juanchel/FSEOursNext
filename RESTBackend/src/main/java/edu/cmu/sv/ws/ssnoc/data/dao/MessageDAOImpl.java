@@ -620,4 +620,40 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         }
     }
 
+
+    public List<MessagePO> searchWall(String content){
+        Log.enter();
+
+        String query = SQL.SEARCH_WALL;
+
+        List<MessagePO> messages = new ArrayList<MessagePO>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);) {
+            stmt.setString(1, "%"+content+"%");
+            messages = processPublicResults(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(messages);
+        }
+        return messages;
+    }
+
+    public List<MessagePO> searchPM(String content, String username){
+        Log.enter();
+
+        String query = SQL.SEARCH_PM;
+
+        List<MessagePO> messages = new ArrayList<MessagePO>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);) {
+            stmt.setString(1, "%"+content+"%");
+            stmt.setString(2, username);
+            stmt.setString(3, username);
+            messages = processPrivateResults(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(messages);
+        }
+        return messages;
+    }
 }

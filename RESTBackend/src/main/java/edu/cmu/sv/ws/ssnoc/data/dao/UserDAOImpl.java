@@ -252,4 +252,40 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
 
     }
 
+    public List<UserPO> searchUsername(String userName) {
+        Log.enter();
+
+        String query = SQL.SEARCH_USERNAME;
+
+        List<UserPO> users = new ArrayList<UserPO>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);) {
+            stmt.setString(1, "%"+userName+"%");
+            users = processResults(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(users);
+        }
+
+        return users;
+    }
+
+    public List<UserPO> searchStatus(int status) {
+        Log.enter();
+
+        String query = SQL.SEARCH_STATUS;
+
+        List<UserPO> users = new ArrayList<UserPO>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);) {
+            stmt.setInt(1, status);
+            users = processResults(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(users);
+        }
+
+        return users;
+    }
+
 }

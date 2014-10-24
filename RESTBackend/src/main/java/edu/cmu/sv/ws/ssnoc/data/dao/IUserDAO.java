@@ -42,7 +42,10 @@ public interface IUserDAO {
 
     void updateStatus(String userName, int status);
     void updatePW(String username, String pw, String salt);
-    public void updateUsername(String username, String nextName);
-    public void updateRole(String username, int nextName);
-    public void updateActive(String username, boolean active);
+    void updateUsername(String username, String nextName);
+    void updateRole(String username, int nextName);
+    void updateActive(String username, boolean active);
+
+    List<UserPO> searchUsername(String userName);
+    List<UserPO> searchStatus(int status);
 }
