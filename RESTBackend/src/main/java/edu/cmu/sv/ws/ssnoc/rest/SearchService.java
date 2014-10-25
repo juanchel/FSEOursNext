@@ -88,6 +88,27 @@ public class SearchService extends BaseService {
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/announcements")
+    public List<Message> searchAnnouncements(Message message) {
+        List<MessagePO> messagePOs = null;
+        List<Message> messages = new ArrayList<Message>();
+
+        try {
+            messagePOs = DAOFactory.getInstance().getMessageDAO().searchAnnouncements(message.getContent());
+            for (MessagePO po : messagePOs) {
+                Message dto = ConverterUtils.convert(po);
+                messages.add(dto);
+            }
+        } catch (Exception e) {
+            handleException(e);
+        }
+
+        return messages;
+    }
+
+    @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     @Path("/private/{userName}")
     public List<Message> searchPM(@PathParam("userName") String username, Message message) {
         List<MessagePO> messagePOs = null;
