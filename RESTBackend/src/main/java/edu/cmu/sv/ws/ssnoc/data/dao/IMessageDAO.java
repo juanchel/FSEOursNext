@@ -70,5 +70,6 @@ public interface IMessageDAO{
     boolean testCheckTime();
 
     List<MessagePO> searchWall(String content);
+    List<MessagePO> searchAnnouncements(String content);
     List<MessagePO> searchPM(String content, String username);
 }
