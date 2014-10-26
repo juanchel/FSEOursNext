@@ -42,8 +42,8 @@ module.exports = function(app, _, io, participants, performanceMeasurements, pas
   app.post("/analyzeSocialNetwork", isLoggedIn, user_controller.hoursForAnalyzing);
   app.get("/analyze", isLoggedIn, user_controller.analyzeNetwork);
   
-  app.get("/search", searchCtl_controller.getSearchResults);
-  app.post("/search", searchCtl_controller.postSearchInfo);
+  app.get("/searchForUsername", isLoggedIn, searchCtl_controller.getSearchedUsernames);
+  app.post("/searchForUsername", isLoggedIn, searchCtl_controller.postSearchForUsername);
 
   app.get("/welcome", isLoggedIn, user_controller.getWelcome);
   
@@ -63,4 +63,6 @@ module.exports = function(app, _, io, participants, performanceMeasurements, pas
 
   app.get("/wall", isLoggedIn, message_controller.getWall);
   app.get("/monitor", isLoggedIn, monitor_controller.getResult);
+  
+  app.get("/search", isLoggedIn, searchCtl_controller.getSearch);
 };

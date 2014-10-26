@@ -11,7 +11,7 @@ html
     link(rel='stylesheet', href='/css/style.css')
     link(rel='stylesheet', href='/css/bootstrap.min.css')
     script(src='/js/bootstrap.min.js')
-    script(src='/js/status.js')
+    script(src='/js/search.js')
   title SSNoC - Search
   body
     include includes/navbar.jade
@@ -19,3 +19,27 @@ html
     br
     br
     br
+    br
+    br
+   
+  body
+    form(action='/searchForUsername', method='post')
+      div.container
+        p Input the username:
+        input(type='text', name='searchForUsername')
+        br
+        br
+        button(type="submit" class="btn btn-primary btn-sm" id="searchForUsername") Search Username
+        br
+        br        
+  body
+    div.container
+      p Search Username:
+        div.container
+          div.well
+            p= searchedUsernames
+
+        br
+        br
+        br
+    
