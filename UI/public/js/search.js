@@ -10,6 +10,10 @@ function init() {
   
   var formatResults = function(div, type, results) {
     div.html("");
+    if (results.length == 0) {
+      div.html("<p>(no results)</p>");
+      return;
+    }
     for (var i = 0; i < results.length; ++i) {
       var result = results[i];
       switch (type) {
@@ -29,7 +33,7 @@ function init() {
         break;
       case '4':
         div.append("<p>" + result.content + " (sent by " + result.author + 
-            " on " + result.timestamp + ")</p>");
+            " to " + result.target + " on " + result.timestamp + ")</p>");
         break;
       default:
         break;
@@ -40,7 +44,8 @@ function init() {
   $('button#search').click(function() {
     var type = $('select#search_type option:selected').val();
     var keywords = $('input#keywords').val();
-    $("div#search_results").html("<p>search in progress...</p>");
+    $("div#online_results").html("<p>search in progress...</p>");
+    $("div#offline_results").html("<p>search in progress...</p>")
     $.ajax({
       url: '/search',
       type: 'POST',
@@ -54,7 +59,8 @@ function init() {
         alert("search returned error: " + data.error);
         return;
       }
-      formatResults($("div#search_results"), type, data.result);
+      formatResults($("div#online_results"), type, data.result.online);
+      formatResults($("div#offline_results"), type, data.result.offline);
     });
   });
  
