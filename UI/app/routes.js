@@ -42,7 +42,7 @@ module.exports = function(app, _, io, participants, performanceMeasurements, pas
   app.post("/analyzeSocialNetwork", isLoggedIn, user_controller.hoursForAnalyzing);
   app.get("/analyze", isLoggedIn, user_controller.analyzeNetwork);
   
-  app.post("/searchForUsername", isLoggedIn, searchCtl_controller.postSearchForUsername);
+  app.post("/search", isLoggedIn, searchCtl_controller.search);
 
   app.get("/welcome", isLoggedIn, user_controller.getWelcome);
   

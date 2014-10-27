@@ -4,31 +4,60 @@ var rest_api = require('../../config/rest_api');
 var utils = require("../utils");
 var User = require("./UserRest");
 
-function SearchQuery(searcher,keyword) {
+function SearchQuery(type, searcher, keywords) {
   this.searcher = searcher;
-  this.keyword = keyword;
+  this.keywords = keywords;
+  this.type = type;
 }
 
-SearchQuery.prototype.send = function(callback) {
-  var options = {
-      url : rest_api.searchForUsername,
-      body : {
-        'content' : this.keyword
-      },
-      json : true
-    };
-  console.log(this);  
-  
-    console.info("send searchForUsername options: " + JSON.stringify(options));
+SearchQuery.Type = {
+  USERS_BY_NAME : 0,
+  USERS_BY_STATUS : 1,
+  ANNOUNCEMENTS : 2,
+  PUBLIC_MESSAGES : 3,
+  PRIVATE_MESSAGES : 4
+};
 
-    request.post(options, function(error, response, body) {
-      if (error) {
-        callback(error, null);
-      } else if (response.statusCode !== 201) {
-        callback(JSON.stringify(response.body), null);
-      }
-        callback(null, body);
-    });
-  };
+SearchQuery.prototype.send = function(callback) {
+  var url;
+  switch (this.type) {
+  case SearchQuery.Type.USERS_BY_NAME:
+    url = rest_api.searchForUsername;
+    break;
+  case SearchQuery.Type.USERS_BY_STATUS:
+    url = rest_api.searchForStatus;
+    break;
+  case SearchQuery.Type.ANNOUNCEMENTS:
+    url = rest_api.searchForAnnouncement;
+    break;
+  case SearchQuery.Type.PUBLIC_MESSAGES:
+    url = rest_api.searchForWall;
+    break;
+  case SearchQuery.Type.PRIVATE_MESSAGES:
+    url = rest_api.searchForPrivateMessage.replace("{username}", this.searcher);
+    break;
+  default:
+    console.warn("SearchQuery aborted, unknown type.");
+    callback("unknown SearchQuery type");
+  }
+  var options = {
+    url : url,
+    body : {
+      'content' : this.keywords
+    },
+    json : true
+  };  
+  
+  console.info("send searchForUsername options: " + JSON.stringify(options));
+
+  request.post(options, function(error, response, body) {
+    if (error) {
+      callback(error, null);
+    } else if (response.statusCode !== 200) {
+      callback(JSON.stringify(response.body), null);
+    }
+    callback(null, body);
+  });
+};
 
 module.exports = SearchQuery;
