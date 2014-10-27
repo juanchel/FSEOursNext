@@ -46,7 +46,8 @@ SearchQuery.prototype.send = function(callback) {
   console.log("The spllittedKeyword is: " + splittedKeyword);
   for(var i =0; i <= splittedKeyword.length; i++){
     if(stopwords.indexOf(splittedKeyword[i]) >= 0){
-      splittedKeyword.splice(splittedKeyword.indexOf(splittedKeyword[i]),1);
+      splittedKeyword.splice(i,1);
+      i = i-1;
     }
   }
   var newKeyword = splittedKeyword.join(" ");
