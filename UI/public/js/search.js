@@ -8,6 +8,17 @@ function init() {
   
   var username = '';
   
+  Array.prototype.sortOn = function(key){
+    this.sort(function(a, b){
+        if(a[key] < b[key]){
+            return -1;
+        }else if(a[key] > b[key]){
+            return 1;
+        }
+        return 0;
+    });
+}
+  
   var formatResults = function(div, type, results) {
     div.html("");
     if (results.length == 0) {
@@ -59,6 +70,8 @@ function init() {
         alert("search returned error: " + data.error);
         return;
       }
+      data.result.online.sortOn('userName');
+      data.result.offline.sortOn('userName');
       formatResults($("div#online_results"), type, data.result.online);
       formatResults($("div#offline_results"), type, data.result.offline);
     });
