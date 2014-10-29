@@ -142,11 +142,14 @@ module.exports = function(_, io, participants, performanceMeasurements, passport
 	},
     
   analyzeNetwork:function (req,res) {
-    res.render('analyze', {
-        title: "Hello " + req.session.passport.user.user_name + " !!",
-        message: req.flash('welcomeMessage')
-    });
-    console.log("I'm in analyzeNetworkFunction!");
+	if(req.session.passport.user.user_role == 1 || req.session.passport.user.user_role == 3){
+		res.render('analyze', {
+          title: "Hello " + req.session.passport.user.user_name + " !!",
+          message: req.flash('welcomeMessage')
+        });
+    }else{
+	  res.render("trespass", {message: ""});
+	}
 },
 
  hoursForAnalyzing:function(req, res, next) {
@@ -184,6 +187,7 @@ stopMeasureMemoryFn : function(req, res) {
   },
 
     getWelcome : function(req, res) {
+	 console.log('passport: ' + req.session.passport.user.foo);
      res.render('welcome', {
     	 title: "Hello " + req.session.passport.user.user_name + " !!",
     	 message: req.flash('welcomeMessage')
