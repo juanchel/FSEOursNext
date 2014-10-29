@@ -5,7 +5,9 @@ module.exports = function(_, io, participants, passport) {
     return {
 	
     getAdministerResult: function(req, res) {
-        res.render("administer", {message: ""});
+	    if(req.session.passport.user.user_role == 3){
+		  res.render("administer", {message: ""});
+	    }
     },
 
 	getUserProfileFn : function(req, res) {

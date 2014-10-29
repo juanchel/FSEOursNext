@@ -4,7 +4,7 @@ var User = require('../app/models/UserRest');
 
 module.exports = function(passport) {
   passport.serializeUser(function(user, done) {
-    done(null, {user_name: user.local.name});
+    done(null, {user_name: user.local.name, user_role: user.local.role});
   });
 
   passport.deserializeUser(function(user_info, done) {
@@ -20,7 +20,7 @@ module.exports = function(passport) {
   },
   function(req, name, password, done) {
     process.nextTick(function() {
-      User.saveNewUser(name, password, function(err, new_user, isNew) {
+      User.saveNewUser(name, password, 0, function(err, new_user, isNew) {
         if (err) {
           return done(null, null, false, req.flash('signupMessage', 'Signup failed due to: ' + err));
         }
