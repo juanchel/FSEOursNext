@@ -18,6 +18,7 @@ module.exports = {
   'measure_performance_post' : host_url + '/test/post/',
   'measure_performance_get' : host_url + '/test/get',
   'analyzing_network' : host_url + '/users/clusters/',
+  
   'searchForUsername' : host_url + '/search/username',
   'searchForStatus' : host_url + '/search/status',
   'searchForAnnoucement' : host_url + '/search/announcement',

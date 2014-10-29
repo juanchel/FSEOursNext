@@ -55,6 +55,8 @@ User.getAllUsers(function(err, users) {
     users.forEach(function(user) {
       participants.all.push({userName : user.local.name, emergency: user.local.status});
     });
+  } else {
+    console.warn(err);
   }
 
   require('./app/routes')(app, _, io, participants, performanceMeasurements, passport);

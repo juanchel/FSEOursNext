@@ -94,6 +94,7 @@ module.exports = function(_, io, participants, performanceMeasurements, passport
 		var user_name = req.session.passport.user.user_name;
 		if (performanceMeasurements.onGoing) {
 		  res.json(200, {error: "on going measurement", started: false, serial: performanceMeasurements.serial});
+		  return;
 		}
 		User.sendMeasurePerformanceStart(user_name, req.body.measurePerformanceTime, performanceMeasurements,
 		    function(error, started) {

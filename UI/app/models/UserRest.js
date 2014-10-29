@@ -80,7 +80,7 @@ User.getAllUsers = function(callback) {
       return;
     }
     if (res.statusCode !== 200) {
-      callback(null, null);
+      callback(JSON.stringify(body), null);
       return;
     }
   });
