@@ -29,4 +29,9 @@ module.exports = {
   'start_measure_memory' : host_url + '/memory/start',
   'save_measure_memory': host_url + '/memory/save',
   'end_measure_memory' : host_url + '/memory/end',
+
+  'change_user_name' : host_url + '/admin/username/',
+  'change_privilege_level' : host_url + '/admin/role/',
+  'change_account_status' : host_url + '/admin/active/',
+  'change_password' : host_url + '/admin/password/',
 };

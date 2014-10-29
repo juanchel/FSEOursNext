@@ -1,0 +1,81 @@
+doctype html
+html
+  include includes/head.jade
+  script(src='/js/jquery.cookie.js')
+    <meta charset="utf-8">
+    <!-- Set the viewpor/ot so this responsive site displays correctly on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    script(src='/js/jquery-1.9.1.min.js')
+    script(src='/js/jquery.watermarkinput.js')
+    link(rel='stylesheet', href='/csspensans.css')
+    link(rel='stylesheet', href='/css/style.css')
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    script(src='/js/bootstrap.min.js')
+    script(src='/js/status.js')
+  title SSNoC - Administer
+  body
+    include includes/navbar.jade
+    br
+    br
+    br
+    br
+    br
+    br
+    br
+
+    form(action='/administerUserProfile', method='post')
+      &nbsp
+      |Enter Name: 
+      input(type='text', name='administerUserName')
+      &nbsp
+      button(type="submit" class="btn btn-primary btn-sm" id="administerUserNameButton") Get User Details
+      br
+      br
+
+    table(style='width: 100%;', border="1")
+      tr
+        th User Name  
+        td 
+          form(action='/changeUserName', method='post')
+            &nbsp
+            |Enter New User Name:
+            &nbsp
+            input(type='text', name='changeUserName')
+            &nbsp
+            button(type="submit" class="btn btn-primary btn-sm" id="changeUserNameButton") Change Name
+        td #{userName}
+      tr
+        th Privilege Level  
+        td
+          |Select Privilege Level: 
+          &nbsp
+          form(action='/changePrivilegeLevel', method='post')
+            select(name='changePrivilegeLevel')
+              option(value='0') Citizen
+              option(value='1') Co-ordinator
+              option(value='2') Monitor
+              option(value='3') Administrator
+            button(type="submit" class="btn btn-primary btn-sm" id="changePrivilegeLevelButton") Change Privilege Level
+        td #{priviligeLevel}
+      tr
+        th Account Status : 
+        td
+          |Select Account Status: 
+          &nbsp
+          form(action='/changeAccountStatus', method='post')
+            select(name='changeAccountStatus')
+              option(value='0') Inactive
+              option(value='1') Active
+            button(type="submit" class="btn btn-primary btn-sm" id="changeAccountStatusButton") Change Account Status
+        td #{accountStatus}
+      tr
+        th Password  
+        td
+          form(action='/changePassword', method='post')
+            &nbsp
+            |Enter New Password:
+            &nbsp
+            input(type='text', name='changePassword')
+            &nbsp
+            button(type="submit" class="btn btn-primary btn-sm" id="changePasswordButton") Change Password
+        td #{password}

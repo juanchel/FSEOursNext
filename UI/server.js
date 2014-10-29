@@ -6,7 +6,8 @@ var express = require("express"),
   passport = require('passport'),
   flash = require('connect-flash'),
   User = require('./app/models/UserRest');
-  Message = require('./app/models/MessageRest')
+  Message = require('./app/models/MessageRest');
+  AdminUser = require('./app/models/AdministerRest')
 
 var participants = {
   online : {},

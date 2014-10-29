@@ -24,6 +24,7 @@ module.exports = function(app, _, io, participants, performanceMeasurements, pas
   var message_controller = require('./controllers/message')(_, io, participants, passport);
   var monitor_controller = require('./controllers/monitor')(_, io, participants, passport);
   var searchCtl_controller = require('./controllers/searchCtl')(_, io, participants, passport);
+  var administer_controller = require('./controllers/administer')(_, io, participants, passport);
 
   app.get("/", user_controller.getLogin);
   
@@ -62,6 +63,13 @@ module.exports = function(app, _, io, participants, performanceMeasurements, pas
 
   app.get("/wall", isLoggedIn, message_controller.getWall);
   app.get("/monitor", isLoggedIn, monitor_controller.getResult);
+
+  app.get("/administer", isLoggedIn, administer_controller.getAdministerResult);
+  app.post("/administerUserProfile", administer_controller.getUserProfileFn);
+  app.post("/changeUserName", administer_controller.changeUserNameFn);
+  app.post("/changePrivilegeLevel", administer_controller.changePrivilegeLevelFn);
+  app.post("/changeAccountStatus", administer_controller.changeAccountStatusFn);
+  app.post("/changePassword", administer_controller.changePasswordFn);
   
   app.get("/search", isLoggedIn, searchCtl_controller.getSearch);
 };
