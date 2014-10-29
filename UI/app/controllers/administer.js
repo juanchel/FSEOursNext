@@ -7,6 +7,8 @@ module.exports = function(_, io, participants, passport) {
     getAdministerResult: function(req, res) {
 	    if(req.session.passport.user.user_role == 3){
 		  res.render("administer", {message: ""});
+	    }else{
+		  res.render("trespass", {message: ""});
 	    }
     },
 

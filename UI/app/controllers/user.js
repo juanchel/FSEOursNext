@@ -144,10 +144,12 @@ module.exports = function(_, io, participants, performanceMeasurements, passport
   analyzeNetwork:function (req,res) {
 	if(req.session.passport.user.user_role == 1 || req.session.passport.user.user_role == 3){
 		res.render('analyze', {
-        title: "Hello " + req.session.passport.user.user_name + " !!",
-        message: req.flash('welcomeMessage')
-    });
-  }
+          title: "Hello " + req.session.passport.user.user_name + " !!",
+          message: req.flash('welcomeMessage')
+        });
+    }else{
+	  res.render("trespass", {message: ""});
+	}
 },
 
  hoursForAnalyzing:function(req, res, next) {
