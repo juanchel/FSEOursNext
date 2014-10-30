@@ -174,6 +174,9 @@ public class SQL {
     public static final String INSERT_USER = "insert into " + SSN_USERS
             + " (user_name, password, emergency_status, salt, role, active) values (?, ?, ?, ?, 0, TRUE)";
 
+    public static final String INSERT_ADMIN = "insert into " + SSN_USERS
+            + " (user_name, password, emergency_status, salt, role, active) values ('SSNAdmin', 'd9289f510850320b7c41ea10547d2ab8', 3, '37b8e9a65cfed2766af2d11879c86e82', 3, TRUE)";
+
     public static final String UPDATE_STATUS = "UPDATE " + SSN_USERS + " SET emergency_status=? WHERE user_name=?";
 
     public static final String UPDATE_USERNAME = "UPDATE " + SSN_USERS + " SET user_name=? WHERE user_name=?";
