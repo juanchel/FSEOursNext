@@ -160,6 +160,34 @@ User.setPublicMessage = function(user_name, publicMessage, callback) {
 	  });
 };
 
+
+User.setPublicAnnouncement = function(user_name, publicAnnouncement, callback) {
+    var options = {
+        url : rest_api.save_public_announcement + user_name,
+        body : {'content' : publicAnnouncement},
+        json : true
+    };
+
+    console.log("set public announcement: options: " + options);
+
+    request.post(options, function(err, res, body) {
+        console.log('post err' + err);
+        console.log('post res ' + res);
+        console.log('post body ' + body);
+        if (err){
+            callback(err,null);
+            return;
+        }
+        if (res.statusCode !== 200 && res.statusCode !== 201) {
+            callback(res.body, null);
+            return;
+        }
+        callback(null, publicAnnouncement);
+        return;
+    });
+};
+
+
 User.sendHoursForAnalyzing = function(user_name,analyzeTime,callback){
   console.log("Yo Analyze Time is here:" + analyzeTime);
   var options = {
