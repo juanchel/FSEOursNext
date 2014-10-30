@@ -53,7 +53,7 @@ public class MessageService extends BaseService {
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-    @Path("/{userName}/announcement")
+    @Path("/announcement/{userName}/")
     public Response postAnnouncement (@PathParam("userName") String userName, Message m) {
 
         Message resp = new Message();
