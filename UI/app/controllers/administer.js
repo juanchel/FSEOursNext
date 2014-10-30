@@ -32,7 +32,7 @@ module.exports = function(_, io, participants, passport) {
     	    userName: user.local.name,
     	    priviligeLevel: userRole,
             accountStatus: "Active",
-	        password: '',
+	        password: '*Cannot Display Password*',
           } );
         });
     },
@@ -45,6 +45,7 @@ module.exports = function(_, io, participants, passport) {
           } else {}
         });
         name_of_user = changedUserName;
+        res.render('administer', {} );
     },
 
     changePrivilegeLevelFn : function (req, res, next) {
@@ -54,6 +55,7 @@ module.exports = function(_, io, participants, passport) {
             next(error);
           } else {}
         });
+        res.render('administer', {} );
     },  
 
     changeAccountStatusFn : function (req, res, next) {
@@ -63,6 +65,7 @@ module.exports = function(_, io, participants, passport) {
             next(error);
           } else {}
         });
+        res.render('administer', {} );
     },    
 
     changePasswordFn : function (req, res, next) {
@@ -72,6 +75,7 @@ module.exports = function(_, io, participants, passport) {
             next(error);
           } else {}
         });
+        res.render('administer', {} );
     },    
 
     };
