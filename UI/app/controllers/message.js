@@ -127,33 +127,30 @@ module.exports = function(_, io, participants, passport) {
     },
 
     getAnnouncementPage: function (req, res) {
-      PublicAnnouncement.getAllAnnouncement(function (error, publicannouncements) {
+	    if(req.session.passport.user.user_role == 1 || req.session.passport.user.user_role == 3){
+          PublicAnnouncement.getAllAnnouncement(function (error, publicannouncements) {
 
-        var errorMessages = req.flash('errorMessage');
-        if (error) {
-          errorMessages.push(error);
-        }
-        var announcementBuffer = [];
+            var errorMessages = req.flash('errorMessage');
+            if (error) {
+              errorMessages.push(error);
+            }
+            var announcementBuffer = [];
 
-        console.log("Length of public announcements : " + publicannouncements.length);
-
-        for (var i = 0; i < publicannouncements.length; ++i) {
-          var message = publicannouncements[i];
-          console.log("Message : " + JSON.stringify(message));
-          var author = message.author;
-          console.log("Author : " + author);
-          announcementBuffer.push(author + ": " + message.content + " (sent at " + message.timestamp + ")");
-        }
+            for (var i = 0; i < publicannouncements.length; ++i) {
+              var message = publicannouncements[i];
+              var author = message.author;
+              announcementBuffer.push(author + ": " + message.content + " (sent at " + message.timestamp + ")");
+            }
         
-        res.render("Announcement", {
-          error_messages: errorMessages,
-          username: author,
-          publicannouncements: announcementBuffer
-        });
-
-
-
-      });
+            res.render("Announcement", {
+              error_messages: errorMessages,
+              username: author,
+              publicannouncements: announcementBuffer
+            });
+          });
+        }else{
+	        res.render("trespass", {message: ""});
+	      }
     },
   };
 };
