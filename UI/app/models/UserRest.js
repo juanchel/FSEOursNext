@@ -19,11 +19,12 @@ var asyncLoop = function(endTime, performanceMeasurements, functionToLoop, final
   loop(0, performanceMeasurements);
 };
 
-function User(user_name, password, st){
+function User(user_name, password, st, role) {
   this.local = {
     name : user_name,
     password : password,
-    status : st
+    status : st,
+    role : role
   };
 }
 
@@ -49,7 +50,7 @@ User.getUser = function(user_name, callback) {
       return;
     }
     if (res.statusCode === 200) {
-      var user = new User(body.userName, body.password, body.emergency_status);
+      var user = new User(body.userName, body.password, body.emergency_status, body.role);
       callback(null, user);
       return;
     }
@@ -68,7 +69,7 @@ User.getAllUsers = function(callback) {
     }
     if (res.statusCode === 200) {
       var users = body.map(function(item, idx, arr){
-        return new User(item.userName, item.password, item.emergency_status);
+        return new User(item.userName, item.password, item.emergency_status, item.role);
       });
 
       users.sort(function(a,b) {
@@ -80,16 +81,16 @@ User.getAllUsers = function(callback) {
       return;
     }
     if (res.statusCode !== 200) {
-      callback(null, null);
+      callback(JSON.stringify(body), null);
       return;
     }
   });
 };
 
-User.saveNewUser = function(user_name, password, callback) {
+User.saveNewUser = function(user_name, password, role, callback) {
   var options = {
     url : rest_api.post_new_user,
-    body : {userName: user_name, password: password},
+    body : {userName: user_name, password: password, role: role},
     json: true
   };
 
@@ -102,7 +103,7 @@ User.saveNewUser = function(user_name, password, callback) {
       callback(res.body, null, false);
       return;
     }
-    var new_user = new User(body.userName, password, undefined);
+    var new_user = new User(body.userName, password, undefined, 0);
     if (res.statusCode === 200) {
     	callback(null, new_user, false);
     } else if (res.statusCode === 201) {

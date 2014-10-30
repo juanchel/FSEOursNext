@@ -184,5 +184,6 @@ public class SQL {
     public static final String SEARCH_USERNAME = "SELECT user_id, user_name, password, emergency_status, salt, role from " + SSN_USERS + " WHERE user_name LIKE ?";
     public static final String SEARCH_STATUS = "SELECT user_id, user_name, password, emergency_status, salt, role from " + SSN_USERS + " WHERE emergency_status=?";
     public static final String SEARCH_WALL = "SELECT * from " + SSN_MESSAGES + " WHERE message LIKE ?";
+    public static final String SEARCH_ANNOUNCEMENTS = "SELECT * from " + SSN_ANNOUNCEMENTS + " WHERE message LIKE ?";
     public static final String SEARCH_PM = "SELECT * from " + PRIVATE_MESSAGES + " WHERE content LIKE ? AND (author=? OR target=?)";
 }

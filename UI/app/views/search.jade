@@ -11,7 +11,7 @@ html
     link(rel='stylesheet', href='/css/style.css')
     link(rel='stylesheet', href='/css/bootstrap.min.css')
     script(src='/js/bootstrap.min.js')
-    script(src='/js/status.js')
+    script(src='/js/search.js')
   title SSNoC - Search
   body
     include includes/navbar.jade
@@ -19,3 +19,35 @@ html
     br
     br
     br
+    br
+    br
+    br
+    br
+    br
+    br
+    p Pick search type
+      select#search_type
+        option(value='0') search users by username
+        option(value='1') search users by status
+        option(value='2') search announcements
+        option(value='3') search public messages
+        option(value='4') search private messages
+    p Enter your keywords here:
+      input#keywords(type='text')
+    br
+    button#search(type="submit" class="btn btn-primary btn-sm") Search        
+
+    
+    h3 Search Results:
+    
+    b Online Users:
+    div.container
+      div.well
+        div#online_results
+    b Offline Users:
+    div.container
+      div.well
+        div#offline_results
+
+
+    

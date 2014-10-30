@@ -638,6 +638,23 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         return messages;
     }
 
+    public List<MessagePO> searchAnnouncements(String content){
+        Log.enter();
+
+        String query = SQL.SEARCH_ANNOUNCEMENTS;
+
+        List<MessagePO> messages = new ArrayList<MessagePO>();
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);) {
+            stmt.setString(1, "%"+content+"%");
+            messages = processPublicResults(stmt);
+        } catch (SQLException e) {
+            handleException(e);
+            Log.exit(messages);
+        }
+        return messages;
+    }
+
     public List<MessagePO> searchPM(String content, String username){
         Log.enter();
 
