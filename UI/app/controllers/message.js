@@ -1,6 +1,7 @@
 var User = require('../models/UserRest');
 var PrivateMessage = require('../models/PrivateMessageRest');
 var PublicMessage = require('../models/MessageRest');
+var PublicAnnouncement = require('../models/AnnouncementRest');
 
 module.exports = function(_, io, participants, passport) {
   return {
@@ -26,7 +27,7 @@ module.exports = function(_, io, participants, passport) {
             console.warn("message coming from wrong conversation");
           }
         }
-        
+
         res.render("message", {
           error_messages: errorMessages,
           username: buddy,
@@ -42,17 +43,17 @@ module.exports = function(_, io, participants, passport) {
         if (error_message) {
           req.flash('errorMessage', "failed to send message: " + error_message);
         }
-       // console.log("Here is the auther:" + req.user.local.name + "Message content is:" + req.param('content'));
+        // console.log("Here is the auther:" + req.user.local.name + "Message content is:" + req.param('content'));
         io.sockets.emit('newPrivateMessage', {
           author: req.user.local.name, 
           target: req.param('target'),
           message: req.param('content'),
         });
-      //  console.log("Here is the auther:" + req.user.local.name + "Message content is:" + req.param('content'));
+        //  console.log("Here is the auther:" + req.user.local.name + "Message content is:" + req.param('content'));
         res.redirect('/messages?chatbuddy=' + req.param('target'));
       });
     },
-     
+
     getWall : function(req, res) {
       PublicMessage.getAllWallPosts(function(error, publicmessages) {
         var errorMessages = req.flash('errorMessage');
@@ -66,13 +67,13 @@ module.exports = function(_, io, participants, passport) {
           var author = message.author;
           messageBuffer.push(author + ": " + message.content + " (sent at " + message.timestamp + ")");
         }
-        
+
         res.render("wall", {
           error_messages: errorMessages,
           username: author,
           publicmessages: messageBuffer,
         });
-      //  console.log(publicmessages);
+        //  console.log(publicmessages);
       });
     },
 
@@ -84,9 +85,9 @@ module.exports = function(_, io, participants, passport) {
           next(error);
         } else {
           for (var sId in participants.online) {
-                  var userName = participants.online[sId].userName;
-                  if (userName == user_name) {
-                      participants.online[sId] = {'userName' : user_name, 'publicMessage': publicMessage};        
+            var userName = participants.online[sId].userName;
+            if (userName == user_name) {
+              participants.online[sId] = {'userName' : user_name, 'publicMessage': publicMessage};        
             }
           }
           io.sockets.emit("newConnection", {participants: participants});
@@ -95,8 +96,63 @@ module.exports = function(_, io, participants, passport) {
             message: req.param('content'),
           });
           console.log("Testing response - public message:" + res);
-            res.redirect('/wall');
+          res.redirect('/wall');
         }
+      });
+    },
+
+    postAnnouncement: function (req, res, next) {
+      var user_name = req.session.passport.user.user_name;
+      console.log("This is th epublic annpouncement: " + req.body.publicAnnouncement);
+      console.log("Testing request: public announcement" + req);
+      User.setPublicAnnouncement(user_name, req.body.publicAnnouncement, function (error, publicAnnouncement) {
+        if (error) {
+          next(error);
+        } else {
+          for (var sId in participants.online) {
+            var userName = participants.online[sId].userName;
+            if (userName == user_name) {
+              participants.online[sId] = {'userName': user_name, 'publicAnnouncement': publicAnnouncement};
+            }
+          }
+          io.sockets.emit("newConnection", {participants: participants});
+          io.sockets.emit("newAnnouncement", {
+            author: req.user.local.name,
+            message: req.param('content')
+          });
+          console.log("Testing response - public announcement:" + res);
+          res.render('/Announcement');
+        }
+      });
+    },
+
+    getAnnouncementPage: function (req, res) {
+      PublicAnnouncement.getAllAnnouncement(function (error, publicannouncements) {
+
+        var errorMessages = req.flash('errorMessage');
+        if (error) {
+          errorMessages.push(error);
+        }
+        var announcementBuffer = [];
+
+        console.log("Length of public announcements : " + publicannouncements.length);
+
+        for (var i = 0; i < publicannouncements.length; ++i) {
+          var message = publicannouncements[i];
+          console.log("Message : " + JSON.stringify(message));
+          var author = message.author;
+          console.log("Author : " + author);
+          announcementBuffer.push(author + ": " + message.content + " (sent at " + message.timestamp + ")");
+        }
+        
+        res.render("Announcement", {
+          error_messages: errorMessages,
+          username: author,
+          publicannouncements: announcementBuffer
+        });
+
+
+
       });
     },
   };

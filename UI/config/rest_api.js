@@ -34,4 +34,7 @@ module.exports = {
   'change_privilege_level' : host_url + '/admin/role/',
   'change_account_status' : host_url + '/admin/active/',
   'change_password' : host_url + '/admin/password/',
+
+  'save_public_announcement' : host_url + '/message/announcement/',
+  'get_announcement' : host_url + '/messages/announcements',
 };

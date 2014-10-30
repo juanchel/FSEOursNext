@@ -56,6 +56,10 @@ module.exports = function(app, _, io, participants, performanceMeasurements, pas
     failureFlash: true
   }));
 
+
+  app.post("/publicannouncement", message_controller.postAnnouncement);
+  app.get("/Announcement", isLoggedIn, message_controller.getAnnouncementPage);
+  
   app.get("/people", isLoggedIn, people_controller.getPeople);
   
   app.post("/startMeasureMemory", user_controller.startMeasureMemoryFn);
