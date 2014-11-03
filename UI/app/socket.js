@@ -16,6 +16,10 @@ module.exports = function(_, io, participants) {
       io.sockets.emit("newWallPost", {participants: participants});
     });
 
+    socket.on("newAnnouncement",function(data){
+       io.sockets.emit("newAnnouncementPost",{participants : participants});
+    });
+
     socket.on("disconnect", function() {
       delete participants.online[socket.id];
       io.sockets.emit("userDisconnected", {id: socket.id, sender:"system", participants:participants});

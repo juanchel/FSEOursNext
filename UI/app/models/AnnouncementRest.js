@@ -43,10 +43,10 @@ PublicAnnouncement.prototype.send = function(callback) {
     });
 };
 
+
 PublicAnnouncement.getAllAnnouncement = function(callback) {
     request(rest_api.get_announcement, {json:true}, function(err, res, body) {
-        console.log("Announcement rest");
-        console.log("This is the status code : " + res.statusCode);
+        console.warn('sdfsdfs ' + rest_api.get_announcement);
         if (err){
             console.warn("There is an error: " + err);
         }else if (res.statusCode !== 200) {
@@ -54,21 +54,18 @@ PublicAnnouncement.getAllAnnouncement = function(callback) {
         } else if(res.statusCode === 200) {
 
             var publicannouncements = [];
-            console.log("Body length : " + body.length);
-            for (var i = 0; i < body.length; ++i) {
+            for (var i = 0; i < body.length; i++) {
                 var item = body[i];
                 var timestampPattern = /([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}).*/;
                 var match = timestampPattern.exec(item.timestamp);
                 var timestamp = new Date(Number(match[1]), Number(match[2])-1, Number(match[3]),
                     Number(match[4]), Number(match[5]), 0, 0);
                 publicannouncements.push(new PublicAnnouncement(item.author, item.content, timestamp));
-
+                
             }
-
             callback(null, publicannouncements);
         }
 
     });
 };
-
 module.exports = PublicAnnouncement;
