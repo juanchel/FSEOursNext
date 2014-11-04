@@ -1,6 +1,7 @@
 package edu.cmu.sv.ws.ssnoc.data.po;
 
 import com.google.gson.Gson;
+import java.*;
 
 /**
  * This is the persistence class to save all user information in the system.
