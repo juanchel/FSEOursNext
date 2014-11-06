@@ -12,6 +12,16 @@ public class User {
 	private String password;
     private int emergency_status;
 
+    private boolean active;
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public int getRole() {
         return role;
     }
