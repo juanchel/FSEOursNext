@@ -30,6 +30,7 @@ public class ConverterUtils {
 		dto.setUserName(po.getUserName());
         dto.setEmergency_status(po.getEmergency_status());
         dto.setRole(po.getRole());
+        dto.setActive(po.isActive());
 		return dto;
 	}
 
@@ -51,6 +52,7 @@ public class ConverterUtils {
 		po.setPassword(dto.getPassword());
         po.setEmergency_status(dto.getEmergency_status());
         po.setRole(dto.getRole());
+        po.setActive(dto.isActive());
 
 		return po;
 	}
