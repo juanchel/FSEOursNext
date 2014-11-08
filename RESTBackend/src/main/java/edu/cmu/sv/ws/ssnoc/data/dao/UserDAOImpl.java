@@ -70,6 +70,38 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         return users;
     }
 
+    private List<UserPO> processResultsWithActive(PreparedStatement stmt) {
+        Log.enter(stmt);
+
+        if (stmt == null) {
+            Log.warn("Inside processResults method with NULL statement object.");
+            return null;
+        }
+
+        Log.debug("Executing stmt = " + stmt);
+        List<UserPO> users = new ArrayList<UserPO>();
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                UserPO po = new UserPO();
+                po.setUserId(rs.getLong(1));
+                po.setUserName(rs.getString(2));
+                po.setPassword(rs.getString(3));
+                po.setEmergency_status(rs.getInt(4));
+                po.setSalt(rs.getString(5));
+                po.setRole(rs.getInt(6));
+                po.setActive(rs.getBoolean(7));
+
+                users.add(po);
+            }
+        } catch (SQLException e) {
+            handleException(e);
+        } finally {
+            Log.exit(users);
+        }
+
+        return users;
+    }
+
     private String processStatusResults(PreparedStatement stmt) {
         String status = null;
         try (ResultSet rs = stmt.executeQuery()) {
@@ -109,7 +141,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
                      .prepareStatement(SQL.FIND_USER_BY_NAME)) {
             stmt.setString(1, userName.toUpperCase());
 
-            List<UserPO> users = processResults(stmt);
+            List<UserPO> users = processResultsWithActive(stmt);
 
             if (users.size() == 0) {
                 Log.debug("No user account exists with userName = " + userName);

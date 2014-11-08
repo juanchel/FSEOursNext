@@ -103,6 +103,12 @@ module.exports = function(_, io, participants, passport) {
 
     postAnnouncement: function (req, res, next) {
       var user_name = req.session.passport.user.user_name;
+
+      if (req.session.passport.user.user_role == 0 || req.session.passport.user.user_role == 2) {
+        res.render("trespass", {message: ""});
+        return;
+      }
+
       console.log("This is th epublic annpouncement: " + req.body.publicAnnouncement);
       console.log("Testing request: public announcement" + req);
       User.setPublicAnnouncement(user_name, req.body.publicAnnouncement, function (error, publicAnnouncement) {
@@ -121,7 +127,7 @@ module.exports = function(_, io, participants, passport) {
             message: req.param('content')
           });
           console.log("Testing response - public announcement:" + res);
-          res.render('/Announcement');
+          //res.render('Announcement');
         }
       });
     },
@@ -136,21 +142,21 @@ module.exports = function(_, io, participants, passport) {
             }
             var announcementBuffer = [];
 
-            for (var i = 0; i < publicannouncements.length; ++i) {
-              var message = publicannouncements[i];
-              var author = message.author;
-              announcementBuffer.push(author + ": " + message.content + " (sent at " + message.timestamp + ")");
-            }
-        
-            res.render("Announcement", {
-              error_messages: errorMessages,
-              username: author,
-              publicannouncements: announcementBuffer
-            });
-          });
-        }else{
-	        res.render("trespass", {message: ""});
-	      }
+        for (var i = 0; i < publicannouncements.length; ++i) {
+          var message = publicannouncements[i];
+          console.log("Message : " + JSON.stringify(message));
+          var author = message.author;
+          console.log("Author : " + author);
+          announcementBuffer.push(author + ": " + message.content + " (sent at " + message.timestamp + ")");
+        }
+
+        res.render("Announcement", {
+          error_messages: errorMessages,
+          username: author,
+          publicannouncements: announcementBuffer
+        });
+
+      });
     },
   };
 };
