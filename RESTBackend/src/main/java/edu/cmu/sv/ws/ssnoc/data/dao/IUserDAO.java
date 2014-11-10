@@ -25,7 +25,9 @@ public interface IUserDAO {
      *
      * @return - List of all users.
      */
-    List<UserPO> loadUsers();
+    List<UserPO> loadUsers(String query);
+
+    void testloadUsers();
 
     /**
      * This method with search for a user by his userName in the database. The
@@ -39,7 +41,8 @@ public interface IUserDAO {
      */
     UserPO findByName(String userName);
 
-    String getStatusByName(String userName);
+    String getStatusByName(String userName, String query);
+    void testGetStatusByName();
 
     void updateStatus(String userName, int status);
     void updatePW(String username, String pw, String salt);

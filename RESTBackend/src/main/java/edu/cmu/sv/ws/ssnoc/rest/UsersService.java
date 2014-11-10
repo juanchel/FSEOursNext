@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.common.utils.ConverterUtils;
+import edu.cmu.sv.ws.ssnoc.data.SQL;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
 import edu.cmu.sv.ws.ssnoc.dto.User;
@@ -58,7 +59,7 @@ public class UsersService extends BaseService {
 
 		List<User> users = null;
 		try {
-			List<UserPO> userPOs = DAOFactory.getInstance().getUserDAO().loadUsers();
+			List<UserPO> userPOs = DAOFactory.getInstance().getUserDAO().loadUsers(SQL.FIND_ALL_USERS);
 
 			users = new ArrayList<User>();
 			for (UserPO po : userPOs) {

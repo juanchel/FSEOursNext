@@ -9,6 +9,8 @@ import edu.cmu.sv.ws.ssnoc.common.exceptions.UnknownUserException;
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
+import edu.cmu.sv.ws.ssnoc.data.SQL;
+
 
 public class BaseService {
     protected void handleException(Exception e) {
@@ -42,7 +44,7 @@ public class BaseService {
     }
 
     protected String loadStatus (String userName) {
-        String status = DAOFactory.getInstance().getUserDAO().getStatusByName(userName);
+        String status = DAOFactory.getInstance().getUserDAO().getStatusByName(userName, SQL.FIND_STATUS_BY_NAME);
         return status;
     }
 }

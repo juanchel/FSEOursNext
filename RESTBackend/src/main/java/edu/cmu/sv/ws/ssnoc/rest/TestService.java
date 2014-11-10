@@ -3,6 +3,7 @@ package edu.cmu.sv.ws.ssnoc.rest;
 import edu.cmu.sv.ws.ssnoc.common.utils.ConverterUtils;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
 import edu.cmu.sv.ws.ssnoc.data.dao.IMessageDAO;
+import edu.cmu.sv.ws.ssnoc.data.dao.IUserDAO;
 import edu.cmu.sv.ws.ssnoc.data.po.MessagePO;
 import edu.cmu.sv.ws.ssnoc.dto.Message;
 import edu.cmu.sv.ws.ssnoc.dto.TestResult;
@@ -126,6 +127,40 @@ public class TestService extends BaseService{
         }
 
         return created(resp);
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/testLoadUsers/")
+    public Response testLoadUsers () {
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.testloadUsers();
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return ok();
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/testGetStatus/")
+    public Response testGetStatus () {
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.testGetStatusByName();
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return ok();
     }
 }
 

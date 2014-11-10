@@ -22,10 +22,8 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
      *
      * @return - List of users
      */
-    public List<UserPO> loadUsers() {
+    public List<UserPO> loadUsers(String query) {
         Log.enter();
-
-        String query = SQL.FIND_ALL_USERS;
 
         List<UserPO> users = new ArrayList<UserPO>();
         try (Connection conn = getConnection();
@@ -38,7 +36,6 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
 
         return users;
     }
-
     private List<UserPO> processResults(PreparedStatement stmt) {
         Log.enter(stmt);
 
@@ -68,6 +65,32 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         }
 
         return users;
+    }
+
+    public void testloadUsers() {
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.DELETE_TEST_USER)) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn
+                     .prepareStatement(SQL.INSERT_INTO_TEST_USERS)) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException(e);
+        }
+        List<UserPO> mockList = loadUsers(SQL.FIND_TEST_USERS);
+        if(mockList.size() > 0)
+        {
+
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
     }
 
     private String processStatusResults(PreparedStatement stmt) {
@@ -125,7 +148,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
     }
 
     @Override
-    public String getStatusByName(String userName) {
+    public String getStatusByName(String userName, String query) {
         Log.enter(userName);
 
         if (userName == null) {
@@ -136,7 +159,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         String status = null;
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn
-                     .prepareStatement(SQL.FIND_STATUS_BY_NAME)) {
+                     .prepareStatement(query)) {
             stmt.setString(1, userName.toUpperCase());
 
             status = processStatusResults(stmt);
@@ -146,6 +169,18 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         }
 
         return status;
+    }
+
+    public void testGetStatusByName() {
+        String status = getStatusByName("VINAYTESTUSER", SQL.FIND_TEST_STATUS_BY_NAME);
+        if(Integer.parseInt(status) == 0)
+        {
+            return;
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
     }
 
     /**
