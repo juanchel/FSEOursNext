@@ -136,3 +136,7 @@ h3{
 h3{
  color: dodgerblue !important;
 }
+
+.display_none {
+    display: none;
+}
