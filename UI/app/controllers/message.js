@@ -133,14 +133,15 @@ module.exports = function(_, io, participants, passport) {
     },
 
     getAnnouncementPage: function (req, res) {
-	    if(req.session.passport.user.user_role == 1 || req.session.passport.user.user_role == 3){
-          PublicAnnouncement.getAllAnnouncement(function (error, publicannouncements) {
+      PublicAnnouncement.getAllAnnouncement(function (error, publicannouncements) {
 
-            var errorMessages = req.flash('errorMessage');
-            if (error) {
-              errorMessages.push(error);
-            }
-            var announcementBuffer = [];
+        var errorMessages = req.flash('errorMessage');
+        if (error) {
+          errorMessages.push(error);
+        }
+        var announcementBuffer = [];
+
+        console.log("Length of public announcements : " + publicannouncements.length);
 
         for (var i = 0; i < publicannouncements.length; ++i) {
           var message = publicannouncements[i];
