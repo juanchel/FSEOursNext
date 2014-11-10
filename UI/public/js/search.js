@@ -52,9 +52,21 @@ function init() {
     }
   }
   
+  $('select#search_type').change(function() {
+    var type = $('select#search_type option:selected').val();
+    if (type == '1') {
+      $('p#keywords_input').addClass('display_none');
+      $('p#status_input').removeClass('display_none');
+    } else {
+      $('p#keywords_input').removeClass('display_none');
+      $('p#status_input').addClass('display_none');      
+    }
+  });
+  
   $('button#search').click(function() {
     var type = $('select#search_type option:selected').val();
-    var keywords = $('input#keywords').val();
+    var keywords = type == '1' ? 
+        $('select#status_to_search option:selected').val() : $('input#keywords').val();
     $("div#online_results").html("<p>search in progress...</p>");
     $("div#offline_results").html("<p>search in progress...</p>")
     $.ajax({
