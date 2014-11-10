@@ -146,10 +146,10 @@ public class SQL {
      */
     public static final String FIND_USER_BY_NAME = "select user_id, user_name, password,"
             + " emergency_status,"
-            + " salt, role "
+            + " salt, role, active "
             + " from "
             + SSN_USERS
-            + " where UPPER(user_name) = UPPER(?) AND active=TRUE";
+            + " where UPPER(user_name) = UPPER(?)";
 
     public static final String GET_ALL_PUBLIC_MESSAGES = "select * from " + SSN_MESSAGES;
 

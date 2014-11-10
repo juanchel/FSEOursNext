@@ -216,7 +216,6 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         //targets of messages
         List<String> targets = new ArrayList<String>();
 
-
         try (Connection conn = getConnection();
             PreparedStatement stmt = conn.prepareStatement(query2);) {
             stmt.setTimestamp(1, timestamp);

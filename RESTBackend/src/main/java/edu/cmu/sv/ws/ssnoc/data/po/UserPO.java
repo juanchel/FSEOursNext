@@ -18,6 +18,16 @@ public class UserPO {
     private int emergency_status;
     private int role;
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    private boolean active;
+
     public int getRole() {
         return role;
     }
