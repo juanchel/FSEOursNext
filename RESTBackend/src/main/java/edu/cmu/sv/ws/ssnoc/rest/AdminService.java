@@ -6,6 +6,7 @@ import edu.cmu.sv.ws.ssnoc.common.exceptions.ValidationException;
 import edu.cmu.sv.ws.ssnoc.common.logging.Log;
 import edu.cmu.sv.ws.ssnoc.common.utils.ConverterUtils;
 import edu.cmu.sv.ws.ssnoc.common.utils.SSNCipher;
+import edu.cmu.sv.ws.ssnoc.data.SQL;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
 import edu.cmu.sv.ws.ssnoc.data.dao.IUserDAO;
 import edu.cmu.sv.ws.ssnoc.data.po.UserPO;
@@ -37,7 +38,7 @@ public class AdminService extends BaseService {
         po.setPassword(user.getPassword());
         po = SSNCipher.encryptPassword(po);
 
-        DAOFactory.getInstance().getUserDAO().updatePW(po.getUserName(), po.getPassword(), po.getSalt());
+        DAOFactory.getInstance().getUserDAO().updatePW(po.getUserName(), po.getPassword(), po.getSalt(), SQL.UPDATE_PASSWORD);
 
         return ok();
     }
@@ -66,7 +67,7 @@ public class AdminService extends BaseService {
         po.setUserName(userName);
         po.setRole(user.getRole());
 
-        DAOFactory.getInstance().getUserDAO().updateRole(po.getUserName(), po.getRole());
+        DAOFactory.getInstance().getUserDAO().updateRole(po.getUserName(), po.getRole(), SQL.UPDATE_ROLE);
 
         return ok();
     }

@@ -17,7 +17,7 @@ public interface IUserDAO {
      * @param userPO
      *            - User information to be saved.
      */
-    void save(UserPO userPO);
+    void save(UserPO userPO, String query);
 
     /**
      * This method will load all the users in the
@@ -29,6 +29,14 @@ public interface IUserDAO {
 
     void testloadUsers();
 
+    void testSaveInUser();
+
+    void testUpdatePassword();
+
+    void testUpdateRole();
+
+    void testUpdateStatus();
+
     /**
      * This method with search for a user by his userName in the database. The
      * search performed is a case insensitive search to allow case mismatch
@@ -39,15 +47,16 @@ public interface IUserDAO {
      *
      * @return - UserPO with the user information if a match is found.
      */
-    UserPO findByName(String userName);
+    UserPO findByName(String userName, String query);
 
     String getStatusByName(String userName, String query);
     void testGetStatusByName();
+    void testFindByName();
 
-    void updateStatus(String userName, int status);
-    void updatePW(String username, String pw, String salt);
+    void updateStatus(String userName, int status, String query);
+    void updatePW(String username, String pw, String salt, String query);
     void updateUsername(String username, String nextName);
-    void updateRole(String username, int nextName);
+    void updateRole(String username, int nextName, String query);
     void updateActive(String username, boolean active);
 
     List<UserPO> searchUsername(String userName);

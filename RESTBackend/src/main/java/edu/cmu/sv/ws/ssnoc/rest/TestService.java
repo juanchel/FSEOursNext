@@ -162,5 +162,90 @@ public class TestService extends BaseService{
 
         return ok();
     }
+
+    @GET
+     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+     @Path("/testFindUserByName/")
+     public Response testFindUserByName () {
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.testFindByName();
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return ok();
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/testSaveInUser/")
+    public Response testSaveInUser () {
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.testSaveInUser();
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return ok();
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/testUpdatePW/")
+    public Response testUpdatePW () {
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.testUpdatePassword();
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return ok();
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/testUpdateRole/")
+    public Response testUpdateRole () {
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.testUpdateRole();
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return ok();
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/testUpdateStatus/")
+    public Response testUpdateStatus () {
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.testUpdateStatus();
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return ok();
+    }
 }
 

@@ -150,7 +150,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
      * @return - UserPO with the user information if a match is found.
      */
     @Override
-    public UserPO findByName(String userName) {
+    public UserPO findByName(String userName, String query) {
         Log.enter(userName);
 
         if (userName == null) {
@@ -161,7 +161,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         UserPO po = null;
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn
-                     .prepareStatement(SQL.FIND_USER_BY_NAME)) {
+                     .prepareStatement(query)) {
             stmt.setString(1, userName.toUpperCase());
 
             List<UserPO> users = processResultsWithActive(stmt);
@@ -179,6 +179,17 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         return po;
     }
 
+    public void testFindByName() {
+        UserPO user = findByName("vinaytestuser", SQL.FIND_TEST_USER_BY_NAME);
+        if(user.getUserId() == 1)
+        {
+            return;
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
+    }
     @Override
     public String getStatusByName(String userName, String query) {
         Log.enter(userName);
@@ -203,6 +214,8 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         return status;
     }
 
+
+
     public void testGetStatusByName() {
         String status = getStatusByName("VINAYTESTUSER", SQL.FIND_TEST_STATUS_BY_NAME);
         if(Integer.parseInt(status) == 0)
@@ -222,7 +235,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
      *            - User information to be saved.
      */
     @Override
-    public void save(UserPO userPO) {
+    public void save(UserPO userPO, String query) {
         Log.enter(userPO);
         if (userPO == null) {
             Log.warn("Inside save method with userPO == NULL");
@@ -230,7 +243,7 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         }
 
         try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(SQL.INSERT_USER)) {
+             PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, userPO.getUserName());
             stmt.setString(2, userPO.getPassword());
             stmt.setInt(3, userPO.getEmergency_status());
@@ -245,9 +258,30 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         }
     }
 
-    public void updatePW(String username, String pw, String salt) {
+    public void testSaveInUser() {
+        UserPO user = new UserPO();
+        user.setUserName("VINAYTESTUSER1");
+        user.setActive(true);
+        user.setEmergency_status(1);
+        user.setPassword("testing1");
+        user.setRole(1);
+        user.setSalt("erewtewtewtet");
+        user.setUserId(2);
+        save(user, SQL.INSERT_TEST_USER);
+        UserPO user1 = findByName("vinaytestuser1", SQL.FIND_TEST_USER_BY_NAME);
+        if(user1.getUserId() == 2)
+        {
+            return;
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
+    }
+
+    public void updatePW(String username, String pw, String salt, String query) {
         try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_PASSWORD)) {
+             PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, pw);
             stmt.setString(2, salt);
             stmt.setString(3, username);
@@ -258,6 +292,13 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         } finally {
 
         }
+    }
+
+    public void testUpdatePassword() {
+
+        updatePW("VINAYTESTUSER1","testingChangingPassword", "genjnfejnfje", SQL.UPDATE_TEST_PASSWORD);
+        UserPO user1 = findByName("vinaytestuser1", SQL.FIND_TEST_USER_BY_NAME);
+        System.out.println(user1.getPassword());
     }
 
     public void updateUsername(String username, String nextName) {
@@ -274,9 +315,11 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         }
     }
 
-    public void updateRole(String username, int role) {
+
+
+    public void updateRole(String username, int role, String query) {
         try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_ROLE)) {
+             PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, role);
             stmt.setString(2, username);
 
@@ -285,6 +328,20 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
             handleException(e);
         } finally {
 
+        }
+    }
+
+    public void testUpdateRole() {
+
+        updateRole("VINAYTESTUSER1",0, SQL.UPDATE_TEST_ROLE);
+        UserPO user1 = findByName("vinaytestuser1", SQL.FIND_TEST_USER_BY_NAME);
+        if(user1.getRole() == 0)
+        {
+            return;
+        }
+        else
+        {
+            throw new IllegalStateException();
         }
     }
 
@@ -304,9 +361,9 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
     }
 
     @Override
-    public void updateStatus(String username, int status) {
+    public void updateStatus(String username, int status, String query) {
         try (Connection conn = getConnection();
-            PreparedStatement stmt = conn.prepareStatement(SQL.UPDATE_STATUS)) {
+            PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, status);
             stmt.setString(2, username);
 
@@ -317,6 +374,20 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
             
         }
 
+    }
+
+    public void testUpdateStatus() {
+
+        updateStatus("VINAYTESTUSER1",0, SQL.UPDATE_TEST_STATUS);
+        UserPO user1 = findByName("vinaytestuser1", SQL.FIND_TEST_USER_BY_NAME);
+        if(user1.getEmergency_status() == 0)
+        {
+            return;
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
     }
 
     public List<UserPO> searchUsername(String userName) {

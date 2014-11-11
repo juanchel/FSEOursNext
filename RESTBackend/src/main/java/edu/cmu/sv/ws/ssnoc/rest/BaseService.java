@@ -35,7 +35,7 @@ public class BaseService {
     }
 
     protected UserPO loadExistingUser(String userName) {
-        UserPO po = DAOFactory.getInstance().getUserDAO().findByName(userName);
+        UserPO po = DAOFactory.getInstance().getUserDAO().findByName(userName, SQL.FIND_USER_BY_NAME);
         if (po == null) {
             throw new UnknownUserException(userName);
         }

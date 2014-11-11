@@ -135,7 +135,12 @@ public class SQL {
             + " emergency_status," + " salt, role " + " from " + SSN_USERS + " where active=TRUE order by user_name ";
 
     public static final String INSERT_INTO_TEST_USERS = "insert into " + SSN_TEST_USERS + " (user_id, user_name, password, emergency_status,role, active, salt) values ('1', 'VINAYTESTUSER', 'testing', '0','0', 'TRUE', 'etwtww')";
+    public static final String INSERT_TEST_USER = "insert into " + SSN_TEST_USERS
+            + " (user_name, password, emergency_status, salt, role, active) values (?, ?, ?, ?, 0, TRUE)";
     public static final String DELETE_TEST_USER = "delete from " + SSN_TEST_USERS + " where user_id = 1";
+    public static final String DELETE_TEST_USER1 = "delete from " + SSN_TEST_USERS + " where user_id = 2";
+    public static final String UPDATE_TEST_PASSWORD = "UPDATE " + SSN_TEST_USERS + " SET password=?, salt=? WHERE user_name=?";
+
 
     public static final String FIND_TEST_USERS = "select user_id, user_name, password,"
             + " emergency_status," + " salt, role " + " from " + SSN_TEST_USERS + " where active=TRUE order by user_name ";
@@ -149,6 +154,13 @@ public class SQL {
             + " salt, role, active "
             + " from "
             + SSN_USERS
+            + " where UPPER(user_name) = UPPER(?)";
+
+    public static final String FIND_TEST_USER_BY_NAME = "select user_id, user_name, password,"
+            + " emergency_status,"
+            + " salt, role, active "
+            + " from "
+            + SSN_TEST_USERS
             + " where UPPER(user_name) = UPPER(?)";
 
     public static final String GET_ALL_PUBLIC_MESSAGES = "select * from " + SSN_MESSAGES;
@@ -196,10 +208,13 @@ public class SQL {
             + " (user_name, password, emergency_status, salt, role, active) values ('SSNAdmin', 'd9289f510850320b7c41ea10547d2ab8', 3, '37b8e9a65cfed2766af2d11879c86e82', 3, TRUE)";
 
     public static final String UPDATE_STATUS = "UPDATE " + SSN_USERS + " SET emergency_status=? WHERE user_name=?";
+    public static final String UPDATE_TEST_STATUS = "UPDATE " + SSN_TEST_USERS + " SET emergency_status=? WHERE user_name=?";
+
 
     public static final String UPDATE_USERNAME = "UPDATE " + SSN_USERS + " SET user_name=? WHERE user_name=?";
     public static final String UPDATE_PASSWORD = "UPDATE " + SSN_USERS + " SET password=?, salt=? WHERE user_name=?";
     public static final String UPDATE_ROLE = "UPDATE " + SSN_USERS + " SET role=? WHERE user_name=?";
+    public static final String UPDATE_TEST_ROLE = "UPDATE " + SSN_TEST_USERS + " SET role=? WHERE user_name=?";
     public static final String UPDATE_ACTIVE = "UPDATE " + SSN_USERS + " SET active=? WHERE user_name=?";
 
     public static final String SEARCH_USERNAME = "SELECT user_id, user_name, password, emergency_status, salt, role from " + SSN_USERS + " WHERE user_name LIKE ?";
