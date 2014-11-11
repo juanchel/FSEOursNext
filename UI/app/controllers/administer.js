@@ -12,6 +12,7 @@ module.exports = function(_, io, participants, passport) {
 	    }
     },
 
+    console.log("");
 	getUserProfileFn : function(req, res) {
         name_of_user = req.body.administerUserName;
 
