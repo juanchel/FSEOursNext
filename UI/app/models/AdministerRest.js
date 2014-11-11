@@ -4,12 +4,13 @@ var rest_api = require('../../config/rest_api');
 var utils = require('../utils');
 var User = require("./UserRest");
 
-function AdminUser(user_name, password, st, role) {
+function AdminUser(user_name, password, st, role, active) {
   this.local = {
     name : user_name,
     password : password,
     status : st,
-	role : role
+	role : role,
+	active : active,
   };
 }
 
@@ -20,7 +21,7 @@ AdminUser.getUserProfile = function(user_name, callback) {
       return;
     }
     if (res.statusCode === 200) {
-      var user = new AdminUser(body.userName, body.password, body.emergency_status, body.role);
+      var user = new AdminUser(body.userName, body.password, body.emergency_status, body.role, body.active);
       callback(null, user);
       return;
     }
