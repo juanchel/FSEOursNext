@@ -360,6 +360,20 @@ public class UserDAOImpl extends BaseDAOImpl implements IUserDAO {
         }
     }
 
+//    public void testUpdateActive() {
+//
+//        updateActive("VINAYTESTUSER1",false, SQL.UPDATE_TEST_ACTIVE);
+//        UserPO user1 = findByName("vinaytestuser1", SQL.FIND_TEST_USER_BY_NAME);
+//        if(!user1.isActive())
+//        {
+//            return;
+//        }
+//        else
+//        {
+//            throw new IllegalStateException();
+//        }
+//    }
+
     @Override
     public void updateStatus(String username, int status, String query) {
         try (Connection conn = getConnection();

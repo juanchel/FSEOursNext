@@ -216,6 +216,7 @@ public class SQL {
     public static final String UPDATE_ROLE = "UPDATE " + SSN_USERS + " SET role=? WHERE user_name=?";
     public static final String UPDATE_TEST_ROLE = "UPDATE " + SSN_TEST_USERS + " SET role=? WHERE user_name=?";
     public static final String UPDATE_ACTIVE = "UPDATE " + SSN_USERS + " SET active=? WHERE user_name=?";
+    public static final String UPDATE_TEST_ACTIVE = "UPDATE " + SSN_TEST_USERS + " SET active=? WHERE user_name=?";
 
     public static final String SEARCH_USERNAME = "SELECT user_id, user_name, password, emergency_status, salt, role from " + SSN_USERS + " WHERE user_name LIKE ?";
     public static final String SEARCH_STATUS = "SELECT user_id, user_name, password, emergency_status, salt, role from " + SSN_USERS + " WHERE emergency_status=?";

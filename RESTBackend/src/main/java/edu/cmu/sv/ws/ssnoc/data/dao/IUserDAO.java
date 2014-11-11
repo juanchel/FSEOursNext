@@ -37,6 +37,7 @@ public interface IUserDAO {
 
     void testUpdateStatus();
 
+
     /**
      * This method with search for a user by his userName in the database. The
      * search performed is a case insensitive search to allow case mismatch
