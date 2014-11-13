@@ -2,197 +2,223 @@ var AdminUser = require('../models/AdministerRest');
 var name_of_user = null;
 
 module.exports = function(_, io, participants, passport) {
-    return {
-	
-    getAdministerResult: function(req, res) {
-	    if(req.session.passport.user.user_role == 3){
-		  res.render("administer", {message: ""});
-	    }else{
-		  res.render("trespass", {message: ""});
-	    }
+  return {
+
+    getAdministerResult : function(req, res) {
+      if (req.session.passport.user.user_role == 3) {
+        res.render("administer", {
+          message : ""
+        });
+      } else {
+        res.render("trespass", {
+          message : ""
+        });
+      }
     },
 
-	getUserProfileFn : function(req, res) {
-        name_of_user = req.body.administerUserName;
+    getUserProfileFn : function(req, res) {
+      name_of_user = req.body.administerUserName;
+      //if(req.body.administerUserName in participants.all){
 
-        AdminUser.getUserProfile(name_of_user, function(err, user) {
-	
+      AdminUser.getUserProfile(name_of_user, function(err, user) {
+
+        if (user == null) {
+          res.render('administer', {
+            userName : "User Does Not Exist",
+            priviligeLevel : "User Does Not Exist",
+            accountStatus : "User Does Not Exist",
+            password : "User Does Not Exist",
+          });
+        } else {
+
           var userRole = null;
-          if(user.local.role == 0){
-	        userRole = "Citizen";
-          }else if(user.local.role == 1){
-	        userRole = "Co-ordinator";
-          }else if(user.local.role == 2){
-	        userRole = "Monitor";
-          }else if(user.local.role == 3){
-	        userRole = "Administrator";
+          if (user.local.role == 0) {
+            userRole = "Citizen";
+          } else if (user.local.role == 1) {
+            userRole = "Co-ordinator";
+          } else if (user.local.role == 2) {
+            userRole = "Monitor";
+          } else if (user.local.role == 3) {
+            userRole = "Administrator";
           }
 
           var userStatus = null;
-          if(user.local.active == true){
-	        userStatus = "Active";
-          }else if(user.local.active == false){
-	        userStatus = "Inactive";
+          if (user.local.active == true) {
+            userStatus = "Active";
+          } else if (user.local.active == false) {
+            userStatus = "Inactive";
           }
-          
+
           res.render('administer', {
-    	    userName: user.local.name,
-    	    priviligeLevel: userRole,
-            accountStatus: userStatus,
-	        password: '*Cannot Display Password*',
-          } );
-        });
+            userName : user.local.name,
+            priviligeLevel : userRole,
+            accountStatus : userStatus,
+            password : '*Cannot Display Password*',
+          });
+        }
+
+      });
+
     },
 
-    changeUserNameFn : function (req, res, next) {
-	    var changedUserName = req.body.changeUserName;
-        AdminUser.changeUser(changedUserName, name_of_user, function(error, user) {
-	      console.log("Is the user object returned : " + JSON.stringify(user));
-          if (error){
-            next(error);
-          } else {}
-        });
-        name_of_user = changedUserName;
-        
-        AdminUser.getUserProfile(changedUserName, function(err, user) {
-	
-          var userRole = null;
-          if(user.local.role == 0){
-	        userRole = "Citizen";
-          }else if(user.local.role == 1){
-	        userRole = "Co-ordinator";
-          }else if(user.local.role == 2){
-	        userRole = "Monitor";
-          }else if(user.local.role == 3){
-	        userRole = "Administrator";
-          }
+    changeUserNameFn : function(req, res, next) {
+      var changedUserName = req.body.changeUserName;
+      AdminUser.changeUser(changedUserName, name_of_user,
+          function(error, user) {
+            console
+                .log("Is the user object returned : " + JSON.stringify(user));
+            if (error) {
+              next(error);
+            } else {
+            }
+          });
+      name_of_user = changedUserName;
 
-          var userStatus = null;
-          if(user.local.active == true){
-	        userStatus = "Active";
-          }else if(user.local.active == false){
-	        userStatus = "Inactive";
-          }
-          
-          res.render('administer', {
-    	    userName: user.local.name,
-    	    priviligeLevel: userRole,
-            accountStatus: userStatus,
-	        password: '*Cannot Display Password*',
-          } );
+      AdminUser.getUserProfile(changedUserName, function(err, user) {
+
+        var userRole = null;
+        if (user.local.role == 0) {
+          userRole = "Citizen";
+        } else if (user.local.role == 1) {
+          userRole = "Co-ordinator";
+        } else if (user.local.role == 2) {
+          userRole = "Monitor";
+        } else if (user.local.role == 3) {
+          userRole = "Administrator";
+        }
+
+        var userStatus = null;
+        if (user.local.active == true) {
+          userStatus = "Active";
+        } else if (user.local.active == false) {
+          userStatus = "Inactive";
+        }
+
+        res.render('administer', {
+          userName : user.local.name,
+          priviligeLevel : userRole,
+          accountStatus : userStatus,
+          password : '*Cannot Display Password*',
         });
+      });
     },
 
-    changePrivilegeLevelFn : function (req, res, next) {
-	    var changedPrivilegeLevel = req.body.changePrivilegeLevel;
-        AdminUser.changePrivilegeLevel(changedPrivilegeLevel, name_of_user, function(error, user) {
-          if (error){
-            next(error);
-          } else {}
-        });
-        
-        AdminUser.getUserProfile(name_of_user, function(err, user) {
-	
-          var userRole = null;
-          if(user.local.role == 0){
-	        userRole = "Citizen";
-          }else if(user.local.role == 1){
-	        userRole = "Co-ordinator";
-          }else if(user.local.role == 2){
-	        userRole = "Monitor";
-          }else if(user.local.role == 3){
-	        userRole = "Administrator";
-          }
+    changePrivilegeLevelFn : function(req, res, next) {
+      var changedPrivilegeLevel = req.body.changePrivilegeLevel;
+      AdminUser.changePrivilegeLevel(changedPrivilegeLevel, name_of_user,
+          function(error, user) {
+            if (error) {
+              next(error);
+            } else {
+            }
+          });
 
-          var userStatus = null;
-          if(user.local.active == true){
-	        userStatus = "Active";
-          }else if(user.local.active == false){
-	        userStatus = "Inactive";
-          }
-          
-          res.render('administer', {
-    	    userName: user.local.name,
-    	    priviligeLevel: userRole,
-            accountStatus: userStatus,
-	        password: '*Cannot Display Password*',
-          } );
-        });
-    },  
+      AdminUser.getUserProfile(name_of_user, function(err, user) {
 
-    changeAccountStatusFn : function (req, res, next) {
-	    var changedAccountStatus = req.body.changeAccountStatus;
-        AdminUser.changeAccountStatus(changedAccountStatus, name_of_user, function(error, user) {
-          if (error){
-            next(error);
-          } else {}
-        });
-        
-        AdminUser.getUserProfile(name_of_user, function(err, user) {
-	
-          var userRole = null;
-          if(user.local.role == 0){
-	        userRole = "Citizen";
-          }else if(user.local.role == 1){
-	        userRole = "Co-ordinator";
-          }else if(user.local.role == 2){
-	        userRole = "Monitor";
-          }else if(user.local.role == 3){
-	        userRole = "Administrator";
-          }
+        var userRole = null;
+        if (user.local.role == 0) {
+          userRole = "Citizen";
+        } else if (user.local.role == 1) {
+          userRole = "Co-ordinator";
+        } else if (user.local.role == 2) {
+          userRole = "Monitor";
+        } else if (user.local.role == 3) {
+          userRole = "Administrator";
+        }
 
-          var userStatus = null;
-          if(user.local.active == true){
-	        userStatus = "Active";
-          }else if(user.local.active == false){
-	        userStatus = "Inactive";
-          }
-          
-          res.render('administer', {
-    	    userName: user.local.name,
-    	    priviligeLevel: userRole,
-            accountStatus: userStatus,
-	        password: '*Cannot Display Password*',
-          } );
-        });
-    },    
+        var userStatus = null;
+        if (user.local.active == true) {
+          userStatus = "Active";
+        } else if (user.local.active == false) {
+          userStatus = "Inactive";
+        }
 
-    changePasswordFn : function (req, res, next) {
-	    var changedPassword = req.body.changePassword;
-        AdminUser.changePassword(changedPassword, name_of_user, function(error, user) {
-          if (error){
-            next(error);
-          } else {}
+        res.render('administer', {
+          userName : user.local.name,
+          priviligeLevel : userRole,
+          accountStatus : userStatus,
+          password : '*Cannot Display Password*',
         });
-        
-        AdminUser.getUserProfile(name_of_user, function(err, user) {
-	
-          var userRole = null;
-          if(user.local.role == 0){
-	        userRole = "Citizen";
-          }else if(user.local.role == 1){
-	        userRole = "Co-ordinator";
-          }else if(user.local.role == 2){
-	        userRole = "Monitor";
-          }else if(user.local.role == 3){
-	        userRole = "Administrator";
-          }
+      });
+    },
 
-          var userStatus = null;
-          if(user.local.active == true){
-	        userStatus = "Active";
-          }else if(user.local.active == false){
-	        userStatus = "Inactive";
-          }
-          
-          res.render('administer', {
-    	    userName: user.local.name,
-    	    priviligeLevel: userRole,
-            accountStatus: userStatus,
-	        password: '*Password Changed*',
-          } );
+    changeAccountStatusFn : function(req, res, next) {
+      var changedAccountStatus = req.body.changeAccountStatus;
+      AdminUser.changeAccountStatus(changedAccountStatus, name_of_user,
+          function(error, user) {
+            if (error) {
+              next(error);
+            } else {
+            }
+          });
+
+      AdminUser.getUserProfile(name_of_user, function(err, user) {
+
+        var userRole = null;
+        if (user.local.role == 0) {
+          userRole = "Citizen";
+        } else if (user.local.role == 1) {
+          userRole = "Co-ordinator";
+        } else if (user.local.role == 2) {
+          userRole = "Monitor";
+        } else if (user.local.role == 3) {
+          userRole = "Administrator";
+        }
+
+        var userStatus = null;
+        if (user.local.active == true) {
+          userStatus = "Active";
+        } else if (user.local.active == false) {
+          userStatus = "Inactive";
+        }
+
+        res.render('administer', {
+          userName : user.local.name,
+          priviligeLevel : userRole,
+          accountStatus : userStatus,
+          password : '*Cannot Display Password*',
         });
-    },    
+      });
+    },
 
-    };
+    changePasswordFn : function(req, res, next) {
+      var changedPassword = req.body.changePassword;
+      AdminUser.changePassword(changedPassword, name_of_user, function(error,
+          user) {
+        if (error) {
+          next(error);
+        } else {
+        }
+      });
+
+      AdminUser.getUserProfile(name_of_user, function(err, user) {
+
+        var userRole = null;
+        if (user.local.role == 0) {
+          userRole = "Citizen";
+        } else if (user.local.role == 1) {
+          userRole = "Co-ordinator";
+        } else if (user.local.role == 2) {
+          userRole = "Monitor";
+        } else if (user.local.role == 3) {
+          userRole = "Administrator";
+        }
+
+        var userStatus = null;
+        if (user.local.active == true) {
+          userStatus = "Active";
+        } else if (user.local.active == false) {
+          userStatus = "Inactive";
+        }
+
+        res.render('administer', {
+          userName : user.local.name,
+          priviligeLevel : userRole,
+          accountStatus : userStatus,
+          password : '*Password Changed*',
+        });
+      });
+    },
+
+  };
 };
