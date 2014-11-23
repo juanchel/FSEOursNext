@@ -27,18 +27,21 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
      */
     public void save(MessagePO messagePO){
         Log.enter(messagePO);
+        //returns if there is no message to be saved
         if (messagePO == null) {
             Log.warn("Inside save method with messagePO == NULL");
             return;
         }
-
+        //determines if the message is a public wall message, or if its a private message
         if(messagePO.getPublic()) {
             try (Connection conn = getConnection();
                  PreparedStatement stmt = conn.prepareStatement(SQL.POST_ON_WALL)) {
                 stmt.setString(1, messagePO.getContent());
                 stmt.setString(2, messagePO.getAuthor());
                 stmt.setTimestamp(3, Timestamp.valueOf(messagePO.getTimestamp()));
+                //TODO: do we need to be storing the rowCount?
                 int rowCount = stmt.executeUpdate();
+                //TODO: delete this log trace?
                 Log.trace("Statement executed, and " + rowCount + " rows inserted.");
             } catch (SQLException e) {
                 handleException(e);
@@ -48,13 +51,16 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         }
         else
         {
+            //goes in this else if its a private message
             try (Connection conn = getConnection();
                  PreparedStatement stmt = conn.prepareStatement(SQL.SEND_PRIVATE_MESSAGE)) {
                 stmt.setString(1, messagePO.getContent());
                 stmt.setString(2, messagePO.getAuthor());
                 stmt.setString(3, messagePO.getTarget());
                 stmt.setString(4, messagePO.getTimestamp());
+                //TODO: again do we need to store rowCount? unnecessary memory usage
                 int rowCount = stmt.executeUpdate();
+                //TODO: delete this log trace?
                 Log.trace("Statement executed, and " + rowCount + " rows inserted.");
             } catch (SQLException e) {
                 handleException(e);
@@ -65,8 +71,10 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
 
     }
 
+    //saves announcement
     public void saveAnnouncement(MessagePO messagePO){
         Log.enter(messagePO);
+        //checks if message is null or not
         if (messagePO == null) {
             Log.warn("Inside save method with messagePO == NULL");
             return;
@@ -77,6 +85,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
             stmt.setString(1, messagePO.getContent());
             stmt.setString(2, messagePO.getAuthor());
             stmt.setTimestamp(3, Timestamp.valueOf(messagePO.getTimestamp()));
+            //TODO: same as above for the next two lines
             int rowCount = stmt.executeUpdate();
             Log.trace("Statement executed, and " + rowCount + " rows inserted.");
         } catch (SQLException e) {
@@ -86,6 +95,8 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         }
     }
 
+    //method to load all announcements
+    //removed some spaces here
     public List<MessagePO> loadAnnouncement(){
         Log.enter();
 
@@ -93,7 +104,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
 
         List<MessagePO> messages = new ArrayList<MessagePO>();
         try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query);) {
+            PreparedStatement stmt = conn.prepareStatement(query);) {
             messages = processPublicResults(stmt);
         } catch (SQLException e) {
             handleException(e);
@@ -102,6 +113,8 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         return messages;
     }
 
+    //TODO: should this test method be in the MessageDAOImpl class?
+    //would suggest moving this to the test class
     public void testSave(MessagePO messagePO){
         Log.enter(messagePO);
         if (messagePO == null) {
@@ -121,7 +134,6 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         } finally {
             Log.exit();
         }
-
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn
                      .prepareStatement(SQL.TEST_COUNT_POST)) {
@@ -134,7 +146,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
 
 
     /**
-     * This method will load all the users in the
+     * This method will load all the public messages in the
      * database.
      *
      * @return - List of messages.
@@ -155,6 +167,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
          return messages;
      }
 
+    //TODO: should this be moved to a test class?
     public List<MessagePO> testLoadWallMessages(){
         Log.enter();
 
@@ -176,15 +189,16 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         } catch (SQLException e) {
             handleException(e);
         }
-
         return messages;
     }
 
+    //gets the clusters for analyze social network.
+    //removed some unnecssary comments and cleaned up code
     public List<List<UserPO>> getClusters(Timestamp timestamp) {
         Log.enter();
 
         String query = SQL.FIND_ALL_USERNAMES;
-
+        //list to store usernames
         List<String> usernames = new ArrayList<String>();
         try (Connection conn = getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);) {
@@ -195,10 +209,11 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         } catch (SQLException e) {
             handleException(e);
         }
-
+        //query to find talkers by timestamp
         String query2 = SQL.FIND_TALKERS_BY_TIME;
-
+        //authors of messages
         List<String> authors = new ArrayList<String>();
+        //targets of messages
         List<String> targets = new ArrayList<String>();
 
         try (Connection conn = getConnection();
@@ -212,7 +227,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         } catch (SQLException e) {
             handleException(e);
         }
-
+        //TODO: rename the following variable?
         Set<String> initSet = new HashSet<String>();
         Set<String> losers = new HashSet<String>();
 
@@ -230,9 +245,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         clusterSet.add(initSet);
 
         for (int i = 0; i < authors.size(); i++) {
-
-            System.out.println("AUTHOR " + authors.get(i) + "  TARGET " + targets.get(i));
-
+            //TODO: rename these variables?
             Set<Set<String>> toRemove = new HashSet<Set<String>>();
             Set<Set<String>> toAdd = new HashSet<Set<String>>();
             Set<String> toAdd1 = new HashSet<String>();
@@ -251,7 +264,6 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
             }
             clusterSet.removeAll(toRemove);
             clusterSet.addAll(toAdd);
-
             Set<Set<String>> toRemove2 = new HashSet<Set<String>>();
             for (Set<String> group : clusterSet) {
                 for (Set<String> group2 : clusterSet) {
@@ -262,22 +274,6 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
             }
 
             clusterSet.removeAll(toRemove2);
-
-//            Iterator<Set<String>> iterator = clusterSet.iterator();
-//
-//            while (iterator.hasNext()) {
-//                Set<String> nextGroup = iterator.next();
-//                Set<String> secondGroup =  new HashSet<String>(nextGroup);
-//                System.out.println(nextGroup);
-//
-//                if (nextGroup.contains(authors.get(i)) && nextGroup.contains(targets.get(i))) {
-//                    clusterSet.remove(nextGroup);
-//                    nextGroup.remove(authors.get(i));
-//                    clusterSet.add(nextGroup);
-//                    secondGroup.remove(targets.get(i));
-//                    clusterSet.add(secondGroup);
-//                }
-//            }
         }
 
         for (Set<String> group : clusterSet) {
@@ -302,7 +298,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
     }
 
     /**
-     * This method will load all the users in the
+     * This method will load all the private messages from the
      * database.
      *
      * @return - List of messages.
@@ -313,6 +309,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn
                      .prepareStatement(SQL.GET_PM_BY_USER_ID)) {
+            //populating the query statement
             stmt.setString(1, author);
             stmt.setString(2, target);
             stmt.setString(3, target);
@@ -326,6 +323,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         return po;
     }
 
+    //TODO: should this be moved to a test class?
     public boolean testCheckTime () {
 
         boolean valid = true;
@@ -333,6 +331,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn
                      .prepareStatement(SQL.TEST_CHECK_TIME)) {
+            //does this need to be stored into a ResultSet?
             ResultSet rs = stmt.executeQuery();
             while(rs.next()) {
                 valid = rs.getBoolean(1);
@@ -351,15 +350,15 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
             Log.warn("Inside processMessageById method with NULL statement object.");
             return null;
         }
-
-        Log.debug("Executing stmt = " + stmt);
         List<MessagePO> messages = new ArrayList<MessagePO>();
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                MessagePO po = new MessagePO();
+                MessagePO po;
                 po = new MessagePO();
+                //populating query
                 po.setContent(rs.getString(2));
                 po.setAuthor(rs.getString(3));
+                //fixing timestamp
                 po.setTimestamp(rs.getTimestamp(4).toString().replace(".0", ""));
                 messages.add(po);
             }
@@ -379,13 +378,12 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
             Log.warn("Inside processMessageById method with NULL statement object.");
             return null;
         }
-
-        Log.debug("Executing stmt = " + stmt);
         List<MessagePO> messages = new ArrayList<MessagePO>();
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                MessagePO po = new MessagePO();
+                MessagePO po;
                 po = new MessagePO();
+                //populating query
                 po.setContent(rs.getString(1));
                 po.setAuthor(rs.getString(2));
                 po.setTarget(rs.getString(3));
@@ -401,7 +399,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         return messages;
     }
     /**
-     * This method will load all the users in the
+     * This method will load all the chat buddies in the
      * database.
      *
      * @return - List of messages.
@@ -411,7 +409,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
             Log.warn("Inside findByName method with NULL author.");
             return null;
         }
-
+        //TODO: why are the same lines of code being used twice?
         Set<UserPO> po = new HashSet<UserPO>();
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn
@@ -441,8 +439,6 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
             Log.warn("Inside processChatBuddies method with NULL statement object.");
             return null;
         }
-
-        Log.debug("Executing stmt = " + stmt);
         List<UserPO> users = new ArrayList<UserPO>();
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
@@ -460,34 +456,26 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
     }
 
     /**
-     * This method will load all the users in the
+     * This method will load all the messages for the given id in the
      * database.
      *
      * @return - List of messages.
      */
     public String loadMessageById(int id){
         Log.enter(id);
-
-//        if (id == null) {
-//            Log.warn("Inside loadMessageById method with NULL id.");
-//            return null;
-//        }
-
         MessagePO po = null;
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn
                      .prepareStatement(SQL.GET_MESSAGE_BY_ID)) {
             stmt.setInt(1, id);
-
             po = processMessageById(stmt);
         } catch (SQLException e) {
             handleException(e);
             Log.exit(po);
         }
-
         return po.getContent();
     }
-
+    //processing message by id ethod
     private MessagePO processMessageById(PreparedStatement stmt) {
         Log.enter(stmt);
 

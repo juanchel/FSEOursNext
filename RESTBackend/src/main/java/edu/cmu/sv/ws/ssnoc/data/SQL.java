@@ -12,6 +12,7 @@ public class SQL {
      * here.
      */
     public static final String SSN_USERS = "SSN_USERS";
+    public static final String SSN_TEST_USERS = "SSN_TEST_USERS";
     public static final String SSN_MESSAGES = "SSN_MESSAGES";
     public static final String PRIVATE_MESSAGES = "PRIVATE_MESSAGES";
     public static final String TEST_POST = "TEST_POST";
@@ -30,6 +31,15 @@ public class SQL {
 
 
     public static final String CREATE_USERS = "create table IF NOT EXISTS " + SSN_USERS +
+            "(user_id IDENTITY PRIMARY KEY," +
+            "user_name VARCHAR(255) NOT NULL," +
+            "password varchar(40) NOT NULL,"+
+            "emergency_status smallint ,"+
+            "role smallint,"+
+            "active boolean," +
+            "salt VARCHAR(512)  );";
+
+    public static final String CREATE_TEST_USERS = "create table IF NOT EXISTS " + SSN_TEST_USERS +
             "(user_id IDENTITY PRIMARY KEY," +
             "user_name VARCHAR(255) NOT NULL," +
             "password varchar(40) NOT NULL,"+
@@ -124,6 +134,17 @@ public class SQL {
     public static final String FIND_ALL_USERS = "select user_id, user_name, password,"
             + " emergency_status," + " salt, role " + " from " + SSN_USERS + " where active=TRUE order by user_name ";
 
+    public static final String INSERT_INTO_TEST_USERS = "insert into " + SSN_TEST_USERS + " (user_id, user_name, password, emergency_status,role, active, salt) values ('1', 'VINAYTESTUSER', 'testing', '0','0', 'TRUE', 'etwtww')";
+    public static final String INSERT_TEST_USER = "insert into " + SSN_TEST_USERS
+            + " (user_name, password, emergency_status, salt, role, active) values (?, ?, ?, ?, 0, TRUE)";
+    public static final String DELETE_TEST_USER = "delete from " + SSN_TEST_USERS + " where user_id = 1";
+    public static final String DELETE_TEST_USER1 = "delete from " + SSN_TEST_USERS + " where user_id = 2";
+    public static final String UPDATE_TEST_PASSWORD = "UPDATE " + SSN_TEST_USERS + " SET password=?, salt=? WHERE user_name=?";
+
+
+    public static final String FIND_TEST_USERS = "select user_id, user_name, password,"
+            + " emergency_status," + " salt, role " + " from " + SSN_TEST_USERS + " where active=TRUE order by user_name ";
+
     /**
      * Query to find a user details depending on his name. Note that this query
      * does a case insensitive search with the user name.
@@ -133,6 +154,13 @@ public class SQL {
             + " salt, role, active "
             + " from "
             + SSN_USERS
+            + " where UPPER(user_name) = UPPER(?)";
+
+    public static final String FIND_TEST_USER_BY_NAME = "select user_id, user_name, password,"
+            + " emergency_status,"
+            + " salt, role, active "
+            + " from "
+            + SSN_TEST_USERS
             + " where UPPER(user_name) = UPPER(?)";
 
     public static final String GET_ALL_PUBLIC_MESSAGES = "select * from " + SSN_MESSAGES;
@@ -157,6 +185,8 @@ public class SQL {
 
     public static final String FIND_STATUS_BY_NAME = "select emergency_status from SSN_USERS where UPPER(user_name) = UPPER(?)";
 
+    public static final String FIND_TEST_STATUS_BY_NAME = "select emergency_status from SSN_TEST_USERS where UPPER(user_name) = UPPER(?)";
+
     public static final String FIND_TALKERS_BY_TIME = "select author, target from " + PRIVATE_MESSAGES +
             " where postedAt > ?";
 
@@ -178,11 +208,15 @@ public class SQL {
             + " (user_name, password, emergency_status, salt, role, active) values ('SSNAdmin', 'd9289f510850320b7c41ea10547d2ab8', 3, '37b8e9a65cfed2766af2d11879c86e82', 3, TRUE)";
 
     public static final String UPDATE_STATUS = "UPDATE " + SSN_USERS + " SET emergency_status=? WHERE user_name=?";
+    public static final String UPDATE_TEST_STATUS = "UPDATE " + SSN_TEST_USERS + " SET emergency_status=? WHERE user_name=?";
+
 
     public static final String UPDATE_USERNAME = "UPDATE " + SSN_USERS + " SET user_name=? WHERE user_name=?";
     public static final String UPDATE_PASSWORD = "UPDATE " + SSN_USERS + " SET password=?, salt=? WHERE user_name=?";
     public static final String UPDATE_ROLE = "UPDATE " + SSN_USERS + " SET role=? WHERE user_name=?";
+    public static final String UPDATE_TEST_ROLE = "UPDATE " + SSN_TEST_USERS + " SET role=? WHERE user_name=?";
     public static final String UPDATE_ACTIVE = "UPDATE " + SSN_USERS + " SET active=? WHERE user_name=?";
+    public static final String UPDATE_TEST_ACTIVE = "UPDATE " + SSN_TEST_USERS + " SET active=? WHERE user_name=?";
 
     public static final String SEARCH_USERNAME = "SELECT user_id, user_name, password, emergency_status, salt, role from " + SSN_USERS + " WHERE user_name LIKE ?";
     public static final String SEARCH_STATUS = "SELECT user_id, user_name, password, emergency_status, salt, role from " + SSN_USERS + " WHERE emergency_status=?";

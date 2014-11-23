@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import edu.cmu.sv.ws.ssnoc.data.SQL;
 import org.h2.util.StringUtils;
 
 import edu.cmu.sv.ws.ssnoc.common.exceptions.ServiceException;
@@ -49,7 +50,7 @@ public class UserService extends BaseService {
 
         try {
             IUserDAO dao = DAOFactory.getInstance().getUserDAO();
-            UserPO existingUser = dao.findByName(user.getUserName());
+            UserPO existingUser = dao.findByName(user.getUserName(), SQL.FIND_USER_BY_NAME);
 
             // Validation to check that user name should be unique
             // in the system. If a new users tries to register with
@@ -70,7 +71,7 @@ public class UserService extends BaseService {
             UserPO po = ConverterUtils.convert(user);
             po = SSNCipher.encryptPassword(po);
 
-            dao.save(po);
+            dao.save(po, SQL.INSERT_USER);
             resp = ConverterUtils.convert(po);
         } catch (Exception e) {
             handleException(e);
@@ -131,7 +132,7 @@ public class UserService extends BaseService {
             //user = ConverterUtils.convert(po);
             //status = loadStatus(userName);
             //po.setEmergency_status(Integer.parseInt(status));
-            dao.updateStatus(po.getUserName(), Integer.parseInt(status));
+            dao.updateStatus(po.getUserName(), Integer.parseInt(status), SQL.UPDATE_STATUS);
             //dao.save(po);
         } catch (Exception e) {
             handleException(e);

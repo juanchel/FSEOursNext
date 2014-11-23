@@ -3,6 +3,7 @@ package edu.cmu.sv.ws.ssnoc.rest;
 import edu.cmu.sv.ws.ssnoc.common.utils.ConverterUtils;
 import edu.cmu.sv.ws.ssnoc.data.dao.DAOFactory;
 import edu.cmu.sv.ws.ssnoc.data.dao.IMessageDAO;
+import edu.cmu.sv.ws.ssnoc.data.dao.IUserDAO;
 import edu.cmu.sv.ws.ssnoc.data.po.MessagePO;
 import edu.cmu.sv.ws.ssnoc.dto.Message;
 import edu.cmu.sv.ws.ssnoc.dto.TestResult;
@@ -126,6 +127,125 @@ public class TestService extends BaseService{
         }
 
         return created(resp);
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/testLoadUsers/")
+    public Response testLoadUsers () {
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.testloadUsers();
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return ok();
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/testGetStatus/")
+    public Response testGetStatus () {
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.testGetStatusByName();
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return ok();
+    }
+
+    @GET
+     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+     @Path("/testFindUserByName/")
+     public Response testFindUserByName () {
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.testFindByName();
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return ok();
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/testSaveInUser/")
+    public Response testSaveInUser () {
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.testSaveInUser();
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return ok();
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/testUpdatePW/")
+    public Response testUpdatePW () {
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.testUpdatePassword();
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return ok();
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/testUpdateRole/")
+    public Response testUpdateRole () {
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.testUpdateRole();
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return ok();
+    }
+
+    @GET
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Path("/testUpdateStatus/")
+    public Response testUpdateStatus () {
+
+        try {
+            IUserDAO dao = DAOFactory.getInstance().getUserDAO();
+            dao.testUpdateStatus();
+        } catch (Exception e) {
+            handleException(e);
+        } finally {
+
+        }
+
+        return ok();
     }
 }
 
