@@ -10,6 +10,7 @@ html
     link(rel='stylesheet', href='/csspensans.css')
     link(rel='stylesheet', href='/css/style.css')
     link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='icon', href='/img/favicon.ico', type='image/png')
     script(src='/js/bootstrap.min.js')
     script(src='/js/status.js')
   title SSNoC - Welcome
@@ -37,13 +38,22 @@ html
             .modal-content
                 .modal-header
                     button.close(type='button', data-dismiss='modal', aria-hidden='true') x
-                    h4.modal-title Welcome
-                    p Welcome to SSNOC.Connect with others in the network, share your status, and reach out to people!
-                    p Status Messages: OK - I am OK, I do not need help;
-                    p Help - I need help, but this is not a life threatening emergency; 
-                    p Emergency - I need help now, as this is a life threatening emergency! 
-                    p Undefined - No status yet. 
-                    p To share status, click on 'Submit' and select your status.
+                    h4.modal-title Welcome to SSNoC!
+                    p Here, you can connect to others in the network, share your status and reach out to those in need.
+                    p Status Messages:
+                    p 
+                        span(style='color: green;') OK 
+                        | &mdash; I am OK, I do not need help
+                    p
+                        span(style='color: darkkhaki') Help 
+                        | &mdash; I need help, but this is not a life threatening emergency
+                    p 
+                        span(style='color: red;') Emergency 
+                        | &mdash; I need help now, as this is a life threatening emergency
+                    p 
+                        span(style='color: grey;') N/A 
+                        | &mdash; I don't have a status yet 
+                    p To share your status, click on 'Submit' and select your status
 
 
 

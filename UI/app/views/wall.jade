@@ -28,9 +28,8 @@ html
   body
     form(action='/publicmessage', method='post')
       div.container
-        p Post Public Message: 
-        
-        input(type='text', name='publicMessage')
+        br
+        input(type='text', name='publicMessage', size='80')
         br
         br
         button(type="submit" class="btn btn-primary btn-sm" id="postMessageButton") Post to wall
@@ -40,10 +39,13 @@ html
     div.container
       p Public messages:
         div.container
-          div.well
             each message in publicmessages
-              p= message
-
+              div.well
+                p(style='float:left; font-weight:bold; font-size:125%')= message.author
+                p(style='float:right;')= message.time
+                br
+                div(style="clear:both")
+                p(style='margin:10px; padding:10px; background-color:lightskyblue')= message.content
         br
         br
         br

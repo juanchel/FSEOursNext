@@ -65,7 +65,7 @@ module.exports = function(_, io, participants, passport) {
         for (var i = 0; i < publicmessages.length; ++i) {
           var message = publicmessages[i];
           var author = message.author;
-          messageBuffer.push(author + ": " + message.content + " (sent at " + message.timestamp + ")");
+          messageBuffer.push({author: author, content: message.content, time: message.timestamp});
         }
 
         res.render("wall", {
@@ -148,7 +148,7 @@ module.exports = function(_, io, participants, passport) {
           console.log("Message : " + JSON.stringify(message));
           var author = message.author;
           console.log("Author : " + author);
-          announcementBuffer.push(author + ": " + message.content + " (sent at " + message.timestamp + ")");
+          announcementBuffer.push({author: author, content: message.content, time: message.timestamp});
         }
 
         res.render("Announcement", {

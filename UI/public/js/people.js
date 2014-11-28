@@ -37,18 +37,19 @@ function init() {
       var name = keys[i];
       var emergency = participants.online[map[name].sId].status;
       if (emergency == '1') {
-          emergency = 'okay';
+          emergency = '<span class="label label-success"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Okay </span>';
         } else if (emergency == '2') {
-          emergency = 'help';
+          emergency = '<span class="label label-warning"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> Help </span>';
         } else if (emergency == '3') {
-          emergency = 'EMERGENCY';
+          emergency = '<span class="label label-danger"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Emergency </span>';
         } else {
-          emergency = 'OTHER';
+          emergency = '<span class="label label-default"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> N/A </span>';
         }
       var img_ele = '<img src="/img/photo4.png" height=40/>';
       var photo_ele = '<div class="col-xs-3 col-sm-2 col-md-1 col-lg-1"><img src="/img/green-dot.png" height=10/><br/>'+img_ele + '</div>';
-      var name_ele = '<div class="col-xs-8 col-sm-9 col-md-10 col-lg-10"><strong>username: ' + name + 'status: ' + emergency + '</strong></div>';
+      var name_ele = '<div class="col-xs-5 col-sm-7 col-md-8 col-lg-9"><strong>' + name + '</strong></div>';
       var dropdown_symbol = map[name].sId === sessionId ? '':'<i class="glyphicon glyphicon-chevron-down text-muted"></i>';
+      var status_ele = '<div class="col-xs-3 col-sm-2 col-md-2 col-lg-1">' + emergency + '</div>';
       var dropdown_ele = '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 dropdown-user" data-for=".' + name + '">' + dropdown_symbol + '</div>';
 
       var info_ele = '<div class="row user-row search_item">' + photo_ele + name_ele + dropdown_ele + '</div>';
@@ -70,20 +71,21 @@ function init() {
         var emergency = userObj.emergency;
 
         if (emergency == '1') {
-            emergency = 'okay';
+            emergency = '<span class="label label-success"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Okay </span>';
           } else if (emergency == '2') {
-            emergency = 'help';
+            emergency = '<span class="label label-warning"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> Help </span>';
           } else if (emergency == '3') {
-            emergency = 'EMERGENCY';
+            emergency = '<span class="label label-danger"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Emergency </span>';
           } else {
-            emergency = 'OTHER';
+            emergency = '<span class="label label-default"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> N/A </span>';
           }
 
         var img_ele = '<img class="img-circle" src="/img/photo4.png" height=40/>';
         var photo_ele = '<div class="offline col-xs-3 col-sm-2 col-md-1 col-lg-1"><img src="/img/grey-dot.png" height=10/><br/>'+img_ele + '</div>';
-        var name_ele = '<div class="offline col-xs-8 col-sm-9 col-md-10 col-lg-10"><strong>' + userObj.userName + ' ' + emergency + '</strong><br/></div>';
+        var name_ele = '<div class="offline col-xs-5 col-sm-7 col-md-8 col-lg-9"><strong>' + userObj.userName + '</strong><br/></div>';
+        var status_ele = '<div class="offiline col-xs-3 col-sm-2 col-md-2 col-lg-1">' + emergency + '</div>';
         var dropdown_ele = '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 dropdown-user" data-for=".' + userObj.userName + '"><i class="glyphicon glyphicon-chevron-down text-muted"></i></div>';
-        var info_ele = '<div class="row user-row search_item">' + photo_ele + name_ele + dropdown_ele + '</div>';
+        var info_ele = '<div class="row user-row search_item">' + photo_ele + status_ele + name_ele + dropdown_ele + '</div>';
         var detail_ele = '<div class="row user-info ' + userObj.userName + '"><button class="btn btn-info col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3 send-Message" username="' + userObj.userName + '">Wanna leave a message?</a><hr/></div></div>';
         $('#participants_online').append(info_ele);
         $('#participants_online').append(detail_ele);

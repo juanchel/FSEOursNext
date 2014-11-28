@@ -23,13 +23,15 @@ html
       br
       br
       form(action='/status', method='post')
-      h4.text-centre
-        You You may now update your status : 
-        select(name='statusSelect')
-          option(value='1') Okay
-          option(value='2') Help
-          option(value='3') EMERGENCY!!!
-        button(type="submit" class="btn btn-primary btn-sm" id="signupBtn") update status
+        h4.text-centre
+          div Update your status below : 
+          br
+          select(name='statusSelect')
+            option(value='1') Okay
+            option(value='2') Help
+            option(value='3') Emergency
+          | &nbsp;&nbsp;
+          button(type="submit" class="btn btn-primary btn-sm") Update
       br
       br
       br

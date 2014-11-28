@@ -38,7 +38,10 @@ html
     div.container
         p Public Announcements:
             div.container
-                div.well
-                    each msg in publicannouncements
-                        p= msg
-                        //p #{msg.author} : #{msg.content}
+                each message in publicannouncements
+                    div.well
+                        p(style='float:left; font-weight:bold; font-size:125%')= message.author
+                        p(style='float:right;')= message.time
+                        br
+                        div(style="clear:both")
+                        p(style='margin:10px; padding:10px; background-color:lightskyblue')= message.content
