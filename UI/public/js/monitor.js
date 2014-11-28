@@ -46,8 +46,8 @@ function init() {
     if (data.error) {
       window.alert("performance measurement error: " + data.error);
     }
-    $("#post_result").html("POSTs/sec=" + data.post);
-    $("#get_result").html("GETs/sec=" + data.get);
+    $("#post_result").html("<span style='color:skyblue'>" + data.post + " / second </span>");
+    $("#get_result").html("<span style='color:coral'>" + data.get +  " / second </span>");
   });
 
 }

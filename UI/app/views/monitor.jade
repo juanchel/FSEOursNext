@@ -22,61 +22,65 @@ html
     br
     br
     div.container
-      p Measure Performance
-    form(action='/startMeasurePerformance', method='post')
-      |Enter Time: 
-      input(type='text', name='measurePerformanceTime')   
-      button(type="submit" class="btn btn-primary btn-sm" id="startMeasurePerformanceButton") Start
+      p(style='font-size:200%') Measure Performance
 
-  
-  body 
+      form(action='/startMeasurePerformance', method='post')
+        | Desired time (in seconds): 
+        input(type='text', name='measurePerformanceTime')
+        br
+        br
+        button(type="submit" class="btn btn-primary btn-default" id="startMeasurePerformanceButton").col-md-4 Start
 
-    form(action='/stopMeasurePerformance', method='post')
-      input(type='hidden', name='serial', value="#{serial}")
-      button(type="submit" class="btn btn-primary btn-sm" id="stopMeasurePerformanceButton") Stop
+      div.col-md-1
+
+      form(action='/stopMeasurePerformance', method='post')
+        input(type='hidden', name='serial', value="#{serial}")
+        button(type="submit" class="btn btn-primary btn-default" id="stopMeasurePerformanceButton").col-md-4 Stop
 
 
-  div#serial(style='display: none') #{serial}
-  p The number of posts per sec is:
-  p#post_result
-  p The number of gets per sec is:
-  p#get_result
-  br
-  br
-  br
+      div#serial(style='display: none') #{serial}
+      br
+      br
+      br
+      div.well
+        p(style='font-weight:bold') Posts:
+        p#post_result
+        p(style='font-weight:bold') Gets:
+        p#get_result
+      br
+      br
+      br
 
-  p Measure Memory
-  body 
-    form(action='/startMeasureMemory', method='post')
-      button(type="submit" class="btn btn-primary btn-sm" id="startMeasureMemoryButton") Start Measure Memory
-    br
+      p(style='font-size:200%') Measure Memory
+      form(action='/startMeasureMemory', method='post')
+        button(type="submit" class="btn btn-primary btn-default" id="startMeasureMemoryButton").col-md-4 Start
 
-  body
-    form(action='/stopMeasureMemory', method='get')
-      button(type="submit" class="btn btn-primary btn-sm" id="stopMeasureMemoryButton") Stop Measure Memory
-  
+      div.col-md-1
 
-  body
-    table(style='width: 100%;')
-      tr
-        th Time Stamp
-        th Used Volatile
-        th Left Volatile
-        th Used Non-Volatile
-        th Left Non-Volatile
-      each entry in entries ? entries : []
+      form(action='/stopMeasureMemory', method='get')
+        button(type="submit" class="btn btn-primary btn-default" id="stopMeasureMemoryButton").col-md-4 Stop
+      br
+      br
+      table(style='width: 100%;')
         tr
-          td #{entry.timestamp}
-          td #{entry.usedVolatile}
-          td #{entry.leftVolatile}
-          td #{entry.usedNonVolatile}
-          td #{entry.leftNonVolatile}
-      tr
-        td #{timestamp}
-        td #{usedVolatile}
-        td #{leftVolatile}
-        td #{usedNonVolatile}
-        td #{leftNonVolatile}
+          th Time Stamp
+          th Used Volatile
+          th Left Volatile
+          th Used Non-Volatile
+          th Left Non-Volatile
+        each entry in entries ? entries : []
+          tr
+            td #{entry.timestamp}
+            td #{entry.usedVolatile}
+            td #{entry.leftVolatile}
+            td #{entry.usedNonVolatile}
+            td #{entry.leftNonVolatile}
+        tr
+          td #{timestamp}
+          td #{usedVolatile}
+          td #{leftVolatile}
+          td #{usedNonVolatile}
+          td #{leftNonVolatile}
 
 
 

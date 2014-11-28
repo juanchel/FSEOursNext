@@ -23,17 +23,18 @@ html
         br
         form(action='/analyzeSocialNetwork', method='post')
             h4.text-center
-                Enter Enter time in hours :
-                        &nbsp
+                Enter Enter time in hours : 
                         input(type='number', name='analyzeTime')
                         br
                         br
                         button(type="submit",class="btn btn-primary btn-sm", id="analyzeSocialNetwork") Analyze
         
             center
-              Following Following are the clusters of users :
+             div.container
+              Following Clusters found :
                 if clusters != null
                     each cluster in clusters
                         each user in cluster
-                            li= user.userName
+                            div(style='background-color:lightskyblue; width:50%')
+                                div= user.userName
                         br
