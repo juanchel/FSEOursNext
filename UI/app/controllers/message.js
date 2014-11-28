@@ -20,9 +20,9 @@ module.exports = function(_, io, participants, passport) {
           var author = message.author;
           var target = message.target;
           if (author === me && target === buddy) {
-            messageBuffer.push(me + ": " + message.content + " (Sent at " + message.timestamp + ")");
+            messageBuffer.push({author: "me", content: message.content, time: message.timestamp});
           } else if (author === buddy && target === me) {
-            messageBuffer.push(buddy + ": " + message.content + " (Sent at " + message.timestamp + ")");
+            messageBuffer.push({author: buddy, content: message.content, time: message.timestamp});
           } else {
             console.warn("message coming from wrong conversation");
           }

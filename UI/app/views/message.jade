@@ -17,11 +17,18 @@ html
     div.bm#main-message
       form(action='/send_message', method='post')
         div.container
-          p Private messages:
+          p Chat log:
         div.container
           div.well
             each message in messages
-              p= message
+              if message.author == 'me'
+                p(style='font-weight:bold; color:coral') me: 
+                  span(style='font-weight:normal; color:black')= message.content + ' '
+                  span(style='font-weight:normal; font-size:75%; color:darkgrey')= message.time
+              else
+                p(style='font-weight:bold; color:skyblue')= message.author + ': '
+                  span(style='font-weight:normal; color:black')= message.content + ' '
+                  span(style='font-weight:normal; font-size:75%; color:darkgrey')= message.time
         div.container
           p Write a private message to: #{username}
           br

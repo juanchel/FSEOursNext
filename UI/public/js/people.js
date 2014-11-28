@@ -86,7 +86,7 @@ function init() {
         var status_ele = '<div class="offiline col-xs-3 col-sm-2 col-md-2 col-lg-1">' + emergency + '</div>';
         var dropdown_ele = '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 dropdown-user" data-for=".' + userObj.userName + '"><i class="glyphicon glyphicon-chevron-down text-muted"></i></div>';
         var info_ele = '<div class="row user-row search_item">' + photo_ele + status_ele + name_ele + dropdown_ele + '</div>';
-        var detail_ele = '<div class="row user-info ' + userObj.userName + '"><button class="btn btn-info col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3 send-Message" username="' + userObj.userName + '">Wanna leave a message?</a><hr/></div></div>';
+        var detail_ele = '<div class="row user-info ' + userObj.userName + '"><button class="btn btn-info col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3 send-Message" username="' + userObj.userName + '">Wanna leave a message?</a></div></div>';
         $('#participants_online').append(info_ele);
         $('#participants_online').append(detail_ele);
       }
