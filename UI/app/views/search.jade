@@ -14,6 +14,7 @@ html
     script(src='/js/search.js')
   title SSNoC - Search
   body
+   div.container
     include includes/navbar.jade
     br
     br
@@ -25,21 +26,21 @@ html
     br
     br
     br
-    p Pick search type
-      select#search_type
-        option(value='0' selected='selected') search users by username
-        option(value='1') search users by status
-        option(value='2') search announcements
-        option(value='3') search public messages
-        option(value='4') search private messages
-    p#keywords_input Enter your keywords here:
+    p#keywords_input Search: 
       input#keywords(type='text')
+      span &nbsp;
+      select#search_type
+        option(value='0' selected='selected') Username
+        option(value='1') Status
+        option(value='2') Announcements
+        option(value='3') Public Messages
+        option(value='4') Private Messages
     p#status_input.display_none Select status
       select#status_to_search
-        option(value='0') undefined
+        option(value='0') N/A
         option(value='1') Okay
         option(value='2') Help
-        option(value='3') EMERGENCY!!!
+        option(value='3') Emergency
     br
     button#search(type="submit" class="btn btn-primary btn-sm") Search        
 

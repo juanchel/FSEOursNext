@@ -14,6 +14,7 @@ html
     script(src='/js/status.js')
   title SSNoC - Administer
   body
+   div.container
     include includes/navbar.jade
     br
     br
@@ -34,48 +35,40 @@ html
 
     table(style='width: 100%;', border="1")
       tr
-        th User Name  
+        th &nbsp;&nbsp; User Name  
         td 
           form(action='/changeUserName', method='post')
-            &nbsp
-            |Enter New User Name:
-            &nbsp
+            button(type="submit" class="btn btn-primary btn-sm" id="changeUserNameButton" style="width:200px") Change Username 
+            | &nbsp;
             input(type='text', name='changeUserName')
-            &nbsp
-            button(type="submit" class="btn btn-primary btn-sm" id="changeUserNameButton") Change Name
         td #{userName}
       tr
-        th Privilege Level  
+        th &nbsp;&nbsp; Privilege Level  
         td
-          |Select Privilege Level: 
-          &nbsp
           form(action='/changePrivilegeLevel', method='post')
+            button(type="submit" class="btn btn-primary btn-sm" id="changePrivilegeLevelButton" style="width:200px") Change Privilege Level 
+            | &nbsp;
             select(name='changePrivilegeLevel')
               option(value='0') Citizen
               option(value='1') Co-ordinator
               option(value='2') Monitor
               option(value='3') Administrator
-            button(type="submit" class="btn btn-primary btn-sm" id="changePrivilegeLevelButton") Change Privilege Level
         td #{priviligeLevel}
       tr
-        th Account Status : 
+        th &nbsp;&nbsp; Account Status
         td
-          |Select Account Status: 
-          &nbsp
           form(action='/changeAccountStatus', method='post')
+            button(type="submit" class="btn btn-primary btn-sm" id="changeAccountStatusButton" style="width:200px") Change Account Status 
+            | &nbsp;
             select(name='changeAccountStatus')
               option(value='0') Inactive
               option(value='1') Active
-            button(type="submit" class="btn btn-primary btn-sm" id="changeAccountStatusButton") Change Account Status
         td #{accountStatus}
       tr
-        th Password  
+        th &nbsp;&nbsp; Password  
         td
           form(action='/changePassword', method='post')
-            &nbsp
-            |Enter New Password:
-            &nbsp
+            button(type="submit" class="btn btn-primary btn-sm" id="changePasswordButton" style="width:200px") Change Password
+            | &nbsp;
             input(type='text', name='changePassword')
-            &nbsp
-            button(type="submit" class="btn btn-primary btn-sm" id="changePasswordButton") Change Password
         td #{password}

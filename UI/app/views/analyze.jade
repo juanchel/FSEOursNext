@@ -13,25 +13,26 @@ html
         script(src='/js/people.js')
     title SSNoC - Analyze
     body
+      div.container
         include includes/navbar.jade
         br
         br
         br
         br
         br
-        h4.text-center Analyze Social Network
+        h4 Analyze Social Network
         br
         form(action='/analyzeSocialNetwork', method='post')
-            h4.text-center
+            h4
                 Enter Enter time in hours : 
                         input(type='number', name='analyzeTime')
                         br
                         br
                         button(type="submit",class="btn btn-primary btn-sm", id="analyzeSocialNetwork") Analyze
         
-            center
-             div.container
-              Following Clusters found :
+            
+            div
+              div Following Clusters found :
                 if clusters != null
                     each cluster in clusters
                         each user in cluster
