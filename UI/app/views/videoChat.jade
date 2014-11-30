@@ -1,0 +1,47 @@
+doctype html
+html
+  include includes/head.jade
+  script(src='/js/jquery.cookie.js')
+    <meta charset="utf-8">
+    <!-- Set the viewpor/ot so this responsive site displays correctly on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    script(src='/js/jquery-1.9.1.min.js')
+    script(src='/js/jquery.watermarkinput.js')
+    script(src='/js/peer.js')
+    link(rel='stylesheet', href='/css/opensans.css')
+    link(rel='stylesheet', href='/css/style.css')
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    script(src='/js/bootstrap.min.js')
+    script(src='/js/people.js')
+    script(src='/js/video_chat.js')
+  title SSNoC - People
+  body
+    include includes/navbar.jade
+    div.pure-g
+
+      <!-- Video area -->
+      div#video-container.pure-u-2-3
+        video#their-video(autoplay)
+        video#my-video(muted='true' autoplay)
+
+      <!-- Steps -->
+      div
+        <!-- Get local audio/video stream -->
+        div#get-local-stream
+          p Please click `allow` on the top of the screen so we can access your webcam and microphone for calls.
+          div#get-local-stream-error
+            p Failed to access the webcam and microphone. Make sure to run this demo on an http server and click allow when asked for permission by the browser.
+            button#get-local-stream-retry(href='#') Try again
+
+        <!-- Make calls to others -->
+        div#ready-for-call
+          div.pure-form
+            select#users-ready-for-call
+            button#make-call(href='#') Call
+
+        <!-- Call in progress -->
+        div#call-in-progress
+          p Currently in call with 
+            span#their-id ...
+          p
+            button#end-call(href="#") End call

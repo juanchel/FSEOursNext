@@ -25,6 +25,7 @@ module.exports = function(app, _, io, participants, performanceMeasurements, pas
   var monitor_controller = require('./controllers/monitor')(_, io, participants, passport);
   var searchCtl_controller = require('./controllers/searchCtl')(_, io, participants, passport);
   var administer_controller = require('./controllers/administer')(_, io, participants, passport);
+  var videoChat_controller = require('./controllers/videoChat')(_, io, participants, passport);
 
   app.get("/", user_controller.getLogin);
   
@@ -76,4 +77,6 @@ module.exports = function(app, _, io, participants, performanceMeasurements, pas
   app.post("/changePassword", administer_controller.changePasswordFn);
   
   app.get("/search", isLoggedIn, searchCtl_controller.getSearch);
+  
+  app.get("/videoChat", isLoggedIn, videoChat_controller.getVideoChat);
 };

@@ -24,6 +24,10 @@ module.exports = function(_, io, participants) {
       delete participants.online[socket.id];
       io.sockets.emit("userDisconnected", {id: socket.id, sender:"system", participants:participants});
     });
-
+    
+    socket.on("newVideoChatBuddy", function(data) {
+      participants.online[socket.id].peerId = data.peerId;
+      io.sockets.emit("newConnection", {'participants': participants});
+    });
   });
 };

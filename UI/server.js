@@ -5,9 +5,10 @@ var express = require("express"),
   _ = require("underscore"),
   passport = require('passport'),
   flash = require('connect-flash'),
-  User = require('./app/models/UserRest');
-  Message = require('./app/models/MessageRest');
-  AdminUser = require('./app/models/AdministerRest')
+  User = require('./app/models/UserRest'),
+  Message = require('./app/models/MessageRest'),
+  AdminUser = require('./app/models/AdministerRest');
+
 
 var participants = {
   online : {},
